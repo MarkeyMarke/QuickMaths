@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, TextInput, Button, StyleSheet} from 'react-native';
+import {View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback} from 'react-native';
 
 import Background from '../components/Background';
 import AppTitle from '../constants/AppTitle';
@@ -21,52 +21,54 @@ const RegisterScreen = props => {
 
     return(
         <Background>
-            <View style={styles.screen}>
-                <View style={styles.titleContainer}>
-                    <AppTitle/>
-                </View>
-                <View style={styles.inputFieldContainer}>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder="Enter Email"
-                        placeholderTextColor='white'   
-                        onChangeText={(text) => setEmail(text)}
-                        value={email}
-                    />
-                </View>
-                <View style={styles.inputFieldContainer}>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder="Enter Full Name"
-                        placeholderTextColor='white'   
-                        onChangeText={(text) => setName(text)}
-                        value={email}
-                    />
-                </View>
-                <View style={styles.inputFieldContainer}>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder="Enter Course Code"
-                        placeholderTextColor='white'   
-                        onChangeText={(text) => setCourseCode(text)}
-                        value={email}
-                    />
-                </View>
-                <View style={styles.inputFieldContainer}>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder="Enter Password"
-                        placeholderTextColor='white'
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
-                    />
-                </View>
-                <StandardButton text="Register" onTap={onRegister}/>
-                <Button title="Already registered?" onPress={() => {
-                    props.navigation.navigate('Login');
-                }}/>
+            <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
+                <View style={styles.screen}>
+                    <View style={styles.titleContainer}>
+                        <AppTitle/>
+                    </View>
+                    <View style={styles.inputFieldContainer}>
+                        <TextInput
+                            style={styles.inputField}
+                            placeholder="Enter Email"
+                            placeholderTextColor='white'   
+                            onChangeText={(text) => setEmail(text)}
+                            value={email}
+                        />
+                    </View>
+                    <View style={styles.inputFieldContainer}>
+                        <TextInput
+                            style={styles.inputField}
+                            placeholder="Enter Full Name"
+                            placeholderTextColor='white'   
+                            onChangeText={(text) => setName(text)}
+                            value={email}
+                        />
+                    </View>
+                    <View style={styles.inputFieldContainer}>
+                        <TextInput
+                            style={styles.inputField}
+                            placeholder="Enter Course Code"
+                            placeholderTextColor='white'   
+                            onChangeText={(text) => setCourseCode(text)}
+                            value={email}
+                        />
+                    </View>
+                    <View style={styles.inputFieldContainer}>
+                        <TextInput
+                            style={styles.inputField}
+                            placeholder="Enter Password"
+                            placeholderTextColor='white'
+                            onChangeText={(text) => setPassword(text)}
+                            value={password}
+                        />
+                    </View>
+                    <StandardButton text="Register" onTap={onRegister}/>
+                    <Button title="Already registered?" onPress={() => {
+                        props.navigation.navigate('Login');
+                    }}/>
 
-            </View>
+                </View>
+            </TouchableWithoutFeedback>
         </Background>
     );
 };
