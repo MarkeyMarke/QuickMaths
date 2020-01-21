@@ -4,12 +4,14 @@ import {View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback}
 import Background from '../components/Background';
 import AppTitle from '../constants/AppTitle';
 import StandardButton from '../components/StandardButton';
+import Checkbox from '../components/Checkbox';
 
 const RegisterScreen = props => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [courseCode, setCourseCode] = useState('');
     const [password, setPassword] = useState('');
+    const [selected, setSelected] = useState(false);
 
     const onRegister = () => {
         console.log(email);
@@ -17,6 +19,10 @@ const RegisterScreen = props => {
         console.log(courseCode);
         console.log(password);
         props.navigation.navigate('TeacherHomeScreen');
+    }
+
+    const onSelect = () => {
+        setSelected(!selected);
     }
 
     return(
@@ -66,7 +72,7 @@ const RegisterScreen = props => {
                     <Button title="Already registered?" onPress={() => {
                         props.navigation.navigate('Login');
                     }}/>
-
+                    <Checkbox onSelect={onSelect} selected={selected}/>
                 </View>
             </TouchableWithoutFeedback>
         </Background>
