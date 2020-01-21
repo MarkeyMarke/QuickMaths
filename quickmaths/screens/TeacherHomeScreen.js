@@ -3,7 +3,7 @@ import {View, ImageBackground, StyleSheet} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
 import {COURSES} from '../data/dummy-data';
-import CourseListItem from '../components/CourseListItem';
+import ListItem from '../components/ListItem';
 import {Item, HeaderButtons} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import Colors from '../constants/Colors';
@@ -17,10 +17,10 @@ const TeacherHomeScreen = props => {
 
     const renderListItem = (itemData) => {
         return (
-            <CourseListItem 
-                title={itemData.item.title} 
-                classYear={itemData.item.classYear}
-                courseCode={itemData.item.courseCode}
+            <ListItem 
+                topText={itemData.item.title} 
+                middleText={itemData.item.classYear}
+                bottomText={itemData.item.courseCode}
                 onSelect={() => {
                     props.navigation.navigate({
                         routeName: 'Class',
