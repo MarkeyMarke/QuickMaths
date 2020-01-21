@@ -18,7 +18,7 @@ const RegisterScreen = props => {
         console.log(name);
         console.log(courseCode);
         console.log(password);
-        props.navigation.navigate('TeacherHomeScreen');
+        props.navigation.navigate(selected ? 'TeacherHomeScreen' : 'StudentHomeScreen');
     }
 
     const onSelect = () => {

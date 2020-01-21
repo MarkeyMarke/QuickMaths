@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 
 import {Ionicons} from '@expo/vector-icons';
@@ -13,7 +13,7 @@ const Checkbox = props => {
                     onPress={props.onSelect} 
                 >
                     <Ionicons 
-                        name={props.selected ? "ios-square-outline" : "ios-checkbox-outline"} 
+                        name={props.selected ? "ios-checkbox-outline" : "ios-square-outline"} 
                         size={30}
                         color="black"
                     />
