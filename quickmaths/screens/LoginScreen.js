@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, TextInput, Button, StyleSheet} from 'react-native';
+import {View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback} from 'react-native';
 
 import Background from '../components/Background';
 import AppTitle from '../constants/AppTitle';
@@ -16,40 +16,42 @@ const LoginScreen = props => {
     };
 
     return(
-        <Background>
-            <View style={styles.screen}>
-                <View style={styles.titleContainer}>
-                    <AppTitle/>
-                </View>
-                <View style={styles.inputFieldContainer}>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder="Enter Email"
-                        placeholderTextColor='white'   
-                        onChangeText={(text) => setEmail(text)}
-                        value={email}
-                    />
-                </View>
-                <View style={styles.inputFieldContainer}>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder="Enter Password"
-                        placeholderTextColor='white'
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
-                    />
-                </View>
-                
-                <StandardButton text="Login" onTap={onLogin}
-                />
-                <Button title="Forgot Password?" onPress={() => {
-                    props.navigation.navigate('EmailRecovery');
-                }}/>
-                <Button title="Not Registered?" onPress={() => {
-                    props.navigation.navigate('Register');
-                }}/>
-            </View>
-        </Background>
+            <Background>
+                 <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
+                    <View style={styles.screen}>
+                        <View style={styles.titleContainer}>
+                            <AppTitle/>
+                        </View>
+                        <View style={styles.inputFieldContainer}>
+                            <TextInput
+                                style={styles.inputField}
+                                placeholder="Enter Email"
+                                placeholderTextColor='white'   
+                                onChangeText={(text) => setEmail(text)}
+                                value={email}
+                            />
+                        </View>
+                        <View style={styles.inputFieldContainer}>
+                            <TextInput
+                                style={styles.inputField}
+                                placeholder="Enter Password"
+                                placeholderTextColor='white'
+                                onChangeText={(text) => setPassword(text)}
+                                value={password}
+                            />
+                        </View>
+                        
+                        <StandardButton text="Login" onTap={onLogin}
+                        />
+                        <Button title="Forgot Password?" onPress={() => {
+                            props.navigation.navigate('EmailRecovery');
+                        }}/>
+                        <Button title="Not Registered?" onPress={() => {
+                            props.navigation.navigate('Register');
+                        }}/>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Background>
     );
 };
 
