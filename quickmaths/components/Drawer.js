@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Button} from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import { DrawerItems } from 'react-navigation-drawer';
 
 import Colors from '../constants/Colors';
+import StandardButton from './StandardButton';
 
 const CustomDrawer = props => (
   <ScrollView>
@@ -21,6 +22,13 @@ const CustomDrawer = props => (
       null
     }
       />
+    
+    <StandardButton 
+      text="Sign Out"
+      onTap={() => {props.navigation.navigate('Home');}}
+      buttonStyle={styles.button}
+      containerStyle={styles.container}
+    />
     </SafeAreaView>
   </ScrollView>
 );

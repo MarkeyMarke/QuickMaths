@@ -46,12 +46,6 @@ const MainNavigator = createDrawerNavigator({
         }
     },
     Profile: ProfileScreen,
-    SignOut: {
-        screen: AuthNavigator,
-        navigationOptions: {
-            title: 'Sign Out'
-        }
-    }
 }, {
     drawerWidth: '60%',
     drawerBackgroundColor: Colors.accentColor,
