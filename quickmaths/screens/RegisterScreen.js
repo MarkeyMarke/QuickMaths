@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import {View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {useDispatch} from 'react-redux';
 
 import Background from '../components/Background';
 import AppTitle from '../constants/AppTitle';
 import StandardButton from '../components/StandardButton';
 import Checkbox from '../components/Checkbox';
+import {signInAsStudent, signInAsTeacher} from '../store/actions/users';
 
 const RegisterScreen = props => {
     const [email, setEmail] = useState('');
@@ -13,11 +15,27 @@ const RegisterScreen = props => {
     const [password, setPassword] = useState('');
     const [selected, setSelected] = useState(false);
 
+    const dispatch = useDispatch();
+
+    const signInAsStudentHandler = () => {
+        dispatch(signInAsStudent());
+    };
+
+    const signInAsTeacherHandler = () => {
+        dispatch(signInAsTeacher());
+    };
+
     const onRegister = () => {
         console.log(email);
         console.log(name);
         console.log(courseCode);
         console.log(password);
+        if(selected){
+            signInAsTeacherHandler();
+        }
+        else{
+            signInAsStudentHandler();
+        }
         props.navigation.navigate(selected ? 'TeacherHomeScreen' : 'StudentHomeScreen');
     }
 
