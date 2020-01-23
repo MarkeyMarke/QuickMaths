@@ -1,26 +1,34 @@
 import React, {useState} from 'react';
 import {View, ImageBackground, StyleSheet} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import {useSelector, useDispatch} from 'react-redux';
 
-import {COURSES} from '../data/dummy-data';
-import CourseListItem from '../components/CourseListItem';
+import ListItem from '../components/ListItem';
 import {Item, HeaderButtons} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import Colors from '../constants/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import AddListItemButton from '../components/AddListItemButton';
+import {deleteCourse} from '../store/actions/courses';
 
 const TeacherHomeScreen = props => {
 
-    const [courses, setCourses] = useState(COURSES);
+    const courses = useSelector(state => state.courses.courses);
+
+    const dispatch = useDispatch();
+
+    const deleteCourseHandler = (id) => {
+        dispatch(deleteCourse(id));
+    };
+    //const [courses, setCourses] = useState(COURSES);
 
     const renderListItem = (itemData) => {
         return (
-            <CourseListItem 
-                title={itemData.item.title} 
-                classYear={itemData.item.classYear}
-                courseCode={itemData.item.courseCode}
+            <ListItem 
+                topText={itemData.item.title} 
+                middleText={itemData.item.classYear}
+                bottomText={itemData.item.courseCode}
                 onSelect={() => {
                     props.navigation.navigate({
                         routeName: 'Class',
@@ -50,14 +58,7 @@ const TeacherHomeScreen = props => {
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
                                 style={styles.backButton}
-                                onPress={() => {
-                                    let c = courses.filter(
-                                        (course) => {
-                                            return course.id !== data.item.id
-                                        }
-                                    );
-                                    setCourses(c); 
-                                }}
+                                onPress={() => deleteCourseHandler(data.item.id)}
                             >
                                 <Ionicons name="ios-trash" size={75} color="white"/>
                             </TouchableOpacity>
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     buttonContainer:{
         backgroundColor: 'red',
         width: 75,
-        left: 60,
+        left: 45,
         justifyContent: 'center',
         marginTop: 20,
         borderRadius: 10

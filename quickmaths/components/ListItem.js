@@ -1,14 +1,14 @@
 import React from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-const CourseListItem = props => {
+const ListItem = props => {
     return (
         <View style={{...styles.container, ...styles.listItem}}>
             <View style={styles.textContainer}>
-                <Text style={[styles.text, styles.title]}>{props.title}</Text>
-                <Text style={[styles.text, styles.classYear]}>{props.classYear}</Text>
-                <Text style={[styles.text, styles.courseCode]}>{props.courseCode}</Text>
+                <Text style={[styles.text, styles.topText]}>{props.topText}</Text>
+                <Text style={[styles.text, styles.middleText]}>{props.middleText}</Text>
+                <Text style={[styles.text, styles.bottomText]}>{props.bottomText}</Text>
             </View>
             
             <TouchableOpacity onPress={props.onSelect}>
@@ -23,23 +23,23 @@ const CourseListItem = props => {
 
 const styles = StyleSheet.create({
     listItem: {
-        height: 100,
+        height: 110,
         marginTop: 20,
         backgroundColor: 'rgba(0,0,0, 0.8)',
-        width: '75%',
+        width: '85%',
         flex: 1,
     },
     text: {
         color: 'white'
     },
-    title: {
+    topText: {
         fontSize: 22,
         fontWeight:'bold'
     },
-    classYear: {
+    middleText: {
         fontSize: 20
     },
-    courseCode:{
+    bottomText:{
         fontSize: 18
     },
     textContainer:{
@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CourseListItem;
+export default ListItem;

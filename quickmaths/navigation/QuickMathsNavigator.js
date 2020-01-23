@@ -6,6 +6,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import EmailRecoveryScreen from '../screens/EmailRecoveryScreen';
 import TeacherHomeScreen from '../screens/TeacherHomeScreen';
+import StudentHomeScreen from '../screens/StudentHomeScreen';
 import ClassScreen from '../screens/ClassScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CustomDrawer from '../components/Drawer';
@@ -13,6 +14,7 @@ import CustomDrawer from '../components/Drawer';
 import Colors from '../constants/Colors';
 
 const AppNavigator = createStackNavigator({
+    StudentHomeScreen: StudentHomeScreen,
     TeacherHomeScreen: TeacherHomeScreen,
     Class: ClassScreen
 }, {
@@ -44,12 +46,6 @@ const MainNavigator = createDrawerNavigator({
         }
     },
     Profile: ProfileScreen,
-    SignOut: {
-        screen: AuthNavigator,
-        navigationOptions: {
-            title: 'Sign Out'
-        }
-    }
 }, {
     drawerWidth: '60%',
     drawerBackgroundColor: Colors.accentColor,
