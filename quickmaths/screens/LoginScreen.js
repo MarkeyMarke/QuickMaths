@@ -23,6 +23,7 @@ const LoginScreen = props => {
     props.navigation.navigate("TeacherHomeScreen");
   };
 
+  //Blah blah blah
   return (
     <Background>
       <TouchableWithoutFeedback
