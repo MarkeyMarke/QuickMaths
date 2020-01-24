@@ -1,11 +1,20 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {useDispatch} from 'react-redux';
+
 import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
+import {addCourse} from '../store/actions/courses';
 
 const AddClassScreen = props => {
     const [courseName, setCourseName] = useState('');
     const [classYear, setClassYear] = useState('');
+
+    const dispatch = useDispatch();
+    
+    const addCourseHandler = (courseName, classYear) => {
+        dispatch(addCourse(courseName, classYear));
+    };
 
     return(
         <Background>
@@ -31,7 +40,7 @@ const AddClassScreen = props => {
                     </View>
                     <StandardButton
                         text="Save"
-                        onTap={()=> {console.log("Saved!")}}
+                        onTap={()=> addCourseHandler(courseName, classYear)}
                         containerStyle={{width:'85%'}}
                     />
                 </View>
