@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import Background from '../components/Background';
+import StandardButton from '../components/StandardButton';
 
 const AddClassScreen = props => {
     const [courseName, setCourseName] = useState('');
@@ -28,6 +29,11 @@ const AddClassScreen = props => {
                             value={classYear}
                         />
                     </View>
+                    <StandardButton
+                        text="Save"
+                        onTap={()=> {console.log("Saved!")}}
+                        containerStyle={{width:'85%'}}
+                    />
                 </View>
             </TouchableWithoutFeedback>
         </Background>
@@ -42,8 +48,7 @@ const styles = StyleSheet.create({
     },
     inputFieldContainer: {
         backgroundColor: 'rgba(0,0,0, 0.4)',
-        borderRadius: 20,
-        width: '75%',
+        width: '85%',
         height: 50,
         flexDirection: "row",
         alignItems: 'center',
