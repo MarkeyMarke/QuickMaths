@@ -71,7 +71,7 @@ const TeacherHomeScreen = props => {
                 <AddListItemButton
                     text='Create class'
                     onSelect={() => {
-                        console.log('Added item');
+                        props.navigation.navigate('AddClass');
                     }}
                 />
             </View>

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import Background from '../components/Background';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const AddClassScreen = props => {
     const [courseName, setCourseName] = useState('');
@@ -38,7 +37,7 @@ const AddClassScreen = props => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center'
     },
     inputFieldContainer: {

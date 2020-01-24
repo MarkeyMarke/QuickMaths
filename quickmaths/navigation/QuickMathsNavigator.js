@@ -1,6 +1,7 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -10,13 +11,14 @@ import StudentHomeScreen from '../screens/StudentHomeScreen';
 import ClassScreen from '../screens/ClassScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CustomDrawer from '../components/Drawer';
-
 import Colors from '../constants/Colors';
+import AddClassScreen from '../screens/AddClassScreen';
 
 const AppNavigator = createStackNavigator({
     StudentHomeScreen: StudentHomeScreen,
     TeacherHomeScreen: TeacherHomeScreen,
-    Class: ClassScreen
+    Class: ClassScreen,
+    AddClass: AddClassScreen
 }, {
     defaultNavigationOptions: {
         headerStyle: {
