@@ -8,6 +8,7 @@ import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
 import {addCourse} from '../store/actions/courses';
 import Colors from '../constants/Colors';
+import EditIcon from '../constants/EditIcon';
 
 const AddClassScreen = props => {
     const [courseName, setCourseName] = useState('');
@@ -31,6 +32,7 @@ const AddClassScreen = props => {
                             onChangeText={(text) => setCourseName(text)}
                             value={courseName}
                         />
+                        <EditIcon/>
                     </View>
                     <View style={styles.inputFieldContainer}>
                         <TextInput
@@ -40,6 +42,7 @@ const AddClassScreen = props => {
                             onChangeText={(text) => setClassYear(text)}
                             value={classYear}
                         />
+                        <EditIcon/>
                     </View>
                     <StandardButton
                         text="Save"
