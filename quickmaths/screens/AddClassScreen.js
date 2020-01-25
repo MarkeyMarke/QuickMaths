@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
+import {Item, HeaderButtons} from 'react-navigation-header-buttons';
+import HeaderButton from '../components/HeaderButton';
 
 import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
 import {addCourse} from '../store/actions/courses';
+import Colors from '../constants/Colors';
 
 const AddClassScreen = props => {
     const [courseName, setCourseName] = useState('');
@@ -50,6 +53,26 @@ const AddClassScreen = props => {
             </TouchableWithoutFeedback>
         </Background>
     );
+};
+
+AddClassScreen.navigationOptions = (navData) => {
+    return{
+        headerTitle: 'Courses',
+        headerLeftContainerStyle: {
+            backgroundColor: Colors.accentColor,
+        },
+        headerLeft: () => (
+               <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item 
+                        title="Menu" 
+                        iconName="md-menu" 
+                        onPress={() => {
+                            navData.navigation.toggleDrawer();
+                        }}
+                    />
+                </HeaderButtons>
+        )
+    };
 };
 
 const styles = StyleSheet.create({
