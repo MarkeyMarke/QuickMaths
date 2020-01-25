@@ -40,7 +40,10 @@ const AddClassScreen = props => {
                     </View>
                     <StandardButton
                         text="Save"
-                        onTap={()=> addCourseHandler(courseName, classYear)}
+                        onTap={()=> {
+                            addCourseHandler(courseName, classYear);
+                            props.navigation.replace('TeacherHomeScreen');
+                        }}
                         containerStyle={{width:'85%'}}
                     />
                 </View>
