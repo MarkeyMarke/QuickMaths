@@ -48,33 +48,33 @@ const TeacherHomeScreen = props => {
                 blurRadius={3}
                 resizeMode="cover"
         >
-            <View>
-                <SwipeListView 
-                    keyExtractor={(item, index) => item.id}
-                    data={courses} 
-                    renderItem={renderListItem}
-                    renderHiddenItem={(data, rowMap) => (
-                    <View style={styles.backRow}>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity
-                                style={styles.backButton}
-                                onPress={() => deleteCourseHandler(data.item.id)}
-                            >
-                                <Ionicons name="ios-trash" size={75} color="white"/>
-                            </TouchableOpacity>
-                        </View>
+            <SwipeListView 
+                keyExtractor={(item, index) => item.id}
+                data={courses} 
+                renderItem={renderListItem}
+                renderHiddenItem={(data, rowMap) => (
+                <View style={styles.backRow}>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            style={styles.backButton}
+                            onPress={() => deleteCourseHandler(data.item.id)}
+                        >
+                            <Ionicons name="ios-trash" size={75} color="white"/>
+                        </TouchableOpacity>
                     </View>
-                        
-                    )}
-                    leftOpenValue={100}
-                />
-                <AddListItemButton
-                    text='Create class'
-                    onSelect={() => {
-                        console.log('Added item');
-                    }}
-                />
-            </View>
+                </View>
+                    
+                )}
+                leftOpenValue={100}
+                ListFooterComponent= {
+                    <AddListItemButton
+                        text='Create class'
+                        onSelect={() => {
+                            props.navigation.replace('AddClass');
+                        }}
+                    />
+                }
+            />
         </ImageBackground>
     );
 };
