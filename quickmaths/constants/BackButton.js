@@ -2,9 +2,9 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 
-const BackButton = () => {
+const BackButton = props => {
     return(
-        <TouchableOpacity onPress={() => {console.log("Pressed!")}}>
+        <TouchableOpacity onPress={props.onTap}>
             <View style={styles.container}>
                 <View>
                     <Ionicons name="ios-play" color="white" size={30} style={styles.icon}/>

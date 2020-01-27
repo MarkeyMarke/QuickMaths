@@ -17,7 +17,7 @@ const ClassScreen = props => {
         <Background>
             <View style={styles.screen}>
                 <View style={styles.tabContainer}>
-                    <BackButton/>
+                    <BackButton onTap={() => {props.navigation.pop()}}/>
                     <TabButton>
                         <MaterialCommunityIcons name="clipboard-text-outline" size={30} color="white"/>
                     </TabButton>
