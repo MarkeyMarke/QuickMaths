@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Colors from '../constants/Colors';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
 
-const AssignmentsTab = props => {
+const TabButton = props => {
     const [active, setActive] = useState(false);
 
     const activeColor = {
@@ -12,14 +11,13 @@ const AssignmentsTab = props => {
 
     return(
         <TouchableWithoutFeedback
-            style={styles.button}  
             onPress={() => {
                 console.log("Pressed");
                 setActive(!active);
             }}
         >
             <View style={[styles.container, activeColor]}>
-                <MaterialCommunityIcons name="clipboard-text-outline"/>
+               {props.children}
             </View>
                
         </TouchableWithoutFeedback>
@@ -28,12 +26,12 @@ const AssignmentsTab = props => {
 
 const styles = StyleSheet.create({
     container: {
+        justifyContent: 'center',
         alignItems: 'center',
-        width: '25%'
+        width: '20%',
+        marginRight: 5,
+        borderRadius: 15
     },
-    button: {
-        width: '25%'
-    }
 });
 
-export default AssignmentsTab;
+export default TabButton;

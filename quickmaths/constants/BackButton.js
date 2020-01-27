@@ -7,7 +7,7 @@ const BackButton = () => {
         <TouchableOpacity onPress={() => {console.log("Pressed!")}}>
             <View style={styles.container}>
                 <View>
-                    <Ionicons name="ios-play" color="white" size={20} style={styles.icon}/>
+                    <Ionicons name="ios-play" color="white" size={30} style={styles.icon}/>
                 </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>Back</Text>
@@ -29,18 +29,19 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 0, height: 2},
         shadowRadius: 3,
         elevation: 3,
-        width: 55
+        width: 75,
+        marginRight: 5
     },
     icon: {
         transform: [{rotateY: "180deg"}]
     },
     textContainer: {
-        marginLeft: 2,
+        marginLeft: 5,
         marginBottom: 2
     },
     text: {
         color: "white",
-        fontSize: 15
+        fontSize: 20
     }
 });
 
