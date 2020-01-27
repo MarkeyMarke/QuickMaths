@@ -14,8 +14,18 @@ import CustomDrawer from '../components/Drawer';
 import Colors from '../constants/Colors';
 import AddClassScreen from '../screens/AddClassScreen';
 
-const AppNavigator = createStackNavigator({
+const StudentNavigator = createStackNavigator({
     StudentHomeScreen: StudentHomeScreen,
+}, {
+    defaultNavigationOptions: {
+        headerStyle: {
+            backgroundColor: Colors.primaryColor
+        },
+        headerTintColor: 'white'
+    }
+});
+
+const TeacherNavigator = createStackNavigator({
     TeacherHomeScreen: TeacherHomeScreen,
     Class: ClassScreen,
     AddClass: AddClassScreen
@@ -37,7 +47,8 @@ const AuthNavigator = createSwitchNavigator({
 
 const QuickMathsNavigator = createSwitchNavigator({
     Auth: AuthNavigator,
-    App: AppNavigator
+    Student: StudentNavigator,
+    Teacher: TeacherNavigator
 });
 
 const MainNavigator = createDrawerNavigator({
