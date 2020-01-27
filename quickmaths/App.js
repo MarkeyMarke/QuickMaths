@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {enableScreens} from 'react-native-screens';
-import {createStore, combineReducers} from 'redux';
-import {Provider} from 'react-redux';
+import { enableScreens } from 'react-native-screens';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import ReduxThunk from 'redux-thunk';
 
 import QuickMathsNavigator from './navigation/QuickMathsNavigator';
 import usersReducer from './store/reducers/users';
@@ -11,25 +12,25 @@ import coursesReducer from './store/reducers/courses';
 enableScreens();
 
 const rootReducer = combineReducers({
-  users: usersReducer,
-  courses: coursesReducer
+	users: usersReducer,
+	courses: coursesReducer
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
-  return (
-    <Provider store={store}>
-      <QuickMathsNavigator/>
-    </Provider>
-  );
+	return (
+		<Provider store={store}>
+			<QuickMathsNavigator />
+		</Provider>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+		alignItems: 'center',
+		justifyContent: 'center'
+	}
 });
