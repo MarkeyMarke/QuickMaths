@@ -8,12 +8,14 @@ import ReduxThunk from 'redux-thunk';
 import QuickMathsNavigator from './navigation/QuickMathsNavigator';
 import usersReducer from './store/reducers/users';
 import coursesReducer from './store/reducers/courses';
+import assignmentsReducer from './store/reducers/assignments';
 
 enableScreens();
 
 const rootReducer = combineReducers({
 	users: usersReducer,
-	courses: coursesReducer
+	courses: coursesReducer,
+	assignments: assignmentsReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
