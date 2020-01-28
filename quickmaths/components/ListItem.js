@@ -4,11 +4,11 @@ import {Ionicons} from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const ListItem = props => {
     return (
-        <View style={{...styles.container, ...styles.listItem}}>
+        <View style={{...styles.container, ...styles.listItem, ...props.containerStyle}}>
             <View style={styles.textContainer}>
-                <Text style={[styles.text, styles.topText]}>{props.topText}</Text>
-                <Text style={[styles.text, styles.middleText]}>{props.middleText}</Text>
-                <Text style={[styles.text, styles.bottomText]}>{props.bottomText}</Text>
+                <Text style={[styles.text, styles.topText, props.topTextStyle]}>{props.topText}</Text>
+                <Text style={[styles.text, styles.middleText, props.middleTextStyle]}>{props.middleText}</Text>
+                <Text style={[styles.text, styles.bottomText, props.bottomTextStyle]}>{props.bottomText}</Text>
             </View>
             
             <TouchableOpacity onPress={props.onSelect}>

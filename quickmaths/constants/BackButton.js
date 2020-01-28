@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 0, height: 2},
         shadowRadius: 3,
         elevation: 3,
-        width: 75,
-        marginRight: 5
+        width: 80,
+        marginRight: 10,
     },
     icon: {
         transform: [{rotateY: "180deg"}]
