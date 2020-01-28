@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -10,21 +10,43 @@ import TabButton from '../components/TabButton';
 
 const ClassScreen = props => {
     const cId = props.navigation.getParam('classId');
+    const [isAssignmentsActive, setIsAssignmentsActive] = useState(false);
+    const [isSubmissionsActive, setIsSubmissionsActive] = useState(false);
+    const [isRosterActive, setIsRosterActive] = useState(false);
     
     const selectedClass = COURSES.find(c => c.id === cId);
+
+    const onSelectAssignmentTab = () => {
+        setIsAssignmentsActive(true);
+        setIsSubmissionsActive(false);
+        setIsRosterActive(false);
+    };
+
+    const onSelectSubmissionsTab = () => {
+        setIsSubmissionsActive(true);
+        setIsAssignmentsActive(false);
+        setIsRosterActive(false);
+    };
+
+    const onSelectRosterTab = () => {
+        setIsRosterActive(true);
+        setIsSubmissionsActive(false);
+        setIsAssignmentsActive(false);
+        
+    };
 
     return(
         <Background>
             <View style={styles.screen}>
                 <View style={styles.tabContainer}>
                     <BackButton onTap={() => {props.navigation.pop()}}/>
-                    <TabButton>
+                    <TabButton active={isAssignmentsActive} onTap={onSelectAssignmentTab}>
                         <MaterialCommunityIcons name="clipboard-text-outline" size={30} color="white"/>
                     </TabButton>
-                    <TabButton>
+                    <TabButton active={isSubmissionsActive} onTap={onSelectSubmissionsTab}>
                         <Ionicons name="md-checkmark-circle" size={30} color="white"/>
                     </TabButton>
-                    <TabButton>
+                    <TabButton active={isRosterActive} onTap={onSelectRosterTab}>
                         <Ionicons name="ios-people" size={30} color="white"/>
                     </TabButton>
                 </View>
