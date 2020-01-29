@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Ionicons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -57,6 +57,19 @@ const ClassScreen = props => {
         );
     };
 
+    const renderSubmissionListItem = (itemData) => {
+        return (
+            <ListItem 
+                topText={itemData.item.title} 
+                middleText={"Due " + itemData.item.dueDate}
+                bottomText={itemData.item.submissions + " submissions missing"}
+                bottomTextStyle={{fontStyle:"italic"}}
+                containerStyle={{width:'95%'}}
+                onSelect={() => {console.log("pressed!")}}
+            />
+        );
+    }
+
     return(
         <Background>
             <View style={styles.screen}>
@@ -80,7 +93,12 @@ const ClassScreen = props => {
                         onAdd={() => {console.log("Added")}}
                         onDelete={deleteAssignmentHandler}
                     /> :
-                    isSubmissionsActive ? null :
+                    isSubmissionsActive ? 
+                    <FlatList
+                        keyExtractor={(item, index) => item.id}
+                        data={courseAssignments} 
+                        renderItem={renderSubmissionListItem}
+                    /> :
                     null
                 }
             </View>
