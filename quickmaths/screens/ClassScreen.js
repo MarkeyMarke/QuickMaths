@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {SwipeListView} from 'react-native-swipe-list-view';
 import {Ionicons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import {COURSES} from '../data/dummy-data';
 import Background from '../components/Background';
 import BackButton from '../constants/BackButton';
 import TabButton from '../components/TabButton';
 import ListItem from '../components/ListItem';
-import AddListItemButton from '../components/AddListItemButton';
+import SwipeableList from '../components/SwipeableList';
+import {deleteAssignment} from '../store/actions/assignments';
 
 const ClassScreen = props => {
-    const cId = props.navigation.getParam('classId');
     const [isAssignmentsActive, setIsAssignmentsActive] = useState(true);
     const [isSubmissionsActive, setIsSubmissionsActive] = useState(false);
     const [isRosterActive, setIsRosterActive] = useState(false);
     
     const courseAssignments = useSelector(state => state.assignments.assignments);
+
+    const dispatch = useDispatch();
+
+    const deleteAssignmentHandler = (item) => {
+        dispatch(deleteAssignment(item.id));
+    }
 
     const onSelectAssignmentTab = () => {
         setIsAssignmentsActive(true);
@@ -40,7 +44,7 @@ const ClassScreen = props => {
         
     };
 
-    const renderListItem = (itemData) => {
+    const renderAssignmentListItem = (itemData) => {
         return (
             <ListItem 
                 topText={itemData.item.title} 
@@ -52,38 +56,6 @@ const ClassScreen = props => {
             />
         );
     };
-
-    const RenderAssignments = () => {
-        return (
-        <SwipeListView 
-            keyExtractor={(item, index) => item.id}
-            data={courseAssignments} 
-            renderItem={renderListItem}
-            renderHiddenItem={(data, rowMap) => (
-            <View style={styles.backRow}>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={styles.backButton}
-                        onPress={() => {console.log("Delete")}}
-                    >
-                        <Ionicons name="ios-trash" size={75} color="white"/>
-                    </TouchableOpacity>
-                </View>
-            </View>
-                
-            )}
-            leftOpenValue={100}
-            ListFooterComponent= {
-                <AddListItemButton
-                    text='Create Assignment'
-                    containerStyle={{width:'95%'}}
-                    onSelect={() => {
-                        console.log('Added');
-                    }}
-                />
-            }
-        />
-    )};
 
     return(
         <Background>
@@ -101,7 +73,13 @@ const ClassScreen = props => {
                     </TabButton>
                 </View>
                 {
-                    isAssignmentsActive ? <RenderAssignments/> :
+                    isAssignmentsActive ? 
+                    <SwipeableList 
+                        data={courseAssignments} 
+                        renderItem={renderAssignmentListItem} 
+                        onAdd={() => {console.log("Added")}}
+                        onDelete={deleteAssignmentHandler}
+                    /> :
                     isSubmissionsActive ? null :
                     null
                 }
@@ -130,23 +108,6 @@ const styles = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
         marginTop: 30,
-    },
-    backRow:{
-        flexDirection:'row',
-        alignItems:'center',
-        flex:1,
-    },
-    buttonContainer:{
-        backgroundColor: 'red',
-        width: 75,
-        left: 20,
-        justifyContent: 'center',
-        marginTop: 20,
-        borderRadius: 10
-    },
-    backButton:{
-        alignItems: 'center',
-        
     },
 });
 

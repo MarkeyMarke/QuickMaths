@@ -17,7 +17,7 @@ const SwipeableList = props => {
                 <View style={[styles.buttonContainer, props.buttonContainerStyle]}>
                     <TouchableOpacity
                         style={[styles.backButton, props.backButtonStyle]}
-                        onPress={props.onDelete(data)}
+                        onPress={() => props.onDelete(data.item)}
                     >
                         <Ionicons name="ios-trash" size={75} color="white"/>
                     </TouchableOpacity>
