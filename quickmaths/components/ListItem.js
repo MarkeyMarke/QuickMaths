@@ -12,7 +12,7 @@ const ListItem = props => {
             </View>
             
             <TouchableOpacity onPress={props.onSelect}>
-                <View style={styles.buttonContainer}> 
+                <View style={[styles.buttonContainer, props.buttonContainerStyle]}> 
                     {props.icon}
                 </View>
             </TouchableOpacity >

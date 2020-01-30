@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {Ionicons} from '@expo/vector-icons';
+import {Ionicons, EvilIcons, AntDesign} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import SegmentedControlTab from "react-native-segmented-control-tab";
 
@@ -13,7 +13,7 @@ import ListItem from '../components/ListItem';
 import SwipeableList from '../components/SwipeableList';
 import {deleteAssignment} from '../store/actions/assignments';
 import Colors from '../constants/Colors';
-
+import AddListItemButton from '../components/AddListItemButton';
 
 const ClassScreen = props => {
     const [isAssignmentsActive, setIsAssignmentsActive] = useState(true);
@@ -56,8 +56,10 @@ const ClassScreen = props => {
                 middleText={"Due " + itemData.item.dueDate}
                 bottomText={itemData.item.status + " " + itemData.item.currentDate}
                 bottomTextStyle={{fontStyle:"italic"}}
-                containerStyle={{width:'95%'}}
+                containerStyle={styles.listItemContainerStyle}
                 onSelect={() => {console.log("pressed!")}}
+                icon = {<EvilIcons name="pencil" size={75} color='white'/>}
+                buttonContainerStyle={{marginTop: 5, marginLeft: 10}}
             />
         );
     };
@@ -69,8 +71,9 @@ const ClassScreen = props => {
                 middleText={"Due " + itemData.item.dueDate}
                 bottomText={itemData.item.submissions + " submissions missing"}
                 bottomTextStyle={{fontStyle:"italic"}}
-                containerStyle={{width:'95%'}}
+                containerStyle={{width:'97.5%', marginTop: 10}}
                 onSelect={() => {console.log("pressed!")}}
+                icon = {<Ionicons name="ios-play" size={75} color="white"/>}
             />
         );
     }
@@ -82,8 +85,23 @@ const ClassScreen = props => {
                     middleText={itemData.item.id}
                     bottomText={itemData.item.email}
                     bottomTextStyle={{fontStyle:"italic"}}
-                    containerStyle={{width:'95%'}}
+                    containerStyle={styles.listItemContainerStyle}
                     onSelect={() => {console.log("pressed!")}}
+            />
+        )
+    }
+
+    const renderStudentRequestListItem = (itemData) => {
+        return(
+            <ListItem 
+                    topText={itemData.item.name} 
+                    middleText={itemData.item.id}
+                    bottomText={itemData.item.email}
+                    bottomTextStyle={{fontStyle:"italic"}}
+                    containerStyle={styles.listItemContainerStyle}
+                    onSelect={() => {console.log("pressed!")}}
+                    icon = {<AntDesign name="plus" size={50} color="white"/>}
+                    buttonContainerStyle={{marginTop: 15, marginLeft: 15}}
             />
         )
     }
@@ -110,6 +128,14 @@ const ClassScreen = props => {
                         renderItem={renderAssignmentListItem} 
                         onAdd={() => {console.log("Added")}}
                         onDelete={deleteAssignmentHandler}
+                        buttonContainerStyle={styles.deleteButtonContainer}
+                        listFooterComponent= {
+                            <AddListItemButton
+                                text='Create Assignment'
+                                containerStyle={styles.addButtonContainer}
+                                onSelect={props.onAdd}
+                            />
+                        }
                     /> :
                     isSubmissionsActive ? 
                     <FlatList
@@ -128,12 +154,23 @@ const ClassScreen = props => {
                             borderRadius={0}
                             activeTabStyle={styles.segmentedActiveTabStyle}
                         />
-                        <SwipeableList
-                        data={students} 
-                        renderItem={renderStudentListItem} 
-                        onAdd={() => {console.log("Added")}}
-                        onDelete={() => {console.log("Deleted")}}
-                        />
+                        {selectedIndex === 0 ? 
+                            <SwipeableList
+                                data={students} 
+                                renderItem={renderStudentListItem} 
+                                onAdd={() => {console.log("Added")}}
+                                onDelete={() => {console.log("Deleted")}}
+                                buttonContainerStyle={styles.deleteButtonContainer}
+                            />
+                        :
+                            <SwipeableList
+                                data={students} 
+                                renderItem={renderStudentRequestListItem} 
+                                onAdd={() => {console.log("Added")}}
+                                onDelete={() => {console.log("Deleted")}}
+                                buttonContainerStyle={styles.deleteButtonContainer}
+                            />
+                        }
                     </View>
                 }
             </View>
@@ -161,6 +198,17 @@ const styles = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
         marginTop: 30,
+    },
+    listItemContainerStyle: {
+        width:'95%', 
+        marginTop:10
+    },
+    deleteButtonContainer: {
+        marginTop: 10
+    },
+    addButtonContainer:{
+        width:'95%',
+        marginTop: 10
     },
     segmentedTabsContainerStyle: {
         width: "95%",
