@@ -37,6 +37,9 @@ const TeacherHomeScreen = props => {
                         }
                     });
                 }}
+                icon = {
+                    <Ionicons name="ios-play" size={75} color="white"/>
+                }
             />
         );
     };
