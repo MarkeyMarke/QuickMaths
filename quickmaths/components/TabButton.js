@@ -5,7 +5,7 @@ import Colors from '../constants/Colors';
 const TabButton = props => {
 
     const activeColor = {
-        backgroundColor: props.active ? Colors.accentColor : Colors.primaryColor
+        backgroundColor: props.active ? Colors.primaryColor : Colors.accentColor
     };
 
     return(

@@ -12,6 +12,8 @@ import TabButton from '../components/TabButton';
 import ListItem from '../components/ListItem';
 import SwipeableList from '../components/SwipeableList';
 import {deleteAssignment} from '../store/actions/assignments';
+import Colors from '../constants/Colors';
+
 
 const ClassScreen = props => {
     const [isAssignmentsActive, setIsAssignmentsActive] = useState(true);
@@ -120,7 +122,17 @@ const ClassScreen = props => {
                             values={["Roster", "Requests"]}
                             selectedIndex={selectedIndex}
                             onTabPress={(index) => {setSelectedIndex(index)}}
-                            tabsContainerStyle={styles.tabsContainerStyle}
+                            tabsContainerStyle={styles.segmentedTabsContainerStyle}
+                            tabStyle={styles.segmentedTabStyle}
+                            tabTextStyle={styles.segmentedTabTextStyle}
+                            borderRadius={0}
+                            activeTabStyle={styles.segmentedActiveTabStyle}
+                        />
+                        <SwipeableList
+                        data={students} 
+                        renderItem={renderStudentListItem} 
+                        onAdd={() => {console.log("Added")}}
+                        onDelete={() => {console.log("Deleted")}}
                         />
                     </View>
                 }
@@ -150,9 +162,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 30,
     },
-    tabsContainerStyle: {
-        width: "95%"
-      },
+    segmentedTabsContainerStyle: {
+        width: "95%",
+        marginTop: 10,
+    },
+    segmentedTabStyle: {
+        backgroundColor: Colors.accentColor,
+        borderColor: 'transparent'
+    },
+    segmentedTabTextStyle: {
+        color: "white"
+    },
+    segmentedActiveTabStyle: {
+        backgroundColor: Colors.primaryColor
+    }
 });
 
 export default ClassScreen;
