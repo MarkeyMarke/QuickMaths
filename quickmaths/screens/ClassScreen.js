@@ -3,6 +3,7 @@ import {View, FlatList, StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Ionicons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import SegmentedControlTab from "react-native-segmented-control-tab";
 
 import {COURSES} from '../data/dummy-data';
 import Background from '../components/Background';
@@ -16,8 +17,10 @@ const ClassScreen = props => {
     const [isAssignmentsActive, setIsAssignmentsActive] = useState(true);
     const [isSubmissionsActive, setIsSubmissionsActive] = useState(false);
     const [isRosterActive, setIsRosterActive] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(0);
     
     const courseAssignments = useSelector(state => state.assignments.assignments);
+    const students = useSelector(state => state.students.students);
 
     const dispatch = useDispatch();
 
@@ -70,6 +73,19 @@ const ClassScreen = props => {
         );
     }
 
+    const renderStudentListItem = (itemData) => {
+        return(
+            <ListItem 
+                    topText={itemData.item.name} 
+                    middleText={itemData.item.id}
+                    bottomText={itemData.item.email}
+                    bottomTextStyle={{fontStyle:"italic"}}
+                    containerStyle={{width:'95%'}}
+                    onSelect={() => {console.log("pressed!")}}
+            />
+        )
+    }
+
     return(
         <Background>
             <View style={styles.screen}>
@@ -99,7 +115,14 @@ const ClassScreen = props => {
                         data={courseAssignments} 
                         renderItem={renderSubmissionListItem}
                     /> :
-                    null
+                    <View>
+                        <SegmentedControlTab 
+                            values={["Roster", "Requests"]}
+                            selectedIndex={selectedIndex}
+                            onTabPress={(index) => {setSelectedIndex(index)}}
+                            tabsContainerStyle={styles.tabsContainerStyle}
+                        />
+                    </View>
                 }
             </View>
         </Background>
@@ -127,6 +150,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 30,
     },
+    tabsContainerStyle: {
+        width: "95%"
+      },
 });
 
 export default ClassScreen;
