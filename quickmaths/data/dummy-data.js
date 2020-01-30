@@ -1,5 +1,6 @@
 import Assignment from '../models/Assignment';
 import Course from '../models/Courses';
+import Student from '../models/Student';
 
 export const COURSE_ASSIGNMENTS = [
     new Assignment('a1', 'Long Division HW', '9/12/19', 'Published', '7/20/19', 30),
@@ -17,4 +18,10 @@ export const STUDENT_ASSIGNMENTS = [
     new Assignment('a1', 'Long Division HW', 'Due 9/12/19', '0/5 problems', '7/20/19', 30),
     new Assignment('a2','Multiplication HW', 'Due 9/13/19', 'Completed', '7/20/19', 14),
     new Assignment('a3','Long Subtraction HW', 'Due 9/10/19', '1/3 problems', '7/29/19', 12),
+];
+
+export const STUDENTS = [
+    new Student('s1', 'Student Name', 'Student Email'),
+    new Student('s2', 'Student Name', 'Student Email'),
+    new Student('s3', 'Student Name', 'Student Email'),
 ];

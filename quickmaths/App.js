@@ -9,13 +9,15 @@ import QuickMathsNavigator from './navigation/QuickMathsNavigator';
 import usersReducer from './store/reducers/users';
 import coursesReducer from './store/reducers/courses';
 import assignmentsReducer from './store/reducers/assignments';
+import studentReducer from './store/reducers/students';
 
 enableScreens();
 
 const rootReducer = combineReducers({
 	users: usersReducer,
 	courses: coursesReducer,
-	assignments: assignmentsReducer
+	assignments: assignmentsReducer,
+	students: studentReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
