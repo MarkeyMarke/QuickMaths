@@ -4,8 +4,6 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {Ionicons} from '@expo/vector-icons';
 
-import AddListItemButton from '../components/AddListItemButton';
-
 const SwipeableList = props => {
     return (
         <SwipeListView 
@@ -26,13 +24,7 @@ const SwipeableList = props => {
                 
             )}
             leftOpenValue={100}
-            ListFooterComponent= {
-                <AddListItemButton
-                    text='Create Assignment'
-                    containerStyle={[styles.addButtonContainer, props.addButtonContainerStyle]}
-                    onSelect={props.onAdd}
-                />
-            }
+            ListFooterComponent= {props.listFooterComponent}
         />
     )
 }
@@ -54,9 +46,6 @@ const styles = StyleSheet.create({
     backButton:{
         alignItems: 'center',
     },
-    addButtonContainer:{
-        width:'95%'
-    }
 });
 
 export default SwipeableList; 
