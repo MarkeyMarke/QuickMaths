@@ -33,7 +33,7 @@ const TeacherHomeScreen = props => {
                     props.navigation.navigate({
                         routeName: 'Class',
                         params: {
-                            classId: itemData.item.id
+                            classTitle: itemData.item.title
                         }
                     });
                 }}

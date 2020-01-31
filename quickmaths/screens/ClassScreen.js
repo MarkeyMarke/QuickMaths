@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Ionicons, EvilIcons, AntDesign} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -14,6 +14,9 @@ import SwipeableList from '../components/SwipeableList';
 import {deleteAssignment} from '../store/actions/assignments';
 import Colors from '../constants/Colors';
 import AddListItemButton from '../components/AddListItemButton';
+import {Item, HeaderButtons} from 'react-navigation-header-buttons';
+import HeaderButton from '../components/HeaderButton';
+import EvilIconsHeaderButton from '../components/EvilIconsHeaderButton';
 
 const ClassScreen = props => {
     const [isAssignmentsActive, setIsAssignmentsActive] = useState(true);
@@ -180,12 +183,35 @@ const ClassScreen = props => {
 };
 
 ClassScreen.navigationOptions = (navigationData) =>  {
-    const cId = navigationData.navigation.getParam('classId');
-    
-    const selectedClass = COURSES.find(c => c.id === cId);
+    const selectedClassTitle = navigationData.navigation.getParam('classTitle');
 
     return {
-        headerTitle: selectedClass.title
+        headerTitle: selectedClassTitle,
+        headerLeftContainerStyle: {
+            backgroundColor: Colors.accentColor,
+        },
+        headerRight: () => (
+            <HeaderButtons HeaderButtonComponent={EvilIconsHeaderButton}>
+                 <Item 
+                     title="Edit" 
+                     iconName="pencil" 
+                     onPress={() => {
+                        console.log("edit");
+                     }}
+                 />
+             </HeaderButtons>
+        ),
+        headerLeft: () => (
+            <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                 <Item 
+                     title="Menu" 
+                     iconName="md-menu" 
+                     onPress={() => {
+                        navigationData.navigation.toggleDrawer();
+                     }}
+                 />
+             </HeaderButtons>
+     )
     };
 };
 
