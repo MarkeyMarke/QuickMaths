@@ -7,6 +7,7 @@ import HeaderButton from '../components/HeaderButton';
 import Background from '../components/Background';
 import { STUDENT_ASSIGNMENTS } from '../data/dummy-data';
 import ListItem from '../components/ListItem';
+import {Ionicons} from '@expo/vector-icons';
 
 const StudentHomeScreen = props => {
     const [assignments, setAssignments] = useState(STUDENT_ASSIGNMENTS);
@@ -20,6 +21,9 @@ const StudentHomeScreen = props => {
                 onSelect={() => {
                     console.log("I got clicked!");
                 }}
+                icon = {
+                    <Ionicons name="ios-play" size={75} color="white"/>
+                }
             />
         );
     };

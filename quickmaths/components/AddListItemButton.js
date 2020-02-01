@@ -5,7 +5,7 @@ import {Ionicons} from '@expo/vector-icons';
 
 const AddListItemButton = props => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, props.containerStyle]}>
             <View style={styles.textContainer}>
                 <Text style={styles.text}>{props.text}</Text>
             </View>
