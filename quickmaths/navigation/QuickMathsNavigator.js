@@ -45,15 +45,15 @@ const AuthNavigator = createSwitchNavigator({
     EmailRecovery: EmailRecoveryScreen
 });
 
-const QuickMathsNavigator = createSwitchNavigator({
-    Auth: AuthNavigator,
-    Student: StudentNavigator,
-    Teacher: TeacherNavigator
-});
-
 const MainNavigator = createDrawerNavigator({
-    Main: {
-        screen: QuickMathsNavigator,
+    Student: {
+        screen: StudentNavigator,
+        navigationOptions: {
+            drawerLabel: () => null,
+        }
+    },
+    Teacher: {
+        screen: TeacherNavigator,
         navigationOptions: {
             drawerLabel: () => null,
         }
@@ -66,4 +66,9 @@ const MainNavigator = createDrawerNavigator({
     contentComponent: CustomDrawer,
 });
 
-export default createAppContainer(MainNavigator);
+const QuickMathsNavigator = createSwitchNavigator({
+    Auth: AuthNavigator,
+    Drawer: MainNavigator
+});
+
+export default createAppContainer(QuickMathsNavigator);
