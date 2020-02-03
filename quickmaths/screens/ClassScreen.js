@@ -183,8 +183,8 @@ const ClassScreen = props => {
 };
 
 ClassScreen.navigationOptions = (navigationData) =>  {
-    const selectedClassTitle = navigationData.navigation.getParam('classTitle');
-
+    const course = navigationData.navigation.getParam('class');
+    const selectedClassTitle = course.title;
     return {
         headerTitle: selectedClassTitle,
         headerLeftContainerStyle: {
@@ -196,7 +196,13 @@ ClassScreen.navigationOptions = (navigationData) =>  {
                      title="Edit" 
                      iconName="pencil" 
                      onPress={() => {
-                        console.log("edit");
+                        navigationData.navigation.navigate({
+                            routeName: 'EditClass',
+                            params: {
+                                class: course
+                            }
+                        });
+                        
                      }}
                  />
              </HeaderButtons>

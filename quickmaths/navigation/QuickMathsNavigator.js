@@ -13,6 +13,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import CustomDrawer from '../components/Drawer';
 import Colors from '../constants/Colors';
 import AddClassScreen from '../screens/AddClassScreen';
+import EditClassScreen from '../screens/EditClassScreen';
 
 const StudentNavigator = createStackNavigator({
     StudentHomeScreen: StudentHomeScreen,
@@ -28,7 +29,8 @@ const StudentNavigator = createStackNavigator({
 const TeacherNavigator = createStackNavigator({
     TeacherHomeScreen: TeacherHomeScreen,
     Class: ClassScreen,
-    AddClass: AddClassScreen
+    AddClass: AddClassScreen,
+    EditClass: EditClassScreen
 }, {
     defaultNavigationOptions: {
         headerStyle: {
