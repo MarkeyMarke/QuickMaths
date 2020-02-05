@@ -1,17 +1,26 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Text, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import {Item, HeaderButtons} from 'react-navigation-header-buttons';
+import {useDispatch} from 'react-redux';
 
 import HeaderButton from '../components/HeaderButton';
 import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
 import Colors from '../constants/Colors';
 import EditIcon from '../constants/EditIcon';
+import {editCourse} from '../store/actions/courses';
 
 const EditClassScreen = props => {
     const course= props.navigation.getParam('class');
+
     const [courseName, setCourseName] = useState(course.title);
     const [classYear, setClassYear] = useState(course.classYear);
+
+    const dispatch = useDispatch();
+
+    const editCourseHandler = (id, courseName, classYear) => {
+        dispatch(editCourse(id, courseName, classYear));
+    };
 
     return(
         <Background>
@@ -43,8 +52,8 @@ const EditClassScreen = props => {
                     <StandardButton
                         text="Save"
                         onTap={()=> {
-                            addCourseHandler(courseName, classYear);
-                            props.navigation.replace('TeacherHomeScreen');
+                            editCourseHandler(course.id, courseName, classYear);
+                            props.navigation.pop();
                         }}
                         containerStyle={{width:'85%'}}
                     />
