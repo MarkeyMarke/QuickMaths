@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {Item, HeaderButtons} from 'react-navigation-header-buttons';
 
+import Colors from '../constants/Colors';
+import HeaderButton from '../components/HeaderButton';
 import Background from '../components/Background';
 import EditIcon from '../constants/EditIcon';
 import StandardButton from '../components/StandardButton';
@@ -71,10 +74,30 @@ const ProfileScreen = props => {
     );
 };
 
+ProfileScreen.navigationOptions = (navData) => {
+    return{
+        headerTitle: 'Profile',
+        headerLeftContainerStyle: {
+            backgroundColor: Colors.accentColor,
+        },
+        headerLeft: () => (
+               <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item 
+                        title="Menu" 
+                        iconName="md-menu" 
+                        onPress={() => {
+                            navData.navigation.toggleDrawer();
+                        }}
+                    />
+                </HeaderButtons>
+        )
+    };
+};
+
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center'
     },
     inputFieldContainer: {

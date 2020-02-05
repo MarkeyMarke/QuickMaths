@@ -13,8 +13,12 @@ import ProfileScreen from '../screens/ProfileScreen';
 import CustomDrawer from '../components/Drawer';
 import Colors from '../constants/Colors';
 import AddClassScreen from '../screens/AddClassScreen';
+import NoClassScreen from '../screens/NoClassScreen';
+import PendingClassScreen from '../screens/PendingClassScreen';
 
 const StudentNavigator = createStackNavigator({
+    NoClass: NoClassScreen,
+    Pending: PendingClassScreen,
     StudentHomeScreen: StudentHomeScreen,
 }, {
     defaultNavigationOptions: {
@@ -29,6 +33,17 @@ const TeacherNavigator = createStackNavigator({
     TeacherHomeScreen: TeacherHomeScreen,
     Class: ClassScreen,
     AddClass: AddClassScreen
+}, {
+    defaultNavigationOptions: {
+        headerStyle: {
+            backgroundColor: Colors.primaryColor
+        },
+        headerTintColor: 'white'
+    }
+});
+
+const ProfileNavigator = createStackNavigator({
+    Profile: ProfileScreen
 }, {
     defaultNavigationOptions: {
         headerStyle: {
@@ -58,7 +73,7 @@ const MainNavigator = createDrawerNavigator({
             drawerLabel: () => null,
         }
     },
-    Profile: ProfileScreen,
+    Profile: ProfileNavigator,
 }, {
     drawerWidth: '60%',
     drawerBackgroundColor: Colors.accentColor,
