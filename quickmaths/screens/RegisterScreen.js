@@ -36,7 +36,7 @@ const RegisterScreen = props => {
         else{
             signInAsStudentHandler();
         }
-        props.navigation.navigate(selected ? 'TeacherHomeScreen' : 'StudentHomeScreen');
+        props.navigation.navigate(selected ? 'TeacherHomeScreen' : 'NoClass');
     }
 
     const onSelect = () => {

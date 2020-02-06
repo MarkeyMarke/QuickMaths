@@ -7,7 +7,7 @@ import HeaderButton from '../components/HeaderButton';
 import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
 
-const PendingClassScreen = () => {
+const PendingClassScreen = props => {
     return (
         <Background>
             <View style={styles.screen}>
@@ -19,7 +19,7 @@ const PendingClassScreen = () => {
                     text="Cancel"
                     onTap={()=> {
                         console.log('Cancel');
-                        //props.navigation.replace('TeacherHomeScreen');
+                        props.navigation.replace('StudentHomeScreen');
                     }}
                 />
             </View>

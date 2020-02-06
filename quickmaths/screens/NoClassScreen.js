@@ -7,7 +7,7 @@ import HeaderButton from '../components/HeaderButton';
 import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
 
-const NoClassScreen = () => {
+const NoClassScreen = props => {
     const [courseCode, setCourseCode] = useState('');
 
     return (
@@ -30,7 +30,7 @@ const NoClassScreen = () => {
                     text="Join"
                     onTap={()=> {
                         console.log('Join');
-                        //props.navigation.replace('TeacherHomeScreen');
+                        props.navigation.replace('Pending');
                     }}
                 />
             </View>
