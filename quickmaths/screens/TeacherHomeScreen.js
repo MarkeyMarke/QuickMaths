@@ -13,6 +13,7 @@ import AddListItemButton from '../components/AddListItemButton';
 import {deleteCourse} from '../store/actions/courses';
 
 const TeacherHomeScreen = props => {
+    const [refresh, setRefresh] = useState(false);
 
     const courses = useSelector(state => state.courses.courses);
 
@@ -33,7 +34,8 @@ const TeacherHomeScreen = props => {
                     props.navigation.navigate({
                         routeName: 'Class',
                         params: {
-                            classTitle: itemData.item.title
+                            class: itemData.item,
+                            refresh: doRefresh
                         }
                     });
                 }}
@@ -43,6 +45,10 @@ const TeacherHomeScreen = props => {
             />
         );
     };
+
+    const doRefresh = () => {
+        setRefresh(!refresh);
+    }
 
     return(
         <ImageBackground 

@@ -9,3 +9,9 @@ export const ADD_COURSE = 'ADD_COURSE';
 export const addCourse = (name, year) => {
     return {type: ADD_COURSE, courseName: name, classYear: year}
 }
+
+export const EDIT_COURSE = 'EDIT_COURSE';
+
+export const editCourse = (id, name, year) => {
+    return {type: EDIT_COURSE, courseId: id, courseName: name, classYear: year}
+}
