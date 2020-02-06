@@ -1,6 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {Item, HeaderButtons} from 'react-navigation-header-buttons';
 
+import Colors from '../constants/Colors';
+import HeaderButton from '../components/HeaderButton';
 import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
 
@@ -23,6 +26,26 @@ const PendingClassScreen = () => {
         </Background>
     );
 }
+
+PendingClassScreen.navigationOptions = (navData) => {
+    return{
+        headerTitle: 'Find a class',
+        headerLeftContainerStyle: {
+            backgroundColor: Colors.accentColor,
+        },
+        headerLeft: () => (
+               <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item 
+                        title="Menu" 
+                        iconName="md-menu" 
+                        onPress={() => {
+                            navData.navigation.toggleDrawer();
+                        }}
+                    />
+                </HeaderButtons>
+        )
+    };
+};
 
 const styles = StyleSheet.create({
     screen: {
