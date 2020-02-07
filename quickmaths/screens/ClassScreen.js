@@ -113,7 +113,10 @@ const ClassScreen = props => {
         <Background>
             <View style={styles.screen}>
                 <View style={styles.tabContainer}>
-                    <BackButton onTap={() => {props.navigation.pop()}}/>
+                    <BackButton onTap={() => {
+                        props.navigation.state.params.refresh();
+                        props.navigation.pop();
+                        }}/>
                     <TabButton active={isAssignmentsActive} onTap={onSelectAssignmentTab}>
                         <MaterialCommunityIcons name="clipboard-text-outline" size={30} color="white"/>
                     </TabButton>
@@ -183,8 +186,8 @@ const ClassScreen = props => {
 };
 
 ClassScreen.navigationOptions = (navigationData) =>  {
-    const selectedClassTitle = navigationData.navigation.getParam('classTitle');
-
+    const course = navigationData.navigation.getParam('class');
+    const selectedClassTitle = course.title;
     return {
         headerTitle: selectedClassTitle,
         headerLeftContainerStyle: {
@@ -196,7 +199,13 @@ ClassScreen.navigationOptions = (navigationData) =>  {
                      title="Edit" 
                      iconName="pencil" 
                      onPress={() => {
-                        console.log("edit");
+                        navigationData.navigation.navigate({
+                            routeName: 'EditClass',
+                            params: {
+                                class: course
+                            }
+                        });
+                        
                      }}
                  />
              </HeaderButtons>
