@@ -1,17 +1,19 @@
 import React from 'react';
-import {View, Text, Button, ImageBackground, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
+import AppTitle from '../constants/AppTitle';
+import StandardButton from '../components/StandardButton';
 import Background from '../components/Background';
 
 const HomeScreen = props => {
     return(
         <Background >
             <View style={styles.screen}>
-                <Text>The Home Screen!</Text>
-                <Button title="Sign In" onPress={() => {
+                <AppTitle/>
+                <StandardButton text="Sign In" onTap={() => {
                     props.navigation.navigate('Login');
                 }}/>
-                <Button title="Register" onPress={() => {
+                <StandardButton text="Register" onTap={() => {
                     props.navigation.navigate('Register');
                 }}/>
             </View>
