@@ -1,4 +1,4 @@
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
@@ -17,75 +17,87 @@ import NoClassScreen from '../screens/NoClassScreen';
 import PendingClassScreen from '../screens/PendingClassScreen';
 import EditClassScreen from '../screens/EditClassScreen';
 
-const StudentNavigator = createStackNavigator({
-    NoClass: NoClassScreen,
-    Pending: PendingClassScreen,
-    StudentHomeScreen: StudentHomeScreen,
-}, {
-    defaultNavigationOptions: {
-        headerStyle: {
-            backgroundColor: Colors.primaryColor
-        },
-        headerTintColor: 'white'
-    }
-});
+const StudentNavigator = createStackNavigator(
+	{
+		NoClass: NoClassScreen,
+		Pending: PendingClassScreen,
+		StudentHomeScreen: StudentHomeScreen
+	},
+	{
+		defaultNavigationOptions: {
+			headerStyle: {
+				backgroundColor: Colors.primaryColor
+			},
+			headerTintColor: 'white'
+		}
+	}
+);
 
-const TeacherNavigator = createStackNavigator({
-    TeacherHomeScreen: TeacherHomeScreen,
-    Class: ClassScreen,
-    AddClass: AddClassScreen,
-    EditClass: EditClassScreen
-}, {
-    defaultNavigationOptions: {
-        headerStyle: {
-            backgroundColor: Colors.primaryColor
-        },
-        headerTintColor: 'white'
-    }
-});
+const TeacherNavigator = createStackNavigator(
+	{
+		TeacherHomeScreen: TeacherHomeScreen,
+		Class: ClassScreen,
+		AddClass: AddClassScreen,
+		EditClass: EditClassScreen
+	},
+	{
+		defaultNavigationOptions: {
+			headerStyle: {
+				backgroundColor: Colors.primaryColor
+			},
+			headerTintColor: 'white'
+		}
+	}
+);
 
-const ProfileNavigator = createStackNavigator({
-    Profile: ProfileScreen
-}, {
-    defaultNavigationOptions: {
-        headerStyle: {
-            backgroundColor: Colors.primaryColor
-        },
-        headerTintColor: 'white'
-    }
-});
+const ProfileNavigator = createStackNavigator(
+	{
+		Profile: ProfileScreen
+	},
+	{
+		defaultNavigationOptions: {
+			headerStyle: {
+				backgroundColor: Colors.primaryColor
+			},
+			headerTintColor: 'white'
+		}
+	}
+);
 
 const AuthNavigator = createSwitchNavigator({
-    Home: HomeScreen,
-    Login: LoginScreen,
-    Register: RegisterScreen,
-    EmailRecovery: EmailRecoveryScreen
+	Home: HomeScreen,
+	Login: LoginScreen,
+	Register: RegisterScreen,
+	EmailRecovery: EmailRecoveryScreen
 });
 
-const MainNavigator = createDrawerNavigator({
-    Student: {
-        screen: StudentNavigator,
-        navigationOptions: {
-            drawerLabel: () => null,
-        }
-    },
-    Teacher: {
-        screen: TeacherNavigator,
-        navigationOptions: {
-            drawerLabel: () => null,
-        }
-    },
-    Profile: ProfileNavigator,
-}, {
-    drawerWidth: '60%',
-    drawerBackgroundColor: Colors.accentColor,
-    overlayColor: 1,
-    contentComponent: CustomDrawer,
-});
+const MainNavigator = createDrawerNavigator(
+	{
+		Student: {
+			screen: StudentNavigator,
+			navigationOptions: {
+				drawerLabel: () => null
+			}
+		},
+		Teacher: {
+			screen: TeacherNavigator,
+			navigationOptions: {
+				drawerLabel: () => null
+			}
+		},
+		Profile: ProfileNavigator
+	},
+	{
+		drawerWidth: '60%',
+		drawerBackgroundColor: Colors.accentColor,
+		overlayColor: 1,
+		contentComponent: CustomDrawer
+	}
+);
 
 const QuickMathsNavigator = createSwitchNavigator({
-    Auth: AuthNavigator,
-    Drawer: MainNavigator
+	Auth: AuthNavigator,
+	Drawer: MainNavigator
 });
 
 export default createAppContainer(QuickMathsNavigator);
