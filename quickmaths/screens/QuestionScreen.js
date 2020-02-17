@@ -8,7 +8,7 @@ import StandardButton from '../components/StandardButton';
 import Colors from '../constants/Colors';
 import EditIcon from '../constants/EditIcon';
 
-const AddQuestionScreen = props => {
+const QuestionScreen = props => {
     const item = props.navigation.getParam('question');
 
     const [question, setQuestion] =  item ? useState(item.question) : useState('');
@@ -60,9 +60,9 @@ const AddQuestionScreen = props => {
     );
 };
 
-AddQuestionScreen.navigationOptions = (navData) => {
+QuestionScreen.navigationOptions = (navData) => {
     return{
-        headerTitle: 'Courses',
+        headerTitle: 'Question',
         headerLeftContainerStyle: {
             backgroundColor: Colors.accentColor,
         },
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddQuestionScreen;
+export default QuestionScreen;
