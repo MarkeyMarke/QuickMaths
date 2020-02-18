@@ -10,7 +10,7 @@ import Question from '../models/Question';
 import ListItem from '../components/ListItem';
 import {EvilIcons} from '@expo/vector-icons';
 import StandardButton from '../components/StandardButton';
-import {addAssignment} from '../store/actions/assignments';
+import {addAssignment, editAssignment} from '../store/actions/assignments';
 
 const AddAssignmentScreen = props => {
     const item = props.navigation.getParam('assignment');
@@ -27,7 +27,11 @@ const AddAssignmentScreen = props => {
 
     const addAssignmentHandler = () => {
         dispatch(addAssignment(assignmentName, date, questions));
-    }
+    };
+
+    const editAssignmentHandler = () => {
+        dispatch(editAssignment(item.id, assignmentName, date, questions));
+    };
 
     const renderQuestionListItem = (itemData) => {
         return (
@@ -167,7 +171,13 @@ const AddAssignmentScreen = props => {
                             <StandardButton
                                 text="Save"
                                 containerStyle={styles.saveButtonContainer}
-                                onTap={() => addAssignmentHandler()}
+                                onTap={() => {
+                                    if(item){
+                                        editAssignmentHandler();
+                                    } else {
+                                        addAssignmentHandler();
+                                    }
+                                }}
                             />
                         </View>
                     }
