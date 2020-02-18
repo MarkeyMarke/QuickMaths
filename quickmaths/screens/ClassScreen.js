@@ -132,14 +132,13 @@ const ClassScreen = props => {
                     <SwipeableList 
                         data={courseAssignments} 
                         renderItem={renderAssignmentListItem} 
-                        onAdd={() => {console.log("Added")}}
                         onDelete={deleteAssignmentHandler}
                         buttonContainerStyle={styles.deleteButtonContainer}
                         listFooterComponent= {
                             <AddListItemButton
                                 text='Create Assignment'
                                 containerStyle={styles.addButtonContainer}
-                                onSelect={props.onAdd}
+                                onSelect={() => {props.navigation.navigate('AddAssignment');}}
                             />
                         }
                     /> :
