@@ -13,18 +13,20 @@ import StandardButton from '../components/StandardButton';
 import {addAssignment} from '../store/actions/assignments';
 
 const AddAssignmentScreen = props => {
-    const [assignmentName, setAssignmentName] = useState('');
-    const [questions, setQuestions] = useState([]);
+    const item = props.navigation.getParam('assignment');
+
+    const [assignmentName, setAssignmentName] = item ? useState(item.title) : useState('');
+    const [questions, setQuestions] = item ? useState(item.questions) : useState([]);
     const [id, setID] = useState(questions.length +1);
     const [refresh, setRefresh] = useState(false);
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = item ? useState(item.dueDate) : useState(new Date());
     const [show, setShow] = useState(false);
-    const [dateText, setDateText] = useState(null);
+    const [dateText, setDateText] = item ? useState(item.getDueDateText()) : useState(null);
 
     const dispatch = useDispatch();
 
     const addAssignmentHandler = () => {
-        dispatch(addAssignment(assignmentName, dateText, questions));
+        dispatch(addAssignment(assignmentName, date, questions));
     }
 
     const renderQuestionListItem = (itemData) => {
@@ -90,7 +92,7 @@ const AddAssignmentScreen = props => {
                 text="Set Due Date"
                 onTap={() => {
                     setShow(false);
-                    setDateText((date.getMonth()+1).toString()+'/'+date.getDate().toString()+'/'+date.getFullYear().toString())
+                    setDateText((date.getMonth()+1).toString()+'/'+date.getDate().toString()+'/'+date.getFullYear().toString());
                 }}
                 containerStyle={{alignSelf:'center'}}
             />
