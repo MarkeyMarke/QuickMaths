@@ -4,9 +4,7 @@ import {StyleSheet, View, Button} from 'react-native';
 const AssignmentScreen = props => {
     return(
         <View style={styles.screen}>
-            <Button onPress={
-                console.log('Pressed!')
-            }/>
+            <Button title="Back" onPress={() => {props.navigation.pop()}}/>
         </View>
     );
 };
