@@ -23,6 +23,7 @@ const ClassScreen = props => {
     const [isSubmissionsActive, setIsSubmissionsActive] = useState(false);
     const [isRosterActive, setIsRosterActive] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [refresh, setRefresh] = useState(false);
     
     const courseAssignments = useSelector(state => state.assignments.assignments);
     const students = useSelector(state => state.students.students);
@@ -52,6 +53,10 @@ const ClassScreen = props => {
         
     };
 
+    const doRefresh = () => {
+        setRefresh(!refresh);
+    }
+
     const renderAssignmentListItem = (itemData) => {
         return (
             <ListItem 
@@ -64,7 +69,8 @@ const ClassScreen = props => {
                     props.navigation.navigate({
                         routeName: 'AddAssignment',
                         params: {
-                            assignment: itemData.item
+                            assignment: itemData.item,
+                            refresh: doRefresh
                         }
                     });
                 }}
@@ -145,7 +151,14 @@ const ClassScreen = props => {
                             <AddListItemButton
                                 text='Create Assignment'
                                 containerStyle={styles.addButtonContainer}
-                                onSelect={() => {props.navigation.navigate('AddAssignment');}}
+                                onSelect={() => {
+                                    props.navigation.navigate({
+                                        routeName: 'AddAssignment',
+                                        params: {
+                                            refresh: doRefresh
+                                        }
+                                    });
+                                }}
                             />
                         }
                     /> :

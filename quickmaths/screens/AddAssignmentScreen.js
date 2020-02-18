@@ -177,6 +177,8 @@ const AddAssignmentScreen = props => {
                                     } else {
                                         addAssignmentHandler();
                                     }
+                                    props.navigation.state.params.refresh();
+                                    props.navigation.pop();
                                 }}
                             />
                         </View>
