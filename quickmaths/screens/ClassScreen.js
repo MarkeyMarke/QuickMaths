@@ -56,11 +56,18 @@ const ClassScreen = props => {
         return (
             <ListItem 
                 topText={itemData.item.title} 
-                middleText={"Due " + itemData.item.dueDate}
+                middleText={"Due " + itemData.item.getDueDateText()}
                 bottomText={itemData.item.status + " " + itemData.item.currentDate}
                 bottomTextStyle={{fontStyle:"italic"}}
                 containerStyle={styles.listItemContainerStyle}
-                onSelect={() => {console.log("pressed!")}}
+                onSelect={() => {
+                    props.navigation.navigate({
+                        routeName: 'AddAssignment',
+                        params: {
+                            assignment: itemData.item
+                        }
+                    });
+                }}
                 icon = {<EvilIcons name="pencil" size={75} color='white'/>}
                 buttonContainerStyle={{marginTop: 5, marginLeft: 10}}
             />
@@ -71,7 +78,7 @@ const ClassScreen = props => {
         return (
             <ListItem 
                 topText={itemData.item.title} 
-                middleText={"Due " + itemData.item.dueDate}
+                middleText={"Due " + itemData.item.getDueDateText()}
                 bottomText={itemData.item.submissions + " submissions missing"}
                 bottomTextStyle={{fontStyle:"italic"}}
                 containerStyle={{width:'97.5%', marginTop: 10}}

@@ -3,9 +3,9 @@ import Course from '../models/Courses';
 import Student from '../models/Student';
 
 export const COURSE_ASSIGNMENTS = [
-    new Assignment('a1', 'Long Division HW', '9/12/19', 'Published', '7/20/19', 30, []),
-    new Assignment('a2','Long Addition HW', '9/13/19', 'Published', '7/20/19', 23, []),
-    new Assignment('a3','Mixed Math HW', '9/25/19', 'Drafted', '7/29/19', 1, []),
+    new Assignment('a1', 'Long Division HW', new Date('December 17, 2020 03:24:00'), 'Published', '7/20/19', 30, []),
+    new Assignment('a2','Long Addition HW', new Date('December 25, 2020 03:24:00'), 'Published', '7/20/19', 23, []),
+    new Assignment('a3','Mixed Math HW', new Date('December 1, 2020 03:24:00'), 'Drafted', '7/29/19', 1, []),
 ];
 
 export const COURSES = [
