@@ -128,6 +128,8 @@ const ClassScreen = props => {
 				onSelect={() => {
 					console.log('pressed!');
 				}}
+				icon={<AntDesign name='plus' size={50} color='white' />}
+				buttonContainerStyle={{ marginTop: 15, marginLeft: 15 }}
 			/>
 		);
 	};
