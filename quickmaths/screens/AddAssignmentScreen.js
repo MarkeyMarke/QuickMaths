@@ -172,6 +172,11 @@ const AddAssignmentScreen = props => {
                                 text="Save"
                                 containerStyle={styles.saveButtonContainer}
                                 onTap={() => {
+                                    if(questions.length == 0)
+                                    {
+                                        alert("Please add a Question first!");
+                                        return;
+                                    }
                                     if(item){
                                         editAssignmentHandler();
                                     } else {
