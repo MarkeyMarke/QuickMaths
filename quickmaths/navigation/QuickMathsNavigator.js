@@ -18,11 +18,13 @@ import PendingClassScreen from '../screens/PendingClassScreen';
 import EditClassScreen from '../screens/EditClassScreen';
 import AddAssignmentScreen from '../screens/AddAssignmentScreen';
 import QuestionScreen from '../screens/QuestionScreen';
+import AssignmentScreen from '../screens/AssignmentScreen';
 
 const StudentNavigator = createStackNavigator({
     NoClass: NoClassScreen,
     Pending: PendingClassScreen,
     StudentHomeScreen: StudentHomeScreen,
+    Assignment: AssignmentScreen
 }, {
     defaultNavigationOptions: {
         headerStyle: {

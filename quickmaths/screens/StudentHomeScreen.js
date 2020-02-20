@@ -20,6 +20,7 @@ const StudentHomeScreen = props => {
                 bottomText={itemData.item.status}
                 onSelect={() => {
                     console.log("I got clicked!");
+                    props.navigation.navigate('Assignment');
                 }}
                 icon = {
                     <Ionicons name="ios-play" size={75} color="white"/>
@@ -53,6 +54,7 @@ StudentHomeScreen.navigationOptions = (navData) => {
         headerLeftContainerStyle: {
             backgroundColor: Colors.accentColor,
         },
+        gestureEnabled: false,
         headerLeft: () => (
                <HeaderButtons HeaderButtonComponent={HeaderButton}>
                     <Item 

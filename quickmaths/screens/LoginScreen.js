@@ -12,8 +12,9 @@ const LoginScreen = props => {
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
 	const [ error, setError ] = useState();
-	const dispatch = useDispatch();
+	const [ submitted, setSubmitted ] = useState(false);
 	const isTeacher = useSelector(state => state.users.isTeacher);
+	const dispatch = useDispatch();
 	//Function For An Allert
 	useEffect(
 		() => {
@@ -23,6 +24,21 @@ const LoginScreen = props => {
 		},
 		[ error ]
 	);
+
+	useEffect(
+		() => {
+			if (submitted) {
+				if (isTeacher)
+					//Teacher Home Page
+					props.navigation.navigate('TeacherHomeScreen');
+				else
+					//Student Home Page
+					props.navigation.navigate('StudentHomeScreen');
+			}
+		},
+		[ submitted ]
+	);
+
 	//Function For Login
 	const onLogin = async () => {
 		setError(null);
@@ -38,12 +54,7 @@ const LoginScreen = props => {
 				}
             }
             */
-			if (isTeacher)
-				//Teacher Home Page
-				props.navigation.navigate('TeacherHomeScreen');
-			else
-				//Student Home Page
-				props.navigation.navigate('StudentHomeScreen');
+			setSubmitted(true);
 		} catch (err) {
 			setError(err.message);
 		}

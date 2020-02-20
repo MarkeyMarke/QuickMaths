@@ -1,6 +1,7 @@
 import Assignment from '../models/Assignment';
 import Course from '../models/Courses';
 import Student from '../models/Student';
+import Remaining from '../models/Remaining';
 
 export const COURSE_ASSIGNMENTS = [
     new Assignment('a1', 'Long Division HW', new Date('December 17, 2020 03:24:00'), 'Published', '7/20/19', 30, []),
@@ -9,9 +10,9 @@ export const COURSE_ASSIGNMENTS = [
 ];
 
 export const COURSES = [
-    new Course('c1', "Ms. Honda's Class", 'Class of 2017', '123456789'),
-    new Course('c2', "Ms. Honda's Class", 'Class of 2018', '123456789'),
-    new Course('c3', "Ms. Honda's Class", 'Class of 2019', '123456789')
+	new Course('c1', "Ms. Honda's Class", 'Class of 2017', '123456789'),
+	new Course('c2', "Ms. Honda's Class", 'Class of 2018', '123456789'),
+	new Course('c3', "Ms. Honda's Class", 'Class of 2019', '123456789')
 ];
 
 export const STUDENT_ASSIGNMENTS = [
@@ -21,7 +22,13 @@ export const STUDENT_ASSIGNMENTS = [
 ];
 
 export const STUDENTS = [
-    new Student('s1', 'Student Name', 'Student Email'),
-    new Student('s2', 'Student Name', 'Student Email'),
-    new Student('s3', 'Student Name', 'Student Email'),
+	new Student('s1', 'Student Name', 'Student Email'),
+	new Student('s2', 'Student Name', 'Student Email'),
+	new Student('s3', 'Student Name', 'Student Email')
+];
+
+export const STUDENT_REMAINING = [
+	new Remaining('s1', 'Student Name', 'Student ID', 'Completed'),
+	new Remaining('s2', 'Student Name', 'Student ID', 'Incompleted'),
+	new Remaining('s3', 'Student Name', 'Student ID', 'Incompleted')
 ];
