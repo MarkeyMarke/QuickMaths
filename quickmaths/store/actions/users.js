@@ -3,6 +3,14 @@ export const SIGN_OUT = 'SIGN_OUT';
 export const SIGN_IN_AS_TEACHER = 'SIGN_IN_AS_TEACHER';
 export const SIGN_IN_AS_STUDENT = 'SIGN_IN_AS_STUDENT';
 
+import { API_KEY, PROJECT_ID } from 'react-native-dotenv';
+export const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
+export const GETDATA_URL = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`;
+export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
+export const EMAILVERIFICATION_URL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`;
+export const FORGETPASSWORD_URL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`;
+export const CHECKUSER_URL = `https://${PROJECT_ID}.firebaseio.com/users.json`;
+
 //Function For Validating Email
 function validateEmail(email) {
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -26,20 +34,17 @@ export const signIn = (email, password) => {
 			throw new Error(message);
 		}
 		//Sign In, using Firebase API
-		const response = await fetch(
-			'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyANoan0dDcv0SrGib8fa3S2qLYiflt2_dY',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					email: email,
-					password: password,
-					returnSecureToken: true
-				})
-			}
-		);
+		const response = await fetch(SIGNIN_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: email,
+				password: password,
+				returnSecureToken: true
+			})
+		});
 		//Handling The Sign In Error API
 		if (!response.ok) {
 			const errorResData = await response.json();
@@ -54,18 +59,15 @@ export const signIn = (email, password) => {
 		}
 		//Get User Data, using Firebase API
 		const resData = await response.json();
-		const getUserData = await fetch(
-			'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyANoan0dDcv0SrGib8fa3S2qLYiflt2_dY',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					idToken: resData.idToken
-				})
-			}
-		);
+		const getUserData = await fetch(GETDATA_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				idToken: resData.idToken
+			})
+		});
 		const getUserDataArray = await getUserData.json();
 		//Handling Verification Email Error API
 		if (!getUserDataArray.users[0].emailVerified) {
@@ -73,7 +75,7 @@ export const signIn = (email, password) => {
 			throw new Error(message);
 		}
 		//Check User
-		const getUser = await fetch('https://quickmaths-bc73a.firebaseio.com/users.json');
+		const getUser = await fetch(CHECKUSER_URL);
 		const resUserData = await getUser.json();
 		var isTeacher = true;
 		for (const key in resUserData) {
@@ -114,20 +116,17 @@ export const signUp = (email, fullName, userID, password, selected) => {
 			throw new Error(message);
 		}
 		//Sign Up, using Firebase API
-		const response = await fetch(
-			'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyANoan0dDcv0SrGib8fa3S2qLYiflt2_dY',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					email: email,
-					password: password,
-					returnSecureToken: true
-				})
-			}
-		);
+		const response = await fetch(SIGNUP_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: email,
+				password: password,
+				returnSecureToken: true
+			})
+		});
 		//Handling Sign Up Error API
 		if (!response.ok) {
 			const errorResData = await response.json();
@@ -140,19 +139,16 @@ export const signUp = (email, fullName, userID, password, selected) => {
 		}
 		const resData = await response.json();
 		//Send Email Verification, using Firebase API
-		const sendEmailVerification = await fetch(
-			'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyANoan0dDcv0SrGib8fa3S2qLYiflt2_dY',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					requestType: 'VERIFY_EMAIL',
-					idToken: resData.idToken
-				})
-			}
-		);
+		const sendEmailVerification = await fetch(EMAILVERIFICATION_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				requestType: 'VERIFY_EMAIL',
+				idToken: resData.idToken
+			})
+		});
 		//Handling Email Verification Error API
 		if (!sendEmailVerification.ok) {
 			const errorEmailData = await sendEmailVerification.json();
@@ -164,7 +160,7 @@ export const signUp = (email, fullName, userID, password, selected) => {
 			throw new Error(message);
 		}
 		//Post New User to Firebase
-		const createTeacherUser = await fetch('https://quickmaths-bc73a.firebaseio.com/users.json', {
+		const createTeacherUser = await fetch(CHECKUSER_URL, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -195,19 +191,16 @@ export const forgetPassword = email => {
 			throw new Error(message);
 		}
 		//Forget Password, using Firebase API
-		const response = await fetch(
-			'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyANoan0dDcv0SrGib8fa3S2qLYiflt2_dY',
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					requestType: 'PASSWORD_RESET',
-					email: email
-				})
-			}
-		);
+		const response = await fetch(FORGETPASSWORD_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				requestType: 'PASSWORD_RESET',
+				email: email
+			})
+		});
 		//Handling The Forget Password Error API
 		if (!response.ok) {
 			const errorResData = await response.json();
