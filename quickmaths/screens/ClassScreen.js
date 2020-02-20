@@ -70,7 +70,8 @@ const ClassScreen = props => {
                         routeName: 'AddAssignment',
                         params: {
                             assignment: itemData.item,
-                            refresh: doRefresh
+                            refresh: doRefresh,
+                            class: props.navigation.getParam('class')
                         }
                     });
                 }}
@@ -155,7 +156,8 @@ const ClassScreen = props => {
                                     props.navigation.navigate({
                                         routeName: 'AddAssignment',
                                         params: {
-                                            refresh: doRefresh
+                                            refresh: doRefresh,
+                                            class: props.navigation.getParam('class')
                                         }
                                     });
                                 }}

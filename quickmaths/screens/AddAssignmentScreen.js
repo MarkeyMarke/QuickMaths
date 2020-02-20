@@ -195,6 +195,14 @@ const AddAssignmentScreen = props => {
     );
 };
 
+AddAssignmentScreen.navigationOptions = (navigationData) =>  {
+    const course = navigationData.navigation.getParam('class');
+    const selectedClassTitle = course.title;
+    return {
+        headerTitle: selectedClassTitle,
+    }
+};
+
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
