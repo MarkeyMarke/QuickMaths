@@ -89,7 +89,7 @@ const ClassScreen = props => {
 			<View>
 				<ListItem
 					topText={itemData.item.title}
-					middleText={'Due ' + itemData.item.dueDate}
+					middleText={'Due ' + itemData.item.getDueDateText()}
 					bottomText={itemData.item.submissions + ' submissions missing'}
 					bottomTextStyle={{ fontStyle: 'italic' }}
 					containerStyle={{ width: '97.5%', marginTop: 10 }}
