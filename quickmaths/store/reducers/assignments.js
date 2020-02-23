@@ -14,7 +14,7 @@ const assignmentsReducer = (state = initialState, action) => {
             var id = state.init + 1; // Will be removed once connected to database
             var d = new Date();
             var createdDate =  d.getMonth().toString() + '/' + d.getDay().toString() + '/' + d.getFullYear().toString();
-            var newAssignment = new Assignment(id.toString(), action.assignmentName, action.dueDate, 'Drafted', createdDate, 30, action.questions);
+            var newAssignment = new Assignment(id.toString(), action.assignmentName, action.dueDate, 'Drafted', createdDate, 30);
             console.log(newAssignment);
             assignments.push(newAssignment);
             return {...state, assignments: assignments, init: id}
@@ -30,7 +30,6 @@ const assignmentsReducer = (state = initialState, action) => {
             var i = assignments.findIndex((assignment) => { return assignment.id === action.assignmentId});
             assignments[i].title = action.assignmentName;
             assignments[i].dueDate = action.dueDate;
-            assignments[i].questions = action.questions;
             return {...state, assignments: assignments};
         default:
             return state;

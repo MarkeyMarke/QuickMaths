@@ -16,7 +16,7 @@ const AddAssignmentScreen = props => {
     const item = props.navigation.getParam('assignment');
 
     const [assignmentName, setAssignmentName] = item ? useState(item.title) : useState('');
-    const [questions, setQuestions] = item ? useState(item.questions) : useState([]);
+    const [questions, setQuestions] = useState([]);
     const [id, setID] = useState(questions.length +1);
     const [refresh, setRefresh] = useState(false);
     const [date, setDate] = item ? useState(item.dueDate) : useState(new Date());
@@ -26,11 +26,11 @@ const AddAssignmentScreen = props => {
     const dispatch = useDispatch();
 
     const addAssignmentHandler = () => {
-        dispatch(addAssignment(assignmentName, date, questions));
+        dispatch(addAssignment(assignmentName, date));
     };
 
     const editAssignmentHandler = () => {
-        dispatch(editAssignment(item.id, assignmentName, date, questions));
+        dispatch(editAssignment(item.id, assignmentName, date));
     };
 
     const renderQuestionListItem = (itemData) => {
