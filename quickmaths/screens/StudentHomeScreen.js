@@ -16,8 +16,8 @@ const StudentHomeScreen = props => {
         return (
             <ListItem 
                 topText={itemData.item.title} 
-                middleText={itemData.item.dueDate}
-                bottomText={itemData.item.status}
+                middleText={itemData.item.getDueDateText()}
+                bottomText={itemData.item.getProgressText()}
                 onSelect={() => {
                     console.log("I got clicked!");
                     props.navigation.navigate('Assignment');
