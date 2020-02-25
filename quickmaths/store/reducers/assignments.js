@@ -13,8 +13,8 @@ const assignmentsReducer = (state = initialState, action) => {
             var assignments = state.assignments;
             var id = state.init + 1; // Will be removed once connected to database
             var d = new Date();
-            var createdDate =  d.getMonth().toString() + '/' + d.getDay().toString() + '/' + d.getFullYear().toString();
-            var newAssignment = new Assignment(id.toString(), action.assignmentName, action.dueDate, 'Drafted', createdDate, 30);
+            var publishDate =  d.getMonth().toString() + '/' + d.getDay().toString() + '/' + d.getFullYear().toString();
+            var newAssignment = new Assignment(id.toString(), action.assignmentName, action.dueDate, 'Drafted', publishDate, 30);
             console.log(newAssignment);
             assignments.push(newAssignment);
             return {...state, assignments: assignments, init: id}

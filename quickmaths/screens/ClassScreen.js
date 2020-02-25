@@ -65,7 +65,7 @@ const ClassScreen = props => {
             <ListItem 
                 topText={itemData.item.title} 
                 middleText={"Due " + itemData.item.getDueDateText()}
-                bottomText={itemData.item.status + " " + itemData.item.currentDate}
+                bottomText={itemData.item.status + " " + itemData.item.publishDate}
                 bottomTextStyle={{fontStyle:"italic"}}
                 containerStyle={styles.listItemContainerStyle}
                 onSelect={() => {
