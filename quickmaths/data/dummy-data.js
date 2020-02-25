@@ -3,6 +3,7 @@ import Course from '../models/Courses';
 import Student from '../models/Student';
 import Remaining from '../models/Remaining';
 import Question from '../models/Question';
+import StudentAssignment from '../models/StudentAssignment';
 
 export const COURSE_ASSIGNMENTS = [
     new Assignment('a1', 'Long Division HW', new Date('December 17, 2020 03:24:00'), 'Published', '7/20/19', 30),
@@ -17,9 +18,9 @@ export const COURSES = [
 ];
 
 export const STUDENT_ASSIGNMENTS = [
-    new Assignment('a1', 'Long Division HW', 'Due 9/12/19', '0/5 problems', '7/20/19', 30),
-    new Assignment('a2','Multiplication HW', 'Due 9/13/19', 'Completed', '7/20/19', 14),
-    new Assignment('a3','Long Subtraction HW', 'Due 9/10/19', '1/3 problems', '7/29/19', 12),
+    new StudentAssignment('a1', 'Long Division HW', new Date('December 12, 2020 03:24:00'), 0, 5),
+    new StudentAssignment('a2','Multiplication HW', new Date('December 13, 2020 03:24:00'), 6, 6),
+    new StudentAssignment('a3','Long Subtraction HW', new Date('December 1, 2020 03:24:00'), 1, 3)
 ];
 
 export const STUDENTS = [
