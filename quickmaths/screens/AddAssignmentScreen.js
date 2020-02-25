@@ -11,12 +11,13 @@ import ListItem from '../components/ListItem';
 import {EvilIcons} from '@expo/vector-icons';
 import StandardButton from '../components/StandardButton';
 import {addAssignment, editAssignment} from '../store/actions/assignments';
+import { QUESTIONS } from '../data/dummy-data';
 
 const AddAssignmentScreen = props => {
     const item = props.navigation.getParam('assignment');
 
     const [assignmentName, setAssignmentName] = item ? useState(item.title) : useState('');
-    const [questions, setQuestions] = useState([]);
+    const [questions, setQuestions] = item ? useState(QUESTIONS) : useState([]);
     const [id, setID] = useState(questions.length +1);
     const [refresh, setRefresh] = useState(false);
     const [date, setDate] = item ? useState(item.dueDate) : useState(new Date());
