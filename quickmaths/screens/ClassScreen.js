@@ -24,6 +24,7 @@ const ClassScreen = props => {
 	const [ isRosterActive, setIsRosterActive ] = useState(false);
 	const [ isStudentRemainingActive, setIsStudentRemainingActive ] = useState(false);
 	const [ selectedIndex, setSelectedIndex ] = useState(0);
+  const [refresh, setRefresh] = useState(false);
 
 	const courseAssignments = useSelector(state => state.assignments.assignments);
 	const students = useSelector(state => state.students.students);
@@ -55,29 +56,40 @@ const ClassScreen = props => {
 		setIsStudentRemainingActive(false);
 	};
 
-	const renderAssignmentListItem = itemData => {
-		return (
-			<ListItem
-				topText={itemData.item.title}
-				middleText={'Due ' + itemData.item.dueDate}
-				bottomText={itemData.item.status + ' ' + itemData.item.currentDate}
-				bottomTextStyle={{ fontStyle: 'italic' }}
-				containerStyle={styles.listItemContainerStyle}
-				onSelect={() => {
-					console.log('pressed!');
-				}}
-				icon={<EvilIcons name='pencil' size={75} color='white' />}
-				buttonContainerStyle={{ marginTop: 5, marginLeft: 10 }}
-			/>
-		);
-	};
+    const doRefresh = () => {
+        setRefresh(!refresh);
+    }
+
+    const renderAssignmentListItem = (itemData) => {
+        return (
+            <ListItem 
+                topText={itemData.item.title} 
+                middleText={"Due " + itemData.item.getDueDateText()}
+                bottomText={itemData.item.status + " " + itemData.item.publishDate}
+                bottomTextStyle={{fontStyle:"italic"}}
+                containerStyle={styles.listItemContainerStyle}
+                onSelect={() => {
+                    props.navigation.navigate({
+                        routeName: 'AddAssignment',
+                        params: {
+                            assignment: itemData.item,
+                            refresh: doRefresh,
+                            class: props.navigation.getParam('class')
+                        }
+                    });
+                }}
+                icon = {<EvilIcons name="pencil" size={75} color='white'/>}
+                buttonContainerStyle={{marginTop: 5, marginLeft: 10}}
+            />
+        );
+    };
 
 	const renderSubmissionListItem = itemData => {
 		return (
 			<View>
 				<ListItem
 					topText={itemData.item.title}
-					middleText={'Due ' + itemData.item.dueDate}
+					middleText={'Due ' + itemData.item.getDueDateText()}
 					bottomText={itemData.item.submissions + ' submissions missing'}
 					bottomTextStyle={{ fontStyle: 'italic' }}
 					containerStyle={{ width: '97.5%', marginTop: 10 }}
@@ -134,7 +146,7 @@ const ClassScreen = props => {
 		);
 	};
 
-	const renderStudentRequestListItem = itemData => {
+const renderStudentRequestListItem = itemData => {
 		return (
 			<ListItem
 				topText={itemData.item.name}
@@ -150,112 +162,106 @@ const ClassScreen = props => {
 			/>
 		);
 	};
-
-	return (
-		<Background>
-			<View style={styles.screen}>
-				<View style={styles.tabContainer}>
-					<BackButton
-						onTap={() => {
-							props.navigation.state.params.refresh();
-							props.navigation.pop();
-						}}
-					/>
-					<TabButton active={isAssignmentsActive} onTap={onSelectAssignmentTab}>
-						<MaterialCommunityIcons name='clipboard-text-outline' size={30} color='white' />
-					</TabButton>
-					<TabButton active={isSubmissionsActive} onTap={onSelectSubmissionsTab}>
-						<Ionicons name='md-checkmark-circle' size={30} color='white' />
-					</TabButton>
-					<TabButton active={isRosterActive} onTap={onSelectRosterTab}>
-						<Ionicons name='ios-people' size={30} color='white' />
-					</TabButton>
-				</View>
-				{isAssignmentsActive ? (
-					<SwipeableList
-						data={courseAssignments}
-						renderItem={renderAssignmentListItem}
-						onAdd={() => {
-							console.log('Added');
-						}}
-						onDelete={deleteAssignmentHandler}
-						buttonContainerStyle={styles.deleteButtonContainer}
-						listFooterComponent={
-							<AddListItemButton
-								text='Create Assignment'
-								containerStyle={styles.addButtonContainer}
-								onSelect={props.onAdd}
-							/>
-						}
-					/>
-				) : isSubmissionsActive ? (
-					<View>
-						{isStudentRemainingActive ? (
-							<View>
-								<View style={styles.simpleBackLabel}>
-									<TabButton active={isSubmissionsActive} onTap={onSelectSubmissionsTab}>
-										<Ionicons name='ios-play' size={35} style={styles.icon} />
-									</TabButton>
-									<Text style={styles.simpleAdditionText}>Simple Addition HW</Text>
-								</View>
-								<FlatList
-									keyExtractor={(item, index) => item.id}
-									data={studentsRemaining}
-									renderItem={renderStudentRemainingList}
-								/>
-							</View>
-						) : (
-							<FlatList
-								keyExtractor={(item, index) => item.id}
-								data={courseAssignments}
-								renderItem={renderSubmissionListItem}
-							/>
-						)}
-					</View>
-				) : (
-					<View>
-						<SegmentedControlTab
-							values={[ 'Roster', 'Requests' ]}
-							selectedIndex={selectedIndex}
-							onTabPress={index => {
-								setSelectedIndex(index);
-							}}
-							tabsContainerStyle={styles.segmentedTabsContainerStyle}
-							tabStyle={styles.segmentedTabStyle}
-							tabTextStyle={styles.segmentedTabTextStyle}
-							borderRadius={0}
-							activeTabStyle={styles.segmentedActiveTabStyle}
-						/>
-						{selectedIndex === 0 ? (
-							<SwipeableList
-								data={students}
-								renderItem={renderStudentListItem}
-								onAdd={() => {
-									console.log('Added');
-								}}
-								onDelete={() => {
-									console.log('Deleted');
-								}}
-								buttonContainerStyle={styles.deleteButtonContainer}
-							/>
-						) : (
-							<SwipeableList
-								data={students}
-								renderItem={renderStudentRequestListItem}
-								onAdd={() => {
-									console.log('Added');
-								}}
-								onDelete={() => {
-									console.log('Deleted');
-								}}
-								buttonContainerStyle={styles.deleteButtonContainer}
-							/>
-						)}
-					</View>
-				)}
-			</View>
-		</Background>
-	);
+    return(
+        <Background>
+            <View style={styles.screen}>
+                <View style={styles.tabContainer}>
+                    <BackButton onTap={() => {
+                        props.navigation.state.params.refresh();
+                        props.navigation.pop();
+                        }}/>
+                    <TabButton active={isAssignmentsActive} onTap={onSelectAssignmentTab}>
+                        <MaterialCommunityIcons name="clipboard-text-outline" size={30} color="white"/>
+                    </TabButton>
+                    <TabButton active={isSubmissionsActive} onTap={onSelectSubmissionsTab}>
+                        <Ionicons name="md-checkmark-circle" size={30} color="white"/>
+                    </TabButton>
+                    <TabButton active={isRosterActive} onTap={onSelectRosterTab}>
+                        <Ionicons name="ios-people" size={30} color="white"/>
+                    </TabButton>
+                </View>
+                {
+                    isAssignmentsActive ? (
+                    <SwipeableList 
+                        data={courseAssignments} 
+                        renderItem={renderAssignmentListItem} 
+                        onDelete={deleteAssignmentHandler}
+                        buttonContainerStyle={styles.deleteButtonContainer}
+                        listFooterComponent= {
+                            <AddListItemButton
+                                text='Create Assignment'
+                                containerStyle={styles.addButtonContainer}
+                                onSelect={() => {
+                                    props.navigation.navigate({
+                                        routeName: 'AddAssignment',
+                                        params: {
+                                            refresh: doRefresh,
+                                            class: props.navigation.getParam('class')
+                                        }
+                                    });
+                                }}
+                            />
+                        }
+                    />
+                    ) : isSubmissionsActive ? (
+                      <View>
+                        {isStudentRemainingActive ? (
+                          <View>
+                            <View style={styles.simpleBackLabel}>
+                              <TabButton active={isSubmissionsActive} onTap={onSelectSubmissionsTab}>
+                                <Ionicons name='ios-play' size={35} style={styles.icon} />
+                              </TabButton>
+                              <Text style={styles.simpleAdditionText}>Simple Addition HW</Text>
+                            </View>
+                            <FlatList
+                              keyExtractor={(item, index) => item.id}
+                              data={studentsRemaining}
+                              renderItem={renderStudentRemainingList}
+                            />
+                          </View>
+                        ) : (
+                          <FlatList
+                            keyExtractor={(item, index) => item.id}
+                            data={courseAssignments}
+                            renderItem={renderSubmissionListItem}
+                          />
+                        )}
+                      </View>
+                    ) : (
+                    <View>
+                        <SegmentedControlTab 
+                            values={["Roster", "Requests"]}
+                            selectedIndex={selectedIndex}
+                            onTabPress={(index) => {setSelectedIndex(index)}}
+                            tabsContainerStyle={styles.segmentedTabsContainerStyle}
+                            tabStyle={styles.segmentedTabStyle}
+                            tabTextStyle={styles.segmentedTabTextStyle}
+                            borderRadius={0}
+                            activeTabStyle={styles.segmentedActiveTabStyle}
+                        />
+                        {selectedIndex === 0 ? ( 
+                            <SwipeableList
+                                data={students} 
+                                renderItem={renderStudentListItem} 
+                                onAdd={() => {console.log("Added")}}
+                                onDelete={() => {console.log("Deleted")}}
+                                buttonContainerStyle={styles.deleteButtonContainer}
+                            />
+                        ) : (
+                            <SwipeableList
+                                data={students} 
+                                renderItem={renderStudentRequestListItem} 
+                                onAdd={() => {console.log("Added")}}
+                                onDelete={() => {console.log("Deleted")}}
+                                buttonContainerStyle={styles.deleteButtonContainer}
+                            />
+                        )}
+                    </View>
+                )}
+            </View>
+        </Background>
+        
+    );
 };
 
 ClassScreen.navigationOptions = navigationData => {
