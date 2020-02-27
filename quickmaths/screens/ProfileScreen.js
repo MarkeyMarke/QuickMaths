@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
 
 import Colors from '../constants/Colors';
@@ -77,8 +77,6 @@ const ProfileScreen = props => {
 };
 
 ProfileScreen.navigationOptions = navData => {
-	//const course = navData.navigation.getParam('Profile');
-	//const selectedClassTitle = course.title;
 	return {
 		headerTitle: 'Profile',
 		headerLeftContainerStyle: {
