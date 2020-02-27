@@ -17,12 +17,14 @@ import Roster from '../components/Roster';
 import Submissions from '../components/Submissions';
 
 const ClassScreen = props => {
-	const [ isAssignmentsActive, setIsAssignmentsActive ] = useState(true);
-	const [ isSubmissionsActive, setIsSubmissionsActive ] = useState(false);
-	const [ isRosterActive, setIsRosterActive ] = useState(false);
-	const [ isStudentRemainingActive, setIsStudentRemainingActive ] = useState(false);
-	
-  const [refresh, setRefresh] = useState(false);
+	const components = {
+		ASSIGNMENTS: 'assignments',
+		SUBMISSIONS: 'submissions',
+		ROSTER: 	 'roster'
+	};
+
+	const [activeComponent, setActiveComponent] = useState(components.ASSIGNMENTS);
+  	const [refresh, setRefresh] = useState(false);
 
 	const courseAssignments = useSelector(state => state.assignments.assignments);
 	const dispatch = useDispatch();
@@ -30,33 +32,41 @@ const ClassScreen = props => {
 	const deleteAssignmentHandler = item => {
 		dispatch(deleteAssignment(item.id));
 	};
+	
+	let renderComponent;
 
-	const components = {
-		ASSIGNMENTS: 'assignments',
-		SUBMISSIONS: 'submissions',
-		ROSTER: 	 'roster',
-		STUDENT_REMAINING: 'student_remaining'
+	switch (activeComponent){
+		case components.ASSIGNMENTS:
+			renderComponent = 
+			<AssignmentList
+				courseAssignments={courseAssignments}
+				deleteAssignmentHandler={deleteAssignmentHandler}
+				doRefresh={doRefresh}
+				navigation={props.navigation}
+			/>
+			break;
+		case components.SUBMISSIONS:
+			renderComponent = 
+			<Submissions
+				onSelectSubmissionsTab={onSelectSubmissionsTab}
+				courseAssignments={courseAssignments}
+			/>
+			break;
+		case components.ROSTER:
+			renderComponent = <Roster/>
+			break;
 	};
 
 	const onSelectAssignmentTab = () => {
-		setIsAssignmentsActive(true);
-		setIsSubmissionsActive(false);
-		setIsRosterActive(false);
-		setIsStudentRemainingActive(false);
+		setActiveComponent(components.ASSIGNMENTS);
 	};
 
 	const onSelectSubmissionsTab = () => {
-		setIsSubmissionsActive(true);
-		setIsAssignmentsActive(false);
-		setIsRosterActive(false);
-		setIsStudentRemainingActive(false);
+		setActiveComponent(components.SUBMISSIONS);
 	};
 
 	const onSelectRosterTab = () => {
-		setIsRosterActive(true);
-		setIsSubmissionsActive(false);
-		setIsAssignmentsActive(false);
-		setIsStudentRemainingActive(false);
+		setActiveComponent(components.ROSTER);
 	};
 
     const doRefresh = () => {
@@ -72,33 +82,17 @@ const ClassScreen = props => {
                         props.navigation.state.params.refresh();
                         props.navigation.pop();
                         }}/>
-                    <TabButton active={isAssignmentsActive} onTap={onSelectAssignmentTab}>
+                    <TabButton active={activeComponent === components.ASSIGNMENTS} onTap={onSelectAssignmentTab}>
                         <MaterialCommunityIcons name="clipboard-text-outline" size={30} color="white"/>
                     </TabButton>
-                    <TabButton active={isSubmissionsActive} onTap={onSelectSubmissionsTab}>
+                    <TabButton active={activeComponent === components.SUBMISSIONS} onTap={onSelectSubmissionsTab}>
                         <Ionicons name="md-checkmark-circle" size={30} color="white"/>
                     </TabButton>
-                    <TabButton active={isRosterActive} onTap={onSelectRosterTab}>
+                    <TabButton active={activeComponent === components.ROSTER} onTap={onSelectRosterTab}>
                         <Ionicons name="ios-people" size={30} color="white"/>
                     </TabButton>
                 </View>
-                {
-                    isAssignmentsActive ? (
-						<AssignmentList
-							courseAssignments={courseAssignments}
-							deleteAssignmentHandler={deleteAssignmentHandler}
-							doRefresh={doRefresh}
-							navigation={props.navigation}
-						/>
-                    ) : isSubmissionsActive ? (
-                      <Submissions
-						onSelectSubmissionsTab={onSelectSubmissionsTab}
-						courseAssignments={courseAssignments}
-						isSubmissionsActive={isSubmissionsActive}
-					  />
-                    ) : (
-                    <Roster/>
-                )}
+                {renderComponent}
             </View>
         </Background>
         
@@ -152,42 +146,6 @@ const styles = StyleSheet.create({
 	tabContainer: {
 		flexDirection: 'row',
 		marginTop: 30
-	},
-	listItemContainerStyle: {
-		width: '95%',
-		marginTop: 10
-	},
-	deleteButtonContainer: {
-		marginTop: 10
-	},
-	addButtonContainer: {
-		width: '95%',
-		marginTop: 10
-	},
-	icon: {
-		transform: [ { rotateY: '180deg' } ],
-		color: 'white',
-		marginLeft: 3,
-		marginTop: 3,
-		marginBottom: 3
-	},
-	simpleBackLabel: {
-		width: '95%',
-		height: '5%',
-		marginLeft: 10,
-		marginTop: 10,
-		borderColor: 'transparent',
-		backgroundColor: Colors.primaryColor,
-		flexDirection: 'row'
-	},
-	simpleAdditionText: {
-		color: 'white',
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginLeft: 45,
-		marginTop: 10,
-		fontSize: 15,
-		fontWeight: 'bold'
 	}
 });
 
