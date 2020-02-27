@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet, TouchableWithoutFeedback, Text } from 'reac
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons, EvilIcons, AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import SegmentedControlTab from 'react-native-segmented-control-tab';
+
 
 import { STUDENT_REMAINING } from '../data/dummy-data';
 import Background from '../components/Background';
@@ -17,13 +17,15 @@ import AddListItemButton from '../components/AddListItemButton';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import EvilIconsHeaderButton from '../components/EvilIconsHeaderButton';
+import AssignmentList from '../components/AssignmentList';
+import Roster from '../components/Roster';
 
 const ClassScreen = props => {
 	const [ isAssignmentsActive, setIsAssignmentsActive ] = useState(true);
 	const [ isSubmissionsActive, setIsSubmissionsActive ] = useState(false);
 	const [ isRosterActive, setIsRosterActive ] = useState(false);
 	const [ isStudentRemainingActive, setIsStudentRemainingActive ] = useState(false);
-	const [ selectedIndex, setSelectedIndex ] = useState(0);
+	
   const [refresh, setRefresh] = useState(false);
 
 	const courseAssignments = useSelector(state => state.assignments.assignments);
@@ -33,6 +35,13 @@ const ClassScreen = props => {
 
 	const deleteAssignmentHandler = item => {
 		dispatch(deleteAssignment(item.id));
+	};
+
+	const components = {
+		ASSIGNMENTS: 'assignments',
+		SUBMISSIONS: 'submissions',
+		ROSTER: 	 'roster',
+		STUDENT_REMAINING: 'student_remaining'
 	};
 
 	const onSelectAssignmentTab = () => {
@@ -59,30 +68,6 @@ const ClassScreen = props => {
     const doRefresh = () => {
         setRefresh(!refresh);
     }
-
-    const renderAssignmentListItem = (itemData) => {
-        return (
-            <ListItem 
-                topText={itemData.item.title} 
-                middleText={"Due " + itemData.item.getDueDateText()}
-                bottomText={itemData.item.status + " " + itemData.item.publishDate}
-                bottomTextStyle={{fontStyle:"italic"}}
-                containerStyle={styles.listItemContainerStyle}
-                onSelect={() => {
-                    props.navigation.navigate({
-                        routeName: 'AddAssignment',
-                        params: {
-                            assignment: itemData.item,
-                            refresh: doRefresh,
-                            class: props.navigation.getParam('class')
-                        }
-                    });
-                }}
-                icon = {<EvilIcons name="pencil" size={75} color='white'/>}
-                buttonContainerStyle={{marginTop: 5, marginLeft: 10}}
-            />
-        );
-    };
 
 	const renderSubmissionListItem = itemData => {
 		return (
@@ -129,39 +114,6 @@ const ClassScreen = props => {
 		}
 	};
 
-	const renderStudentListItem = itemData => {
-		return (
-			<ListItem
-				topText={itemData.item.name}
-				middleText={itemData.item.id}
-				bottomText={itemData.item.email}
-				bottomTextStyle={{ fontStyle: 'italic' }}
-				containerStyle={styles.listItemContainerStyle}
-				onSelect={() => {
-					console.log('pressed!');
-				}}
-				icon={<AntDesign name='plus' size={50} color='white' />}
-				buttonContainerStyle={{ marginTop: 15, marginLeft: 15 }}
-			/>
-		);
-	};
-
-const renderStudentRequestListItem = itemData => {
-		return (
-			<ListItem
-				topText={itemData.item.name}
-				middleText={itemData.item.id}
-				bottomText={itemData.item.email}
-				bottomTextStyle={{ fontStyle: 'italic' }}
-				containerStyle={styles.listItemContainerStyle}
-				onSelect={() => {
-					console.log('pressed!');
-				}}
-				icon={<AntDesign name='plus' size={50} color='white' />}
-				buttonContainerStyle={{ marginTop: 15, marginLeft: 15 }}
-			/>
-		);
-	};
     return(
         <Background>
             <View style={styles.screen}>
@@ -182,27 +134,12 @@ const renderStudentRequestListItem = itemData => {
                 </View>
                 {
                     isAssignmentsActive ? (
-                    <SwipeableList 
-                        data={courseAssignments} 
-                        renderItem={renderAssignmentListItem} 
-                        onDelete={deleteAssignmentHandler}
-                        buttonContainerStyle={styles.deleteButtonContainer}
-                        listFooterComponent= {
-                            <AddListItemButton
-                                text='Create Assignment'
-                                containerStyle={styles.addButtonContainer}
-                                onSelect={() => {
-                                    props.navigation.navigate({
-                                        routeName: 'AddAssignment',
-                                        params: {
-                                            refresh: doRefresh,
-                                            class: props.navigation.getParam('class')
-                                        }
-                                    });
-                                }}
-                            />
-                        }
-                    />
+						<AssignmentList
+							courseAssignments={courseAssignments}
+							deleteAssignmentHandler={deleteAssignmentHandler}
+							doRefresh={doRefresh}
+							navigation={props.navigation}
+						/>
                     ) : isSubmissionsActive ? (
                       <View>
                         {isStudentRemainingActive ? (
@@ -228,35 +165,7 @@ const renderStudentRequestListItem = itemData => {
                         )}
                       </View>
                     ) : (
-                    <View>
-                        <SegmentedControlTab 
-                            values={["Roster", "Requests"]}
-                            selectedIndex={selectedIndex}
-                            onTabPress={(index) => {setSelectedIndex(index)}}
-                            tabsContainerStyle={styles.segmentedTabsContainerStyle}
-                            tabStyle={styles.segmentedTabStyle}
-                            tabTextStyle={styles.segmentedTabTextStyle}
-                            borderRadius={0}
-                            activeTabStyle={styles.segmentedActiveTabStyle}
-                        />
-                        {selectedIndex === 0 ? ( 
-                            <SwipeableList
-                                data={students} 
-                                renderItem={renderStudentListItem} 
-                                onAdd={() => {console.log("Added")}}
-                                onDelete={() => {console.log("Deleted")}}
-                                buttonContainerStyle={styles.deleteButtonContainer}
-                            />
-                        ) : (
-                            <SwipeableList
-                                data={students} 
-                                renderItem={renderStudentRequestListItem} 
-                                onAdd={() => {console.log("Added")}}
-                                onDelete={() => {console.log("Deleted")}}
-                                buttonContainerStyle={styles.deleteButtonContainer}
-                            />
-                        )}
-                    </View>
+                    <Roster/>
                 )}
             </View>
         </Background>
@@ -322,20 +231,6 @@ const styles = StyleSheet.create({
 	addButtonContainer: {
 		width: '95%',
 		marginTop: 10
-	},
-	segmentedTabsContainerStyle: {
-		width: '95%',
-		marginTop: 10
-	},
-	segmentedTabStyle: {
-		backgroundColor: Colors.accentColor,
-		borderColor: 'transparent'
-	},
-	segmentedTabTextStyle: {
-		color: 'white'
-	},
-	segmentedActiveTabStyle: {
-		backgroundColor: Colors.primaryColor
 	},
 	icon: {
 		transform: [ { rotateY: '180deg' } ],
