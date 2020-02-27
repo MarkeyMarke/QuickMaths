@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
-import { View, FlatList, StyleSheet, TouchableWithoutFeedback, Text } from 'react-native';
+import { View, StyleSheet} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { Ionicons, EvilIcons, AntDesign } from '@expo/vector-icons';
+import { Ionicons} from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
-import { STUDENT_REMAINING } from '../data/dummy-data';
 import Background from '../components/Background';
 import BackButton from '../constants/BackButton';
 import TabButton from '../components/TabButton';
-import ListItem from '../components/ListItem';
-import SwipeableList from '../components/SwipeableList';
 import { deleteAssignment } from '../store/actions/assignments';
 import Colors from '../constants/Colors';
-import AddListItemButton from '../components/AddListItemButton';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import EvilIconsHeaderButton from '../components/EvilIconsHeaderButton';
 import AssignmentList from '../components/AssignmentList';
 import Roster from '../components/Roster';
+import Submissions from '../components/Submissions';
 
 const ClassScreen = props => {
 	const [ isAssignmentsActive, setIsAssignmentsActive ] = useState(true);
@@ -29,8 +25,6 @@ const ClassScreen = props => {
   const [refresh, setRefresh] = useState(false);
 
 	const courseAssignments = useSelector(state => state.assignments.assignments);
-	const students = useSelector(state => state.students.students);
-	const [ studentsRemaining, setStudentsRemaining ] = useState(STUDENT_REMAINING);
 	const dispatch = useDispatch();
 
 	const deleteAssignmentHandler = item => {
@@ -69,51 +63,7 @@ const ClassScreen = props => {
         setRefresh(!refresh);
     }
 
-	const renderSubmissionListItem = itemData => {
-		return (
-			<View>
-				<ListItem
-					topText={itemData.item.title}
-					middleText={'Due ' + itemData.item.getDueDateText()}
-					bottomText={itemData.item.submissions + ' submissions missing'}
-					bottomTextStyle={{ fontStyle: 'italic' }}
-					containerStyle={{ width: '97.5%', marginTop: 10 }}
-					onSelect={() => {
-						setIsStudentRemainingActive(true);
-					}}
-					icon={<Ionicons name='ios-play' size={75} color='white' />}
-				/>
-			</View>
-		);
-	};
-
-	const renderStudentRemainingList = itemData => {
-		var str2 = 'Incompleted';
-		if (itemData.item.assignment === str2) {
-			return (
-				<ListItem
-					topText={itemData.item.name}
-					middleText={itemData.item.studentid}
-					bottomText={itemData.item.assignment}
-					bottomTextStyle={{ fontStyle: 'italic' }}
-					containerStyle={{ width: '95.5%', marginTop: 10 }}
-					icon={<Ionicons name='md-close-circle' size={70} color='white' />}
-				/>
-			);
-		} else {
-			return (
-				<ListItem
-					topText={itemData.item.name}
-					middleText={itemData.item.studentid}
-					bottomText={itemData.item.assignment}
-					bottomTextStyle={{ fontStyle: 'italic' }}
-					containerStyle={{ width: '95.5%', marginTop: 10 }}
-					icon={<Ionicons name='md-checkmark-circle' size={70} color='white' />}
-				/>
-			);
-		}
-	};
-
+	
     return(
         <Background>
             <View style={styles.screen}>
@@ -141,29 +91,11 @@ const ClassScreen = props => {
 							navigation={props.navigation}
 						/>
                     ) : isSubmissionsActive ? (
-                      <View>
-                        {isStudentRemainingActive ? (
-                          <View>
-                            <View style={styles.simpleBackLabel}>
-                              <TabButton active={isSubmissionsActive} onTap={onSelectSubmissionsTab}>
-                                <Ionicons name='ios-play' size={35} style={styles.icon} />
-                              </TabButton>
-                              <Text style={styles.simpleAdditionText}>Simple Addition HW</Text>
-                            </View>
-                            <FlatList
-                              keyExtractor={(item, index) => item.id}
-                              data={studentsRemaining}
-                              renderItem={renderStudentRemainingList}
-                            />
-                          </View>
-                        ) : (
-                          <FlatList
-                            keyExtractor={(item, index) => item.id}
-                            data={courseAssignments}
-                            renderItem={renderSubmissionListItem}
-                          />
-                        )}
-                      </View>
+                      <Submissions
+						onSelectSubmissionsTab={onSelectSubmissionsTab}
+						courseAssignments={courseAssignments}
+						isSubmissionsActive={isSubmissionsActive}
+					  />
                     ) : (
                     <Roster/>
                 )}
