@@ -75,7 +75,7 @@ export const STUDENT_REMAINING = [
 ];
 
 export const QUESTIONS = [
-  new Question("q1", "1+13", "14"),
-  new Question("q2", "2+3", "5"),
-  new Question("q3", "5+5", "10")
+  new Question("q1", "1 + 13", "14"),
+  new Question("q2", "25 - 1", "24"),
+  new Question("q3", "5 + 5", "10")
 ];

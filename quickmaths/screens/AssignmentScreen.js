@@ -10,9 +10,9 @@ import {
 import Signature from "react-native-signature-canvas";
 import { QUESTIONS } from "../data/dummy-data";
 import { GOOGLECLOUD_API_KEY } from "react-native-dotenv";
+import Background from "../components/Background";
 
 //TODO: Set the title of the screen to have the assignment name
-//TODO: Set the background of the screen to the standard BG
 const AssignmentScreen = props => {
   const [currentQuestions, setQuestions] = useState(null);
   const [index, setIndex] = useState(null);
@@ -47,11 +47,6 @@ const AssignmentScreen = props => {
       setIndex(index + 1);
       makeAlert("Good job!", "That was correct!");
     }
-  };
-
-  //TODO: Too simple... Maybe this should just be an in-line function?
-  const nextQuestionHandler = () => {
-    setIndex(index + 1);
   };
 
   //For reusability and shortening lines of code.
@@ -109,23 +104,58 @@ const AssignmentScreen = props => {
   //TODO: Use a better loading screen component.
   if (currentQuestions === null) {
     return (
-      <View style={styles.container}>
-        <Button
-          title="Back"
-          onPress={() => {
-            props.navigation.pop();
-          }}
-        />
-        <ActivityIndicator size="large" />
-      </View>
+      <Background>
+        <View style={styles.container}>
+          <Button
+            title="Back"
+            onPress={() => {
+              props.navigation.pop();
+            }}
+          />
+          <ActivityIndicator size="large" />
+        </View>
+      </Background>
     );
   }
   //Then check if the assignment is already completed (also don't go out of index)
   if (alreadyComplete && index < currentQuestions.length) {
     return (
+      <Background>
+        <View style={styles.container}>
+          <Button
+            title="Back"
+            onPress={() => {
+              props.navigation.pop();
+            }}
+          />
+          <Text>
+            Question {index + 1}/{currentQuestions.length}
+          </Text>
+          <Text>{currentQuestions[index].question}</Text>
+          <Text>Answer:</Text>
+          <Text>{currentQuestions[index].answer}</Text>
+          <Button title="Next" onPress={() => setIndex(index + 1)} />
+        </View>
+      </Background>
+    );
+  }
+  //Check if we've went through all questions
+  if (index === currentQuestions.length) {
+    return (
+      <Background>
+        <View style={styles.container}>
+          <Text>You're finished!</Text>
+          <Button title="Finish" onPress={() => props.navigation.pop()} />
+        </View>
+      </Background>
+    );
+  }
+  //Otherwise, we ask them the current question
+  return (
+    <Background>
       <View style={styles.container}>
         <Button
-          title="Back"
+          title="Back to assignments"
           onPress={() => {
             props.navigation.pop();
           }}
@@ -134,42 +164,15 @@ const AssignmentScreen = props => {
           Question {index + 1}/{currentQuestions.length}
         </Text>
         <Text>{currentQuestions[index].question}</Text>
-        <Text>Answer:</Text>
-        <Text>{currentQuestions[index].answer}</Text>
-        <Button title="Next" onPress={() => nextQuestionHandler()} />
+        <Signature
+          onOK={img => readImageHandler(img.substr(22))}
+          descriptionText="Your answer"
+          clearText="Clear"
+          confirmText="Send"
+          autoClear={true}
+        />
       </View>
-    );
-  }
-  //Check if we've went through all questions
-  if (index === currentQuestions.length) {
-    return (
-      <View style={styles.container}>
-        <Text>You're finished!</Text>
-        <Button title="Finish" onPress={() => props.navigation.pop()} />
-      </View>
-    );
-  }
-  //Otherwise, we ask them the current question
-  return (
-    <View style={styles.container}>
-      <Button
-        title="Back to assignments"
-        onPress={() => {
-          props.navigation.pop();
-        }}
-      />
-      <Text>
-        Question {index + 1}/{currentQuestions.length}
-      </Text>
-      <Text>{currentQuestions[index].question}</Text>
-      <Signature
-        onOK={img => readImageHandler(img.substr(22))}
-        descriptionText="Your answer"
-        clearText="Clear"
-        confirmText="Send"
-        autoClear={true}
-      />
-    </View>
+    </Background>
   );
 };
 
@@ -180,5 +183,13 @@ const styles = StyleSheet.create({
     alignItems: "center"
   }
 });
+
+AssignmentScreen.navigationOptions = navData => {
+  return {
+    headerTitle: navData.navigation.state.params.title,
+    gestureEnabled: false,
+    headerLeft: () => null
+  };
+};
 
 export default AssignmentScreen;

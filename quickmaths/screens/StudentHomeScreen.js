@@ -19,9 +19,9 @@ const StudentHomeScreen = props => {
         middleText={itemData.item.getDueDateText()}
         bottomText={itemData.item.getProgressText()}
         onSelect={() => {
-          console.log("I got clicked!");
           props.navigation.navigate("Assignment", {
-            progress: itemData.item.progress
+            progress: itemData.item.progress,
+            title: itemData.item.title
           });
         }}
         icon={<Ionicons name="ios-play" size={75} color="white" />}
