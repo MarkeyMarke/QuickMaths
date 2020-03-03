@@ -21,9 +21,12 @@ const AssignmentScreen = props => {
   }, []);
 
   const fetchQuestions = async () => {
+    //TODO: Eventually turns into MySQL fetch
     const numberOfQuestions = QUESTIONS.length;
     const questionsAlreadyDone = props.navigation.state.params.progress;
     setQuestions(QUESTIONS);
+
+    //Index is NOT progress, it is used to traverse through the questions
     if (questionsAlreadyDone < numberOfQuestions) {
       setIndex(questionsAlreadyDone);
     } else {
@@ -33,7 +36,8 @@ const AssignmentScreen = props => {
   };
 
   const updateProgress = async () => {
-    const mySQLResult = { error: false }; //TODO: Eventually turns into MySQL fetch
+    //TODO: Eventually turns into MySQL fetch
+    const mySQLResult = { error: false };
     if (mySQLResult.error) {
       makeAlert("Sorry", "An error has occured!");
       console.log(error);
@@ -43,10 +47,12 @@ const AssignmentScreen = props => {
     }
   };
 
+  //TODO: Too simple... Maybe this should just be an in-line function?
   const nextQuestionHandler = () => {
     setIndex(index + 1);
   };
 
+  //For reusability and shortening lines of code.
   const makeAlert = (title, message) => {
     Alert.alert(title, message, [{ text: "OK", onPress: () => {} }]);
   };
@@ -74,8 +80,8 @@ const AssignmentScreen = props => {
         body: JSON.stringify(body)
       });
       const responseJSON = await googleCloudeResponse.json();
+      //Checks if Google found any texts
       if (Object.keys(responseJSON.responses[0]).length > 0) {
-        //Checks if Google found any texts
         const answer = responseJSON.responses[0].fullTextAnnotation.text.replace(
           /[^0-9.]/g,
           ""

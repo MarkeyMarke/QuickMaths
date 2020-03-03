@@ -31,7 +31,7 @@ const LoginScreen = props => {
   }, [error]);
 
   useEffect(() => {
-    props.navigation.navigate("StudentHomeScreen");
+    props.navigation.navigate("StudentHomeScreen"); //TODO: Will delete this line and uncomment it when done developing this branch
     /*
 			if (submitted) {
 				if (isTeacher)
