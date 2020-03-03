@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import { EvilIcons} from '@expo/vector-icons';
 
@@ -9,6 +9,11 @@ import ListItem from './ListItem';
 
 
 const AssignmentList = props => {
+    const [refresh, setRefresh] = useState(false);
+
+    const doRefresh = () => {
+        setRefresh(!refresh);
+    }
 
     const renderAssignmentListItem = (itemData) => {
         return (
@@ -23,7 +28,7 @@ const AssignmentList = props => {
                         routeName: 'AddAssignment',
                         params: {
                             assignment: itemData.item,
-                            refresh: props.doRefresh,
+                            refresh: doRefresh,
                             class: props.navigation.getParam('class')
                         }
                     });
@@ -48,7 +53,7 @@ const AssignmentList = props => {
                         props.navigation.navigate({
                             routeName: 'AddAssignment',
                             params: {
-                                refresh: props.doRefresh,
+                                refresh: doRefresh,
                                 class: props.navigation.getParam('class')
                             }
                         });
