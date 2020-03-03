@@ -11,6 +11,8 @@ import Signature from "react-native-signature-canvas";
 import { QUESTIONS } from "../data/dummy-data";
 import { GOOGLECLOUD_API_KEY } from "react-native-dotenv";
 
+//TODO: Set the title of the screen to have the assignment name
+//TODO: Set the background of the screen to the standard BG
 const AssignmentScreen = props => {
   const [currentQuestions, setQuestions] = useState(null);
   const [index, setIndex] = useState(null);
@@ -101,7 +103,10 @@ const AssignmentScreen = props => {
       console.log(error);
     }
   };
+  //TODO: Make a separate component for all of these rendered elements
+
   //Check if all questions have been loaded first
+  //TODO: Use a better loading screen component.
   if (currentQuestions === null) {
     return (
       <View style={styles.container}>

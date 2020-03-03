@@ -48,6 +48,7 @@ const LoginScreen = props => {
     setError(null);
     try {
       await dispatch(usersAuthActions.signIn(email, password));
+      //TODO: Please delete uneeded comments like this.
       /*
 			const getUserIdentification = await fetch('https://quickmaths-bc73a.firebaseio.com/users.json');
 			const resData = await getUserIdentification.json();
