@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ActivityIndicator} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons} from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../components/Background';
 import BackButton from '../constants/BackButton';
 import TabButton from '../components/TabButton';
-import { deleteAssignment } from '../store/actions/assignments';
+import { deleteAssignment, setAssignment } from '../store/actions/assignments';
 import Colors from '../constants/Colors';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -15,6 +15,7 @@ import EvilIconsHeaderButton from '../components/EvilIconsHeaderButton';
 import AssignmentList from '../components/AssignmentList';
 import Roster from '../components/Roster';
 import Submissions from '../components/Submissions';
+import {COURSE_ASSIGNMENTS} from '../data/dummy-data';
 
 const ClassScreen = props => {
 	const components = {
@@ -24,7 +25,6 @@ const ClassScreen = props => {
 	};
 
 	const [activeComponent, setActiveComponent] = useState(components.ASSIGNMENTS);
-  	const [refresh, setRefresh] = useState(false);
 
 	const courseAssignments = useSelector(state => state.assignments.assignments);
 	const dispatch = useDispatch();
@@ -33,6 +33,14 @@ const ClassScreen = props => {
 		dispatch(deleteAssignment(item.id));
 	};
 	
+	const fetchData = async() => {
+        dispatch(setAssignment(COURSE_ASSIGNMENTS));
+    };
+
+    useEffect(() => {
+        fetchData();
+    },[]);
+
 	let renderComponent;
 
 	switch (activeComponent){
@@ -41,7 +49,6 @@ const ClassScreen = props => {
 			<AssignmentList
 				courseAssignments={courseAssignments}
 				deleteAssignmentHandler={deleteAssignmentHandler}
-				doRefresh={doRefresh}
 				navigation={props.navigation}
 			/>
 			break;
@@ -69,11 +76,6 @@ const ClassScreen = props => {
 		setActiveComponent(components.ROSTER);
 	};
 
-    const doRefresh = () => {
-        setRefresh(!refresh);
-    }
-
-	
     return(
         <Background>
             <View style={styles.screen}>
@@ -92,7 +94,7 @@ const ClassScreen = props => {
                         <Ionicons name="ios-people" size={30} color="white"/>
                     </TabButton>
                 </View>
-                {renderComponent}
+                {!courseAssignments ? <ActivityIndicator/> : renderComponent}
             </View>
         </Background>
         
