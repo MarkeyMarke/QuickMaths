@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
-import {View, ImageBackground, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, ImageBackground, StyleSheet, ActivityIndicator} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {useSelector, useDispatch} from 'react-redux';
 
+import {COURSES} from '../data/dummy-data';
 import ListItem from '../components/ListItem';
 import {Item, HeaderButtons} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -10,19 +11,26 @@ import Colors from '../constants/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import AddListItemButton from '../components/AddListItemButton';
-import {deleteCourse} from '../store/actions/courses';
+import {deleteCourse, setCourse} from '../store/actions/courses';
 
 const TeacherHomeScreen = props => {
     const [refresh, setRefresh] = useState(false);
-
+    
     const courses = useSelector(state => state.courses.courses);
-
+    
     const dispatch = useDispatch();
 
     const deleteCourseHandler = (id) => {
         dispatch(deleteCourse(id));
     };
-    //const [courses, setCourses] = useState(COURSES);
+    
+    const fetchData = async() => {
+        dispatch(setCourse(COURSES));
+    };
+
+    useEffect(() => {
+        fetchData();
+    },[]);
 
     const renderListItem = (itemData) => {
         return (
@@ -57,6 +65,9 @@ const TeacherHomeScreen = props => {
                 blurRadius={3}
                 resizeMode="cover"
         >
+            {!courses ? 
+            <ActivityIndicator/>
+            :
             <SwipeListView 
                 keyExtractor={(item, index) => item.id}
                 data={courses} 
@@ -84,6 +95,7 @@ const TeacherHomeScreen = props => {
                     />
                 }
             />
+            }
         </ImageBackground>
     );
 };

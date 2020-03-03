@@ -1,14 +1,17 @@
-import {COURSES} from '../../data/dummy-data';
-import { DELETE_COURSE, ADD_COURSE, EDIT_COURSE } from '../actions/courses';
+import { DELETE_COURSE, ADD_COURSE, EDIT_COURSE, SET_COURSE } from '../actions/courses';
 import Course from '../../models/Courses';
 
 const initialState = {
-    courses: COURSES,
-    init: COURSES.length  // Will be removed once connected to database
+    courses: null,
+    init: null  // Will be removed once connected to database
 };
 
 const coursesReducer = (state=initialState, action) => {
     switch (action.type){
+        case SET_COURSE:
+            var courseList = action.courses;
+            var length = courseList.length;
+            return {...state, courses:courseList, init: length}
         case DELETE_COURSE:
             var c = state.courses.filter(
                 (course) => {
