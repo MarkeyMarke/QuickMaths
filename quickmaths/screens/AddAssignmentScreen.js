@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, TextInput, FlatList, Text, Platform, TouchableWithoutFeedback} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, TextInput, FlatList, Text, Platform, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
 import {useDispatch} from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -17,14 +17,30 @@ const AddAssignmentScreen = props => {
     const item = props.navigation.getParam('assignment');
 
     const [assignmentName, setAssignmentName] = item ? useState(item.title) : useState('');
-    const [questions, setQuestions] = item ? useState(QUESTIONS) : useState([]);
-    const [id, setID] = useState(questions.length +1);
+    const [questions, setQuestions] = useState(null);
+    const [id, setID] = useState(null);
     const [refresh, setRefresh] = useState(false);
     const [date, setDate] = item ? useState(item.dueDate) : useState(new Date());
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = item ? useState(item.getDueDateText()) : useState(null);
 
     const dispatch = useDispatch();
+
+    const fetchData = async () => {
+        if(item){
+            setQuestions(QUESTIONS);
+            setID(QUESTIONS.length +1);
+        }
+        else{
+            setQuestions([]);
+            setID(0);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+      }, []
+    );
 
     const addAssignmentHandler = () => {
         dispatch(addAssignment(assignmentName, date));
@@ -104,94 +120,96 @@ const AddAssignmentScreen = props => {
         </View>
         :
         <Background>
-            <View style={styles.screen}>
-                {show && Platform.OS==="android" && 
-                    <DateTimePicker
-                        value={date}
-                        onChange={(event, selectedDate) => {
-                            if (selectedDate === undefined) {
-                                setShow(false);
-                            }
-                            else{
-                                setShow(false);
-                                setDate(selectedDate);
-                                setDateText((selectedDate.getMonth()+1).toString()+'/'+selectedDate.getDate().toString()+'/'+selectedDate.getFullYear().toString());
-                            }
-                        }}
-                    />
-                }
-                <FlatList
-                    keyExtractor={(item, index) => item.id}
-                    data={questions} 
-                    renderItem={renderQuestionListItem}
-                    ListEmptyComponent={<View></View>}
-                    ListHeaderComponent={
-                        <View>
-                            <View style={styles.inputFieldContainer}>
-                                <TextInput
-                                    style={styles.inputField}
-                                    placeholder="Enter Assignment Name"
-                                    placeholderTextColor='white'   
-                                    onChangeText={(text) => setAssignmentName(text)}
-                                    value={assignmentName}
-                                />
-                                <EditIcon/>
+            {!questions ? <ActivityIndicator/> :
+                <View style={styles.screen}>
+                    {show && Platform.OS==="android" && 
+                        <DateTimePicker
+                            value={date}
+                            onChange={(event, selectedDate) => {
+                                if (selectedDate === undefined) {
+                                    setShow(false);
+                                }
+                                else{
+                                    setShow(false);
+                                    setDate(selectedDate);
+                                    setDateText((selectedDate.getMonth()+1).toString()+'/'+selectedDate.getDate().toString()+'/'+selectedDate.getFullYear().toString());
+                                }
+                            }}
+                        />
+                    }
+                    <FlatList
+                        keyExtractor={(item, index) => item.id}
+                        data={questions} 
+                        renderItem={renderQuestionListItem}
+                        ListEmptyComponent={<View></View>}
+                        ListHeaderComponent={
+                            <View>
+                                <View style={styles.inputFieldContainer}>
+                                    <TextInput
+                                        style={styles.inputField}
+                                        placeholder="Enter Assignment Name"
+                                        placeholderTextColor='white'   
+                                        onChangeText={(text) => setAssignmentName(text)}
+                                        value={assignmentName}
+                                    />
+                                    <EditIcon/>
+                                </View>
+                                {dateText ? 
+                                    <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
+                                        <View style={styles.inputFieldContainer}>
+                                            <Text style={styles.inputField}>{dateText}</Text>
+                                            <EditIcon/>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                : 
+                                    <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
+                                        <View style={styles.inputFieldContainer}>
+                                            <Text style={styles.inputField}>Enter Due Date</Text>
+                                            <EditIcon/>
+                                        </View>
+                                    </TouchableWithoutFeedback>
+                                }
                             </View>
-                            {dateText ? 
-                                <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
-                                    <View style={styles.inputFieldContainer}>
-                                        <Text style={styles.inputField}>{dateText}</Text>
-                                        <EditIcon/>
-                                    </View>
-                                </TouchableWithoutFeedback>
-                             : 
-                                <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
-                                    <View style={styles.inputFieldContainer}>
-                                        <Text style={styles.inputField}>Enter Due Date</Text>
-                                        <EditIcon/>
-                                    </View>
-                                </TouchableWithoutFeedback>
-                            }
-                        </View>
-                    }
-                    ListFooterComponent= {
-                        <View>
-                            <AddListItemButton
-                                text='Add Question'
-                                containerStyle={styles.addButtonContainer}
-                                onSelect={() => {
-                                    props.navigation.navigate({
-                                        routeName: 'Question',
-                                        params: {
-                                            add: addQuestion,
-                                            refresh: doRefresh
+                        }
+                        ListFooterComponent= {
+                            <View>
+                                <AddListItemButton
+                                    text='Add Question'
+                                    containerStyle={styles.addButtonContainer}
+                                    onSelect={() => {
+                                        props.navigation.navigate({
+                                            routeName: 'Question',
+                                            params: {
+                                                add: addQuestion,
+                                                refresh: doRefresh
+                                            }
+                                        });
+                                    }}
+                                />
+                                <StandardButton
+                                    text="Save"
+                                    containerStyle={styles.saveButtonContainer}
+                                    onTap={() => {
+                                        if(questions.length == 0)
+                                        {
+                                            alert("Please add a Question first!");
+                                            return;
                                         }
-                                    });
-                                }}
-                            />
-                            <StandardButton
-                                text="Save"
-                                containerStyle={styles.saveButtonContainer}
-                                onTap={() => {
-                                    if(questions.length == 0)
-                                    {
-                                        alert("Please add a Question first!");
-                                        return;
-                                    }
-                                    if(item){
-                                        editAssignmentHandler();
-                                    } else {
-                                        addAssignmentHandler();
-                                    }
-                                    props.navigation.state.params.refresh();
-                                    props.navigation.pop();
-                                }}
-                            />
-                        </View>
-                    }
-                    
-                />
-            </View>
+                                        if(item){
+                                            editAssignmentHandler();
+                                        } else {
+                                            addAssignmentHandler();
+                                        }
+                                        props.navigation.state.params.refresh();
+                                        props.navigation.pop();
+                                    }}
+                                />
+                            </View>
+                        }
+                        
+                    />
+                </View>
+            }
         </Background>
     );
 };
