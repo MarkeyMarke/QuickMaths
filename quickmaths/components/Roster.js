@@ -1,16 +1,29 @@
-import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import {AntDesign} from '@expo/vector-icons';
 
 import SwipeableList from '../components/SwipeableList';
 import ListItem from '../components/ListItem';
 import Colors from '../constants/Colors';
+import { setStudents } from '../store/actions/students';
+import { STUDENTS } from '../data/dummy-data';
 
 const Roster = props => {
     const [ selectedIndex, setSelectedIndex ] = useState(0);
     const students = useSelector(state => state.students.students);
+
+    const dispatch = useDispatch();
+
+    const fetchData = async () => {
+        dispatch(setStudents(STUDENTS));
+    };
+
+    useEffect(() => {
+        fetchData();
+      }, []
+    );      
 
     const renderStudentListItem = itemData => {
 		return (
@@ -44,6 +57,28 @@ const Roster = props => {
                 />
             );
         };
+        
+    let component;
+
+    if(selectedIndex === 0){
+        component = 
+        <SwipeableList
+            data={students} 
+            renderItem={renderStudentListItem} 
+            onAdd={() => {console.log("Added")}}
+            onDelete={() => {console.log("Deleted")}}
+            buttonContainerStyle={styles.deleteButtonContainer}
+        />
+    } else {
+        component = 
+        <SwipeableList
+            data={students} 
+            renderItem={renderStudentRequestListItem} 
+            onAdd={() => {console.log("Added")}}
+            onDelete={() => {console.log("Deleted")}}
+            buttonContainerStyle={styles.deleteButtonContainer}
+        />
+    }
 
     return(
         <View>
@@ -57,22 +92,10 @@ const Roster = props => {
                 borderRadius={0}
                 activeTabStyle={styles.segmentedActiveTabStyle}
             />
-            {selectedIndex === 0 ? ( 
-                <SwipeableList
-                    data={students} 
-                    renderItem={renderStudentListItem} 
-                    onAdd={() => {console.log("Added")}}
-                    onDelete={() => {console.log("Deleted")}}
-                    buttonContainerStyle={styles.deleteButtonContainer}
-                />
+            {!students ? ( 
+                <ActivityIndicator/>
             ) : (
-                <SwipeableList
-                    data={students} 
-                    renderItem={renderStudentRequestListItem} 
-                    onAdd={() => {console.log("Added")}}
-                    onDelete={() => {console.log("Deleted")}}
-                    buttonContainerStyle={styles.deleteButtonContainer}
-                />
+                component
             )}
         </View>
     );
