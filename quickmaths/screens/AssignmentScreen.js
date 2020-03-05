@@ -102,7 +102,7 @@ const AssignmentScreen = props => {
 
   //Check if all questions have been loaded first
   //TODO: Use a better loading screen component.
-  if (currentQuestions === null) {
+  if (!currentQuestions) {
     return (
       <Background>
         <View style={styles.container}>
