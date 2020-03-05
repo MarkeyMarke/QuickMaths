@@ -65,11 +65,14 @@ const Submissions = props => {
 		}
 	};
 
-	let component;
-
-	if(isStudentRemainingActive){
-		component = 
-		<View>
+	if(!studentsRemaining){
+		return <ActivityIndicator/>
+	}
+	
+    return (
+        <View>
+        {isStudentRemainingActive ? (
+        <View>
             <View style={styles.simpleBackLabel}>
                 <TabButton active={isStudentRemainingActive} onTap={() => {
                     setIsStudentRemainingActive(false);
@@ -84,21 +87,12 @@ const Submissions = props => {
                 renderItem={renderStudentRemainingList}
             />
         </View>
-	} else {
-		component = 
-		<FlatList
+        ) : (
+        <FlatList
             keyExtractor={(item, index) => item.id}
             data={props.courseAssignments}
             renderItem={renderSubmissionListItem}
         />
-	}
-
-    return (
-        <View>
-        {!studentsRemaining ? (
-            <ActivityIndicator/>
-        ) : (
-            component
         )}
         </View>
     );

@@ -57,27 +57,9 @@ const Roster = props => {
                 />
             );
         };
-        
-    let component;
 
-    if(selectedIndex === 0){
-        component = 
-        <SwipeableList
-            data={students} 
-            renderItem={renderStudentListItem} 
-            onAdd={() => {console.log("Added")}}
-            onDelete={() => {console.log("Deleted")}}
-            buttonContainerStyle={styles.deleteButtonContainer}
-        />
-    } else {
-        component = 
-        <SwipeableList
-            data={students} 
-            renderItem={renderStudentRequestListItem} 
-            onAdd={() => {console.log("Added")}}
-            onDelete={() => {console.log("Deleted")}}
-            buttonContainerStyle={styles.deleteButtonContainer}
-        />
+    if(!students){
+        return <ActivityIndicator/>
     }
 
     return(
@@ -92,10 +74,22 @@ const Roster = props => {
                 borderRadius={0}
                 activeTabStyle={styles.segmentedActiveTabStyle}
             />
-            {!students ? ( 
-                <ActivityIndicator/>
+            {selectedIndex === 0  ? ( 
+                <SwipeableList
+                    data={students} 
+                    renderItem={renderStudentListItem} 
+                    onAdd={() => {console.log("Added")}}
+                    onDelete={() => {console.log("Deleted")}}
+                    buttonContainerStyle={styles.deleteButtonContainer}
+                />
             ) : (
-                component
+                <SwipeableList
+                    data={students} 
+                    renderItem={renderStudentRequestListItem} 
+                    onAdd={() => {console.log("Added")}}
+                    onDelete={() => {console.log("Deleted")}}
+                    buttonContainerStyle={styles.deleteButtonContainer}
+                />
             )}
         </View>
     );

@@ -94,6 +94,10 @@ const AddAssignmentScreen = props => {
         setRefresh(!refresh);
     };
     
+    if(!questions){
+        return <ActivityIndicator/>
+    }
+
     return (
         show && Platform.OS ==="ios" ? 
         <View>
@@ -120,96 +124,93 @@ const AddAssignmentScreen = props => {
         </View>
         :
         <Background>
-            {!questions ? <ActivityIndicator/> :
-                <View style={styles.screen}>
-                    {show && Platform.OS==="android" && 
-                        <DateTimePicker
-                            value={date}
-                            onChange={(event, selectedDate) => {
-                                if (selectedDate === undefined) {
-                                    setShow(false);
-                                }
-                                else{
-                                    setShow(false);
-                                    setDate(selectedDate);
-                                    setDateText((selectedDate.getMonth()+1).toString()+'/'+selectedDate.getDate().toString()+'/'+selectedDate.getFullYear().toString());
-                                }
-                            }}
-                        />
-                    }
-                    <FlatList
-                        keyExtractor={(item, index) => item.id}
-                        data={questions} 
-                        renderItem={renderQuestionListItem}
-                        ListEmptyComponent={<View></View>}
-                        ListHeaderComponent={
-                            <View>
-                                <View style={styles.inputFieldContainer}>
-                                    <TextInput
-                                        style={styles.inputField}
-                                        placeholder="Enter Assignment Name"
-                                        placeholderTextColor='white'   
-                                        onChangeText={(text) => setAssignmentName(text)}
-                                        value={assignmentName}
-                                    />
-                                    <EditIcon/>
-                                </View>
-                                {dateText ? 
-                                    <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
-                                        <View style={styles.inputFieldContainer}>
-                                            <Text style={styles.inputField}>{dateText}</Text>
-                                            <EditIcon/>
-                                        </View>
-                                    </TouchableWithoutFeedback>
-                                : 
-                                    <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
-                                        <View style={styles.inputFieldContainer}>
-                                            <Text style={styles.inputField}>Enter Due Date</Text>
-                                            <EditIcon/>
-                                        </View>
-                                    </TouchableWithoutFeedback>
-                                }
-                            </View>
-                        }
-                        ListFooterComponent= {
-                            <View>
-                                <AddListItemButton
-                                    text='Add Question'
-                                    containerStyle={styles.addButtonContainer}
-                                    onSelect={() => {
-                                        props.navigation.navigate({
-                                            routeName: 'Question',
-                                            params: {
-                                                add: addQuestion,
-                                                refresh: doRefresh
-                                            }
-                                        });
-                                    }}
-                                />
-                                <StandardButton
-                                    text="Save"
-                                    containerStyle={styles.saveButtonContainer}
-                                    onTap={() => {
-                                        if(questions.length == 0)
-                                        {
-                                            alert("Please add a Question first!");
-                                            return;
-                                        }
-                                        if(item){
-                                            editAssignmentHandler();
-                                        } else {
-                                            addAssignmentHandler();
-                                        }
-                                        props.navigation.state.params.refresh();
-                                        props.navigation.pop();
-                                    }}
-                                />
-                            </View>
-                        }
-                        
+            <View style={styles.screen}>
+                {show && Platform.OS==="android" && 
+                    <DateTimePicker
+                        value={date}
+                        onChange={(event, selectedDate) => {
+                            if (selectedDate === undefined) {
+                                setShow(false);
+                            }
+                            else{
+                                setShow(false);
+                                setDate(selectedDate);
+                                setDateText((selectedDate.getMonth()+1).toString()+'/'+selectedDate.getDate().toString()+'/'+selectedDate.getFullYear().toString());
+                            }
+                        }}
                     />
-                </View>
-            }
+                }
+                <FlatList
+                    keyExtractor={(item, index) => item.id}
+                    data={questions} 
+                    renderItem={renderQuestionListItem}
+                    ListEmptyComponent={<View></View>}
+                    ListHeaderComponent={
+                        <View>
+                            <View style={styles.inputFieldContainer}>
+                                <TextInput
+                                    style={styles.inputField}
+                                    placeholder="Enter Assignment Name"
+                                    placeholderTextColor='white'   
+                                    onChangeText={(text) => setAssignmentName(text)}
+                                    value={assignmentName}
+                                />
+                                <EditIcon/>
+                            </View>
+                            {dateText ? 
+                                <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
+                                    <View style={styles.inputFieldContainer}>
+                                        <Text style={styles.inputField}>{dateText}</Text>
+                                        <EditIcon/>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            : 
+                                <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
+                                    <View style={styles.inputFieldContainer}>
+                                        <Text style={styles.inputField}>Enter Due Date</Text>
+                                        <EditIcon/>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            }
+                        </View>
+                    }
+                    ListFooterComponent= {
+                        <View>
+                            <AddListItemButton
+                                text='Add Question'
+                                containerStyle={styles.addButtonContainer}
+                                onSelect={() => {
+                                    props.navigation.navigate({
+                                        routeName: 'Question',
+                                        params: {
+                                            add: addQuestion,
+                                            refresh: doRefresh
+                                        }
+                                    });
+                                }}
+                            />
+                            <StandardButton
+                                text="Save"
+                                containerStyle={styles.saveButtonContainer}
+                                onTap={() => {
+                                    if(questions.length == 0)
+                                    {
+                                        alert("Please add a Question first!");
+                                        return;
+                                    }
+                                    if(item){
+                                        editAssignmentHandler();
+                                    } else {
+                                        addAssignmentHandler();
+                                    }
+                                    props.navigation.state.params.refresh();
+                                    props.navigation.pop();
+                                }}
+                            />
+                        </View>
+                    }  
+                />
+            </View>
         </Background>
     );
 };
