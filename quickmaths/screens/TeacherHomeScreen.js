@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, ImageBackground, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, ImageBackground, StyleSheet} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -12,6 +12,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import AddListItemButton from '../components/AddListItemButton';
 import {deleteCourse, setCourse} from '../store/actions/courses';
+import Loading from '../constants/Loading';
 
 const TeacherHomeScreen = props => {
     const [refresh, setRefresh] = useState(false);
@@ -66,7 +67,7 @@ const TeacherHomeScreen = props => {
                 resizeMode="cover"
         >
             {!courses ? 
-            <ActivityIndicator/>
+            <Loading/>
             :
             <SwipeListView 
                 keyExtractor={(item, index) => item.id}

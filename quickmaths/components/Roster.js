@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import {AntDesign} from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import ListItem from '../components/ListItem';
 import Colors from '../constants/Colors';
 import { setStudents } from '../store/actions/students';
 import { STUDENTS } from '../data/dummy-data';
+import Loading from '../constants/Loading';
 
 const Roster = props => {
     const [ selectedIndex, setSelectedIndex ] = useState(0);
@@ -59,7 +60,7 @@ const Roster = props => {
         };
 
     if(!students){
-        return <ActivityIndicator/>
+        return <Loading/>
     }
 
     return(

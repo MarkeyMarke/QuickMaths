@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator} from 'react-native';
+import { View, StyleSheet} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons} from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -16,6 +16,7 @@ import AssignmentList from '../components/AssignmentList';
 import Roster from '../components/Roster';
 import Submissions from '../components/Submissions';
 import {COURSE_ASSIGNMENTS} from '../data/dummy-data';
+import Loading from '../constants/Loading';
 
 const ClassScreen = props => {
 	const components = {
@@ -94,7 +95,7 @@ const ClassScreen = props => {
                         <Ionicons name="ios-people" size={30} color="white"/>
                     </TabButton>
                 </View>
-                {!courseAssignments ? <ActivityIndicator/> : renderComponent}
+                {!courseAssignments ? <Loading/> : renderComponent}
             </View>
         </Background>
         

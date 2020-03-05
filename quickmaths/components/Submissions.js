@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, StyleSheet, Text, ActivityIndicator} from 'react-native';
+import {View, FlatList, StyleSheet, Text} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 
 import { STUDENT_REMAINING } from '../data/dummy-data';
 import TabButton from './TabButton';
 import ListItem from './ListItem';
 import Colors from '../constants/Colors';
+import Loading from '../constants/Loading';
 
 const Submissions = props => {
     const [ isStudentRemainingActive, setIsStudentRemainingActive ] = useState(false);
@@ -66,7 +67,7 @@ const Submissions = props => {
 	};
 
 	if(!studentsRemaining){
-		return <ActivityIndicator/>
+		return <Loading/>
 	}
 	
     return (

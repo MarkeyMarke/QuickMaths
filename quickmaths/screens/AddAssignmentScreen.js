@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, TextInput, FlatList, Text, Platform, TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, TextInput, FlatList, Text, Platform, TouchableWithoutFeedback} from 'react-native';
 import {useDispatch} from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -12,6 +12,7 @@ import {EvilIcons} from '@expo/vector-icons';
 import StandardButton from '../components/StandardButton';
 import {addAssignment, editAssignment} from '../store/actions/assignments';
 import { QUESTIONS } from '../data/dummy-data';
+import Loading from '../constants/Loading';
 
 const AddAssignmentScreen = props => {
     const item = props.navigation.getParam('assignment');
@@ -95,7 +96,7 @@ const AddAssignmentScreen = props => {
     };
     
     if(!questions){
-        return <ActivityIndicator/>
+        return <Loading/>
     }
 
     return (
