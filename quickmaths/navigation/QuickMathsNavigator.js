@@ -13,16 +13,12 @@ import ProfileScreen from '../screens/ProfileScreen';
 import CustomDrawer from '../components/Drawer';
 import Colors from '../constants/Colors';
 import AddClassScreen from '../screens/AddClassScreen';
-import NoClassScreen from '../screens/NoClassScreen';
-import PendingClassScreen from '../screens/PendingClassScreen';
 import EditClassScreen from '../screens/EditClassScreen';
 import AddAssignmentScreen from '../screens/AddAssignmentScreen';
 import QuestionScreen from '../screens/QuestionScreen';
 import AssignmentScreen from '../screens/AssignmentScreen';
 
 const StudentNavigator = createStackNavigator({
-    NoClass: NoClassScreen,
-    Pending: PendingClassScreen,
     StudentHomeScreen: StudentHomeScreen,
     Assignment: AssignmentScreen
 }, {
