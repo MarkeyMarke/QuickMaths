@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import {StyleSheet, FlatList } from "react-native";
 
 import Colors from "../constants/Colors";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
@@ -8,34 +8,60 @@ import Background from "../components/Background";
 import { STUDENT_ASSIGNMENTS } from "../data/dummy-data";
 import ListItem from "../components/ListItem";
 import { Ionicons } from "@expo/vector-icons";
+import NoClass from "../components/NoClass";
+import PendingClass from "../components/PendingClass";
 
 const StudentHomeScreen = props => {
   const [assignments, setAssignments] = useState(STUDENT_ASSIGNMENTS);
+  const components = {
+		NONE: 'none',
+		PENDING: 'pending',
+        ACCEPTED: 'accepted'
+    };
+    
+    const [activeComponent, setActiveComponent] = useState(components.ACCEPTED);
 
-  const renderListItem = itemData => {
-    return (
-      <ListItem
-        topText={itemData.item.title}
-        middleText={itemData.item.getDueDateText()}
-        bottomText={itemData.item.getProgressText()}
-        onSelect={() => {
-          props.navigation.navigate("Assignment", {
-            progress: itemData.item.progress,
-            title: itemData.item.title
-          });
-        }}
-        icon={<Ionicons name="ios-play" size={75} color="white" />}
-      />
-    );
-  };
+    const renderListItem = itemData => {
+        return (
+          <ListItem
+            topText={itemData.item.title}
+            middleText={itemData.item.getDueDateText()}
+            bottomText={itemData.item.getProgressText()}
+            onSelect={() => {
+              props.navigation.navigate("Assignment", {
+                progress: itemData.item.progress,
+                title: itemData.item.title
+              });
+            }}
+            icon={<Ionicons name="ios-play" size={75} color="white" />}
+          />
+        );
+    };
+
+    let renderComponent;
+
+	switch (activeComponent){
+		case components.NONE:
+			renderComponent = 
+			<NoClass/>
+			break;
+		case components.PENDING:
+			renderComponent = 
+			<PendingClass/>
+			break;
+		case components.ACCEPTED:
+            renderComponent = 
+            <FlatList
+                keyExtractor={(item, index) => item.id}
+                data={assignments}
+                renderItem={renderListItem}
+            />
+			break;
+	};
 
   return (
     <Background>
-      <FlatList
-        keyExtractor={(item, index) => item.id}
-        data={assignments}
-        renderItem={renderListItem}
-      />
+      {renderComponent}
     </Background>
   );
 };
