@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {StyleSheet, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import {StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
 import Colors from "../constants/Colors";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
@@ -12,14 +12,24 @@ import NoClass from "../components/NoClass";
 import PendingClass from "../components/PendingClass";
 
 const StudentHomeScreen = props => {
-  const [assignments, setAssignments] = useState(STUDENT_ASSIGNMENTS);
-  const components = {
-		NONE: 'none',
-		PENDING: 'pending',
+    const components = {
+        NONE: 'none',
+        PENDING: 'pending',
         ACCEPTED: 'accepted'
     };
     
-    const [activeComponent, setActiveComponent] = useState(components.ACCEPTED);
+    const [activeComponent, setActiveComponent] = useState(null);
+    const [assignments, setAssignments] = useState(null);
+    
+    // Will set the active component here depending on what is returned from fetch
+    const fetchData = async () => {
+        setAssignments(STUDENT_ASSIGNMENTS);
+        setActiveComponent(components.ACCEPTED);
+    };
+      
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const renderListItem = itemData => {
         return (
@@ -56,7 +66,10 @@ const StudentHomeScreen = props => {
                 data={assignments}
                 renderItem={renderListItem}
             />
-			break;
+            break;
+        default:
+            renderComponent =
+            <ActivityIndicator/>
 	};
 
   return (
