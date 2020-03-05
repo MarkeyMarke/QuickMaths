@@ -65,18 +65,6 @@ const ClassScreen = props => {
 			break;
 	};
 
-	const onSelectAssignmentTab = () => {
-		setActiveComponent(components.ASSIGNMENTS);
-	};
-
-	const onSelectSubmissionsTab = () => {
-		setActiveComponent(components.SUBMISSIONS);
-	};
-
-	const onSelectRosterTab = () => {
-		setActiveComponent(components.ROSTER);
-	};
-
     return(
         <Background>
             <View style={styles.screen}>
@@ -85,13 +73,13 @@ const ClassScreen = props => {
                         props.navigation.state.params.refresh();
                         props.navigation.pop();
                         }}/>
-                    <TabButton active={activeComponent === components.ASSIGNMENTS} onTap={onSelectAssignmentTab}>
+                    <TabButton active={activeComponent === components.ASSIGNMENTS} onTap={() => setActiveComponent(components.ASSIGNMENTS)}>
                         <MaterialCommunityIcons name="clipboard-text-outline" size={30} color="white"/>
                     </TabButton>
-                    <TabButton active={activeComponent === components.SUBMISSIONS} onTap={onSelectSubmissionsTab}>
+                    <TabButton active={activeComponent === components.SUBMISSIONS} onTap={() => setActiveComponent(components.SUBMISSIONS)}>
                         <Ionicons name="md-checkmark-circle" size={30} color="white"/>
                     </TabButton>
-                    <TabButton active={activeComponent === components.ROSTER} onTap={onSelectRosterTab}>
+                    <TabButton active={activeComponent === components.ROSTER} onTap={() => setActiveComponent(components.ROSTER)}>
                         <Ionicons name="ios-people" size={30} color="white"/>
                     </TabButton>
                 </View>
