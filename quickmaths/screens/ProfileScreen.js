@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
+import { useSelector, useDispatch } from 'react-redux';
+import * as usersAuthActions from '../store/actions/users';
 
 import Colors from '../constants/Colors';
 import HeaderButton from '../components/HeaderButton';
@@ -11,8 +13,65 @@ import StandardButton from '../components/StandardButton';
 const ProfileScreen = props => {
 	const [ name, setName ] = useState('');
 	const [ email, setEmail ] = useState('');
-	const [ studentID, setStudentID ] = useState('');
+	const [ userID, setUserID ] = useState('');
 	const [ password, setPassword ] = useState('');
+	const [ error, setError ] = useState();
+	const dispatch = useDispatch();
+	const idToken = useSelector(state => state.users.token);
+	const nameProfile = useSelector(state => state.users.name);
+	const emailProfile = useSelector(state => state.users.email);
+	const idProfile = useSelector(state => state.users.id);
+	const isTeacher = useSelector(state => state.users.isTeacher);
+	//Function For An Allert
+	useEffect(
+		() => {
+			if (error) {
+				Alert.alert('An Error Occurred!', error, [ { text: 'Okay' } ]);
+			}
+		},
+		[ error ]
+	);
+
+	const homePageHandler = () => {
+		if (isTeacher)
+			//Teacher Home Page
+			props.navigation.navigate('TeacherHomeScreen');
+		else
+			//Student Home Page
+			props.navigation.navigate('StudentHomeScreen');
+	};
+
+	//Function For Update Email
+	const onUpdateEmail = async () => {
+		setError(null);
+		try {
+			await dispatch(usersAuthActions.updateEmail(email, idToken));
+			Alert.alert('Success', 'Email Changed', [ { text: 'Okay' } ]);
+		} catch (err) {
+			setError(err.message);
+		}
+	};
+	//Function For Update Password
+	const onUpdatePassword = async () => {
+		setError(null);
+		try {
+			await dispatch(usersAuthActions.updatePassword(password, idToken));
+			Alert.alert('Success', 'Password Changed', [ { text: 'Okay' } ]);
+		} catch (err) {
+			setError(err.message);
+		}
+	};
+	//Function For Update Profile
+	const onUpdateProfile = async () => {
+		setError(null);
+		try {
+			await dispatch(usersAuthActions.updateProfile(name, nameProfile, userID, idProfile, idToken));
+			Alert.alert('Success', 'Profile Changed', [ { text: 'Okay' } ]);
+		} catch (err) {
+			setError(err.message);
+		}
+	};
+
 	return (
 		<Background>
 			<TouchableWithoutFeedback
@@ -24,8 +83,9 @@ const ProfileScreen = props => {
 					<View style={styles.inputFieldContainer}>
 						<TextInput
 							style={styles.inputField}
-							placeholder='Enter Name'
+							placeholder={nameProfile}
 							placeholderTextColor='white'
+							autoCapitalize='none'
 							onChangeText={text => setName(text)}
 							value={name}
 						/>
@@ -34,8 +94,9 @@ const ProfileScreen = props => {
 					<View style={styles.inputFieldContainer}>
 						<TextInput
 							style={styles.inputField}
-							placeholder='Enter Email'
+							placeholder={emailProfile}
 							placeholderTextColor='white'
+							autoCapitalize='none'
 							onChangeText={text => setEmail(text)}
 							value={email}
 						/>
@@ -44,18 +105,21 @@ const ProfileScreen = props => {
 					<View style={styles.inputFieldContainer}>
 						<TextInput
 							style={styles.inputField}
-							placeholder='Enter Student ID'
+							placeholder={idProfile}
 							placeholderTextColor='white'
-							onChangeText={text => setStudentID(text)}
-							value={studentID}
+							autoCapitalize='none'
+							onChangeText={text => setUserID(text)}
+							value={userID}
 						/>
 						<EditIcon />
 					</View>
 					<View style={styles.inputFieldContainer}>
 						<TextInput
 							style={styles.inputField}
-							placeholder='Enter Password'
+							placeholder='•••••••'
 							placeholderTextColor='white'
+							secureTextEntry
+							autoCapitalize='none'
 							onChangeText={text => setPassword(text)}
 							value={password}
 						/>
@@ -64,9 +128,15 @@ const ProfileScreen = props => {
 					<StandardButton
 						text='Save'
 						onTap={() => {
-							console.log('Save');
+							homePageHandler();
+							if (email != '') {
+								onUpdateEmail();
+							} else if (password != '') {
+								onUpdatePassword();
+							} else {
+								onUpdateProfile();
+							}
 							//addCourseHandler(courseName, classYear);
-							//props.navigation.replace('TeacherHomeScreen');
 						}}
 						containerStyle={{ width: '85%' }}
 					/>
