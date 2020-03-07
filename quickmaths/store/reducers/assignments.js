@@ -1,14 +1,17 @@
 import Assignment from '../../models/Assignment';
-import {COURSE_ASSIGNMENTS} from '../../data/dummy-data';
-import {ADD_ASSIGNMENT, DELETE_ASSIGNMENT, EDIT_ASSIGNMENT} from '../actions/assignments';
+import {ADD_ASSIGNMENT, DELETE_ASSIGNMENT, EDIT_ASSIGNMENT, SET_ASSIGNMENT} from '../actions/assignments';
 
 const initialState = {
-    assignments: COURSE_ASSIGNMENTS,
-    init: COURSE_ASSIGNMENTS.length  // Will be removed once connected to database
+    assignments: null,
+    init: null  // Will be removed once connected to database
 };
 
 const assignmentsReducer = (state = initialState, action) => {
     switch (action.type){
+        case SET_ASSIGNMENT:
+            var assignmentList = action.assignments;
+            var length = assignmentList.length;
+            return {...state, assignments:assignmentList, init: length}
         case ADD_ASSIGNMENT:
             var assignments = state.assignments;
             var id = state.init + 1; // Will be removed once connected to database

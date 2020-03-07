@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, FlatList, StyleSheet, Text} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 
@@ -6,10 +6,20 @@ import { STUDENT_REMAINING } from '../data/dummy-data';
 import TabButton from './TabButton';
 import ListItem from './ListItem';
 import Colors from '../constants/Colors';
+import Loading from '../constants/Loading';
 
 const Submissions = props => {
     const [ isStudentRemainingActive, setIsStudentRemainingActive ] = useState(false);
-    const [ studentsRemaining, setStudentsRemaining ] = useState(STUDENT_REMAINING);
+	const [ studentsRemaining, setStudentsRemaining ] = useState(null);
+	
+	const fetchData = async () => {
+		setStudentsRemaining(STUDENT_REMAINING);
+	};
+
+	useEffect(() => {
+		fetchData();
+	  }, []
+	);	  
 
     const renderSubmissionListItem = itemData => {
 		return (
@@ -56,11 +66,14 @@ const Submissions = props => {
 		}
 	};
 
-
+	if(!studentsRemaining){
+		return <Loading/>
+	}
+	
     return (
         <View>
         {isStudentRemainingActive ? (
-            <View>
+        <View>
             <View style={styles.simpleBackLabel}>
                 <TabButton active={isStudentRemainingActive} onTap={() => {
                     setIsStudentRemainingActive(false);
@@ -74,13 +87,13 @@ const Submissions = props => {
                 data={studentsRemaining}
                 renderItem={renderStudentRemainingList}
             />
-            </View>
+        </View>
         ) : (
-            <FlatList
+        <FlatList
             keyExtractor={(item, index) => item.id}
             data={props.courseAssignments}
             renderItem={renderSubmissionListItem}
-            />
+        />
         )}
         </View>
     );

@@ -15,3 +15,9 @@ export const EDIT_ASSIGNMENT = 'EDIT_ASSIGNMENT';
 export const editAssignment = (id, name, date) => {
     return {type: EDIT_ASSIGNMENT, assignmentId: id, assignmentName: name, dueDate: date}
 };
+
+export const SET_ASSIGNMENT = 'SET_ASSIGNMENT';
+
+export const setAssignment = (assignments) => {
+    return {type: SET_ASSIGNMENT, assignments: assignments}
+};

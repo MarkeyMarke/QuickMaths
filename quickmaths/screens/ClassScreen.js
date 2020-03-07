@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons} from '@expo/vector-icons';
@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../components/Background';
 import BackButton from '../constants/BackButton';
 import TabButton from '../components/TabButton';
-import { deleteAssignment } from '../store/actions/assignments';
+import { deleteAssignment, setAssignment } from '../store/actions/assignments';
 import Colors from '../constants/Colors';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -15,6 +15,8 @@ import EvilIconsHeaderButton from '../components/EvilIconsHeaderButton';
 import AssignmentList from '../components/AssignmentList';
 import Roster from '../components/Roster';
 import Submissions from '../components/Submissions';
+import {COURSE_ASSIGNMENTS} from '../data/dummy-data';
+import Loading from '../constants/Loading';
 
 const ClassScreen = props => {
 	const components = {
@@ -24,7 +26,6 @@ const ClassScreen = props => {
 	};
 
 	const [activeComponent, setActiveComponent] = useState(components.ASSIGNMENTS);
-  	const [refresh, setRefresh] = useState(false);
 
 	const courseAssignments = useSelector(state => state.assignments.assignments);
 	const dispatch = useDispatch();
@@ -33,6 +34,14 @@ const ClassScreen = props => {
 		dispatch(deleteAssignment(item.id));
 	};
 	
+	const fetchData = async() => {
+        dispatch(setAssignment(COURSE_ASSIGNMENTS));
+    };
+
+    useEffect(() => {
+        fetchData();
+    },[]);
+
 	let renderComponent;
 
 	switch (activeComponent){
@@ -41,7 +50,6 @@ const ClassScreen = props => {
 			<AssignmentList
 				courseAssignments={courseAssignments}
 				deleteAssignmentHandler={deleteAssignmentHandler}
-				doRefresh={doRefresh}
 				navigation={props.navigation}
 			/>
 			break;
@@ -57,23 +65,6 @@ const ClassScreen = props => {
 			break;
 	};
 
-	const onSelectAssignmentTab = () => {
-		setActiveComponent(components.ASSIGNMENTS);
-	};
-
-	const onSelectSubmissionsTab = () => {
-		setActiveComponent(components.SUBMISSIONS);
-	};
-
-	const onSelectRosterTab = () => {
-		setActiveComponent(components.ROSTER);
-	};
-
-    const doRefresh = () => {
-        setRefresh(!refresh);
-    }
-
-	
     return(
         <Background>
             <View style={styles.screen}>
@@ -82,17 +73,17 @@ const ClassScreen = props => {
                         props.navigation.state.params.refresh();
                         props.navigation.pop();
                         }}/>
-                    <TabButton active={activeComponent === components.ASSIGNMENTS} onTap={onSelectAssignmentTab}>
+                    <TabButton active={activeComponent === components.ASSIGNMENTS} onTap={() => setActiveComponent(components.ASSIGNMENTS)}>
                         <MaterialCommunityIcons name="clipboard-text-outline" size={30} color="white"/>
                     </TabButton>
-                    <TabButton active={activeComponent === components.SUBMISSIONS} onTap={onSelectSubmissionsTab}>
+                    <TabButton active={activeComponent === components.SUBMISSIONS} onTap={() => setActiveComponent(components.SUBMISSIONS)}>
                         <Ionicons name="md-checkmark-circle" size={30} color="white"/>
                     </TabButton>
-                    <TabButton active={activeComponent === components.ROSTER} onTap={onSelectRosterTab}>
+                    <TabButton active={activeComponent === components.ROSTER} onTap={() => setActiveComponent(components.ROSTER)}>
                         <Ionicons name="ios-people" size={30} color="white"/>
                     </TabButton>
                 </View>
-                {renderComponent}
+                {!courseAssignments ? <Loading/> : renderComponent}
             </View>
         </Background>
         

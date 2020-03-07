@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, TextInput, FlatList, Text, Platform, TouchableWithoutFeedback} from 'react-native';
 import {useDispatch} from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -12,19 +12,36 @@ import {EvilIcons} from '@expo/vector-icons';
 import StandardButton from '../components/StandardButton';
 import {addAssignment, editAssignment} from '../store/actions/assignments';
 import { QUESTIONS } from '../data/dummy-data';
+import Loading from '../constants/Loading';
 
 const AddAssignmentScreen = props => {
     const item = props.navigation.getParam('assignment');
 
     const [assignmentName, setAssignmentName] = item ? useState(item.title) : useState('');
-    const [questions, setQuestions] = item ? useState(QUESTIONS) : useState([]);
-    const [id, setID] = useState(questions.length +1);
+    const [questions, setQuestions] = useState(null);
+    const [id, setID] = useState(null);
     const [refresh, setRefresh] = useState(false);
     const [date, setDate] = item ? useState(item.dueDate) : useState(new Date());
     const [show, setShow] = useState(false);
     const [dateText, setDateText] = item ? useState(item.getDueDateText()) : useState(null);
 
     const dispatch = useDispatch();
+
+    const fetchData = async () => {
+        if(item){
+            setQuestions(QUESTIONS);
+            setID(QUESTIONS.length +1);
+        }
+        else{
+            setQuestions([]);
+            setID(0);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+      }, []
+    );
 
     const addAssignmentHandler = () => {
         dispatch(addAssignment(assignmentName, date));
@@ -78,6 +95,10 @@ const AddAssignmentScreen = props => {
         setRefresh(!refresh);
     };
     
+    if(!questions){
+        return <Loading/>
+    }
+
     return (
         show && Platform.OS ==="ios" ? 
         <View>
@@ -144,7 +165,7 @@ const AddAssignmentScreen = props => {
                                         <EditIcon/>
                                     </View>
                                 </TouchableWithoutFeedback>
-                             : 
+                            : 
                                 <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
                                     <View style={styles.inputFieldContainer}>
                                         <Text style={styles.inputField}>Enter Due Date</Text>
@@ -188,8 +209,7 @@ const AddAssignmentScreen = props => {
                                 }}
                             />
                         </View>
-                    }
-                    
+                    }  
                 />
             </View>
         </Background>

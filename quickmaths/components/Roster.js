@@ -1,16 +1,30 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import {AntDesign} from '@expo/vector-icons';
 
 import SwipeableList from '../components/SwipeableList';
 import ListItem from '../components/ListItem';
 import Colors from '../constants/Colors';
+import { setStudents } from '../store/actions/students';
+import { STUDENTS } from '../data/dummy-data';
+import Loading from '../constants/Loading';
 
 const Roster = props => {
     const [ selectedIndex, setSelectedIndex ] = useState(0);
     const students = useSelector(state => state.students.students);
+
+    const dispatch = useDispatch();
+
+    const fetchData = async () => {
+        dispatch(setStudents(STUDENTS));
+    };
+
+    useEffect(() => {
+        fetchData();
+      }, []
+    );      
 
     const renderStudentListItem = itemData => {
 		return (
@@ -45,6 +59,10 @@ const Roster = props => {
             );
         };
 
+    if(!students){
+        return <Loading/>
+    }
+
     return(
         <View>
             <SegmentedControlTab 
@@ -57,7 +75,7 @@ const Roster = props => {
                 borderRadius={0}
                 activeTabStyle={styles.segmentedActiveTabStyle}
             />
-            {selectedIndex === 0 ? ( 
+            {selectedIndex === 0  ? ( 
                 <SwipeableList
                     data={students} 
                     renderItem={renderStudentListItem} 
