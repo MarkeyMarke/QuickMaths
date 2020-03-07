@@ -10,6 +10,8 @@ export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:si
 export const EMAILVERIFICATION_URL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`;
 export const FORGETPASSWORD_URL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`;
 export const CHECKUSER_URL = `https://${PROJECT_ID}.firebaseio.com/users.json`;
+export const CHANGEPASSWORD_URL = `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`;
+export const CHANGEEMAIL_URL = `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`;
 
 //Function For Validating Email
 function validateEmail(email) {
@@ -75,16 +77,29 @@ export const signIn = (email, password) => {
 			throw new Error(message);
 		}
 		//Check User
-		const getUser = await fetch(CHECKUSER_URL);
+		var localId = resData.localId;
+		const getUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`);
 		const resUserData = await getUser.json();
-		var isTeacher = true;
-		for (const key in resUserData) {
-			if (resUserData[key].email == email) {
-				isTeacher = resUserData[key].teacher;
-			}
-		}
-		if (isTeacher) dispatch({ type: SIGN_IN_AS_TEACHER });
-		else dispatch({ type: SIGN_IN_AS_STUDENT });
+		var isTeacher = resUserData.teacher;
+		var nameProf = resUserData.fullName;
+		var idProf = resUserData.userID;
+		var emailProf = resData.email;
+		if (isTeacher)
+			dispatch({
+				type: SIGN_IN_AS_TEACHER,
+				name: nameProf,
+				email: emailProf,
+				id: idProf,
+				token: resData.idToken
+			});
+		else
+			dispatch({
+				type: SIGN_IN_AS_STUDENT,
+				name: nameProf,
+				email: emailProf,
+				id: idProf,
+				token: resData.idToken
+			});
 		//dispatch({ type: SIGN_IN });
 	};
 };
@@ -111,8 +126,8 @@ export const signUp = (email, fullName, userID, password, selected) => {
 		} else if (password === '') {
 			let message = 'Fill In The Password';
 			throw new Error(message);
-		} else if (password.length <= 5) {
-			let message = 'Password Length Minimum 5';
+		} else if (password.length < 6) {
+			let message = 'Password Length Minimum 6';
 			throw new Error(message);
 		}
 		//Sign Up, using Firebase API
@@ -160,13 +175,13 @@ export const signUp = (email, fullName, userID, password, selected) => {
 			throw new Error(message);
 		}
 		//Post New User to Firebase
-		const createTeacherUser = await fetch(CHECKUSER_URL, {
-			method: 'POST',
+		var localId = resData.localId;
+		const createTeacherUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
+			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				email: email,
 				fullName: fullName,
 				userID: userID,
 				teacher: selected
@@ -216,4 +231,128 @@ export const forgetPassword = email => {
 //Function For Sign Out
 export const signOut = () => {
 	return { type: SIGN_OUT };
+};
+
+//Function For Update Email
+export const updateEmail = (email, idToken) => {
+	return async dispatch => {
+		if (validateEmail(email)) {
+			let message = 'Invalid Email!';
+			throw new Error(message);
+		}
+		//Change Email, using Firebase API
+		const changeEmail = await fetch(CHANGEEMAIL_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				idToken: idToken,
+				email: email,
+				returnSecureToken: true
+			})
+		});
+		//Handling Change Email Error API
+		if (!changeEmail.ok) {
+			const errorResData = await changeEmail.json();
+			const errorId = errorResData.error.message;
+			let message = 'Sign Out And Try Again!';
+			if (errorId === 'EMAIL_EXISTS') {
+				message = 'Email Exist';
+			}
+			throw new Error(message);
+		}
+		const newData = await changeEmail.json();
+		//Send Email Verification, using Firebase API
+		const sendEmailVerification = await fetch(EMAILVERIFICATION_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				requestType: 'VERIFY_EMAIL',
+				idToken: newData.idToken
+			})
+		});
+		//Handling Email Verification Error API
+		if (!sendEmailVerification.ok) {
+			const errorEmailData = await sendEmailVerification.json();
+			const errorIdEm = errorEmailData.error.message;
+			let message = 'Something Went Wrong!';
+			if (errorIdEm === 'EMAIL_EXISTS') {
+				message = 'Email Exists';
+			}
+			throw new Error(message);
+		}
+	};
+};
+//Function For Update Password
+export const updatePassword = (password, idToken) => {
+	return async dispatch => {
+		if (password.length < 6) {
+			let message = 'Password Length Minimum 6';
+			throw new Error(message);
+		}
+		//Change Password, using Firebase API
+		const changePass = await fetch(CHANGEPASSWORD_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				idToken: idToken,
+				password: password,
+				returnSecureToken: true
+			})
+		});
+		//Handling The Change Password Error API
+		if (!changePass.ok) {
+			const resDataPass = await changePass.json();
+			const errorResData = await resDataPass.json();
+			const errorId = errorResData.error.message;
+			let message = 'Something Went Wrong!';
+			if (errorId === 'WEAK_PASSWORD') {
+				message = 'Password Should More Than 6';
+			}
+			throw new Error(message);
+		}
+	};
+};
+//Function For Update Name And/Or UserID Profile
+export const updateProfile = (name, nameProfile, id, idProfile, token) => {
+	return async dispatch => {
+		const response = await fetch(
+			`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}
+		`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					idToken: token
+				})
+			}
+		);
+		if (!response.ok) {
+			throw new Error('Something went wrong!');
+		}
+		if (name == '') name = nameProfile;
+		if (id == '') id = idProfile;
+		const resData = await response.json();
+		var localId = resData.users[0].localId;
+		const updateProfileFetch = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				fullName: name,
+				userID: id
+			})
+		});
+		if (!updateProfileFetch.ok) {
+			throw new Error('Something went wrong!');
+		}
+	};
 };

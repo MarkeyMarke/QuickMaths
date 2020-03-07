@@ -2,17 +2,43 @@ import { SIGN_OUT, SIGN_IN, SIGN_IN_AS_STUDENT, SIGN_IN_AS_TEACHER } from '../ac
 
 const initialState = {
 	isTeacher: false,
-	isStudent: false
+	isStudent: false,
+	name: null,
+	email: null,
+	id: null,
+	token: null
 };
 
 const usersReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case SIGN_IN_AS_TEACHER:
-			return { ...state, isTeacher: true };
+			return {
+				...state,
+				isTeacher: true,
+				name: action.name,
+				email: action.email,
+				id: action.id,
+				token: action.token
+			};
 		case SIGN_IN_AS_STUDENT:
-			return { ...state, isStudent: true };
+			return {
+				...state,
+				isStudent: true,
+				name: action.name,
+				email: action.email,
+				id: action.id,
+				token: action.token
+			};
 		case SIGN_OUT:
-			return { ...state, isTeacher: false, isStudent: false };
+			return {
+				...state,
+				isTeacher: false,
+				isStudent: false,
+				name: null,
+				email: null,
+				id: null,
+				token: null
+			};
 		default:
 	}
 	return state;
