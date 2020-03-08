@@ -1,13 +1,10 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, StyleSheet, TouchableWithoutFeedback, Keyboard} from 'react-native';
-import {Item, HeaderButtons} from 'react-navigation-header-buttons';
 
-import Colors from '../constants/Colors';
-import HeaderButton from '../components/HeaderButton';
-import Background from '../components/Background';
-import StandardButton from '../components/StandardButton';
+import Background from './Background';
+import StandardButton from './StandardButton';
 
-const NoClassScreen = props => {
+const NoClass = props => {
     const [courseCode, setCourseCode] = useState('');
 
     return (
@@ -37,26 +34,6 @@ const NoClassScreen = props => {
             </TouchableWithoutFeedback>
         </Background>
     );
-}
-
-NoClassScreen.navigationOptions = (navData) => {
-    return{
-        headerTitle: 'Find a class',
-        headerLeftContainerStyle: {
-            backgroundColor: Colors.accentColor,
-        },
-        headerLeft: () => (
-               <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                    <Item 
-                        title="Menu" 
-                        iconName="md-menu" 
-                        onPress={() => {
-                            navData.navigation.toggleDrawer();
-                        }}
-                    />
-                </HeaderButtons>
-        )
-    };
 };
 
 const styles = StyleSheet.create({
@@ -85,4 +62,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default NoClassScreen;
+export default NoClass;
