@@ -14,6 +14,8 @@ import Background from "../components/Background";
 import BackButton from "../constants/BackButton";
 import StandardButton from "../components/StandardButton";
 import Colors from "../constants/Colors";
+import { Item, HeaderButtons } from "react-navigation-header-buttons";
+import HeaderButton from "../components/HeaderButton";
 
 //TODO: Set the title of the screen to have the assignment name
 const AssignmentScreen = props => {
@@ -259,8 +261,21 @@ const styles = StyleSheet.create({
 AssignmentScreen.navigationOptions = navData => {
   return {
     headerTitle: navData.navigation.state.params.title,
+    headerLeftContainerStyle: {
+      backgroundColor: Colors.accentColor
+    },
     gestureEnabled: false,
-    headerLeft: () => null
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName="md-menu"
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    )
   };
 };
 
