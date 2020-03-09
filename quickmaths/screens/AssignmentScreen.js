@@ -112,6 +112,22 @@ const AssignmentScreen = props => {
     </View>
   );
 
+  const progressText = text => {
+    return (
+      <View style={styles.progressTextContainer}>
+        <Text style={styles.whiteText}>{text}</Text>
+      </View>
+    );
+  };
+
+  const questionText = text => {
+    return (
+      <View style={styles.questionTextContainer}>
+        <Text style={styles.whiteText}>{text}</Text>
+      </View>
+    );
+  };
+
   const canvasWebStyle = `.m-signature-pad--footer
   .button {
     background-color: #B76767;
@@ -135,16 +151,8 @@ const AssignmentScreen = props => {
       <Background>
         {backButton}
         <View style={styles.assignmentContainer}>
-          <View style={styles.progressTextContainer}>
-            <Text style={styles.whiteText}>
-              Question {index + 1}/{currentQuestions.length}
-            </Text>
-          </View>
-          <View style={styles.questionTextContainer}>
-            <Text style={styles.whiteText}>
-              {currentQuestions[index].question}?
-            </Text>
-          </View>
+          {progressText(`Question ${index + 1}/${currentQuestions.length}`)}
+          {questionText(`${currentQuestions[index].question}?`)}
           <View style={styles.answerTextContainer}>
             <Text style={styles.answerText}>
               {currentQuestions[index].answer}
@@ -161,15 +169,11 @@ const AssignmentScreen = props => {
       <Background>
         {backButton}
         <View style={styles.assignmentContainer}>
-          <View style={styles.progressTextContainer}>
-            <Text style={styles.whiteText}>
-              {currentQuestions.length}/{currentQuestions.length}
-            </Text>
-          </View>
-          <View style={styles.questionTextContainer}>
-            <Text style={styles.whiteText}>You're finished!</Text>
-          </View>
-          <StandardButton text="Next" onTap={() => props.navigation.pop()} />
+          {progressText(
+            `Question ${currentQuestions.length}/${currentQuestions.length}`
+          )}
+          {questionText(`You're finished!`)}
+          <StandardButton text="Finish" onTap={() => props.navigation.pop()} />
         </View>
       </Background>
     );
@@ -179,16 +183,8 @@ const AssignmentScreen = props => {
     <Background>
       {backButton}
       <View style={styles.assignmentContainer}>
-        <View style={styles.progressTextContainer}>
-          <Text style={styles.whiteText}>
-            Question {index + 1}/{currentQuestions.length}
-          </Text>
-        </View>
-        <View style={styles.questionTextContainer}>
-          <Text style={styles.whiteText}>
-            {currentQuestions[index].question}?
-          </Text>
-        </View>
+        {progressText(`Question ${index + 1}/${currentQuestions.length}`)}
+        {questionText(`${currentQuestions[index].question}?`)}
         <View style={styles.canvasContainer}>
           <Signature
             onOK={img => readImageHandler(img.substr(22))}
