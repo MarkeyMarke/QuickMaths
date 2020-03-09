@@ -31,14 +31,14 @@ const LoginScreen = props => {
   }, [error]);
 
   useEffect(() => {
-    //props.navigation.navigate("StudentHomeScreen"); //TODO: Will delete this line and uncomment it when done developing this branch
-    if (submitted) {
+    props.navigation.navigate("StudentHomeScreen"); //TODO: Will delete this line and uncomment it when done developing this branch
+    /*if (submitted) {
       if (isTeacher)
         //Teacher Home Page
         props.navigation.navigate("TeacherHomeScreen");
       //Student Home Page
       else props.navigation.navigate("StudentHomeScreen");
-    }
+    }*/
   }, [submitted]);
 
   //Function For Login
