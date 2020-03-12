@@ -62,6 +62,11 @@ export const STUDENT_ASSIGNMENTS = [
   )
 ];
 
+export const STUDENT_FETCH = {
+  status: "none",
+  assignments: STUDENT_ASSIGNMENTS
+};
+
 export const STUDENTS = [
   new Student("s1", "Student Name", "Student Email"),
   new Student("s2", "Student Name", "Student Email"),

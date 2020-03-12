@@ -1,30 +1,39 @@
 import React, { useState, useEffect } from "react";
-import {StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import {View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
 import Colors from "../constants/Colors";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
 import Background from "../components/Background";
-import { STUDENT_ASSIGNMENTS } from "../data/dummy-data";
+import { STUDENT_ASSIGNMENTS, STUDENT_FETCH } from "../data/dummy-data";
 import ListItem from "../components/ListItem";
 import { Ionicons } from "@expo/vector-icons";
 import NoClass from "../components/NoClass";
 import PendingClass from "../components/PendingClass";
 
 const StudentHomeScreen = props => {
-    const components = {
+    const status = {
         NONE: 'none',
         PENDING: 'pending',
         ACCEPTED: 'accepted'
     };
     
-    const [activeComponent, setActiveComponent] = useState(null);
+    const [fetch, setFetch] = useState(STUDENT_FETCH);
+    const [currentStatus, setCurrentStatus] = useState(null);
     const [assignments, setAssignments] = useState(null);
     
     // Will set the active component here depending on what is returned from fetch
     const fetchData = async () => {
-        setAssignments(STUDENT_ASSIGNMENTS);
-        setActiveComponent(components.ACCEPTED);
+      if(fetch.status === status.NONE){
+        setCurrentStatus(status.NONE);
+      }
+      else if(fetch.status === status.PENDING){
+        setCurrentStatus(status.PENDING);
+      }
+      else{
+        setAssignments(fetch.assignments);
+        setCurrentStatus(status.ACCEPTED);
+      }
     };
       
     useEffect(() => {
@@ -50,26 +59,31 @@ const StudentHomeScreen = props => {
 
     let renderComponent;
 
-	switch (activeComponent){
-		case components.NONE:
+	switch (currentStatus){
+		case status.NONE:
 			renderComponent = 
 			<NoClass/>
 			break;
-		case components.PENDING:
+		case status.PENDING:
 			renderComponent = 
 			<PendingClass/>
 			break;
-		case components.ACCEPTED:
-            renderComponent = 
-            <FlatList
-                keyExtractor={(item, index) => item.id}
-                data={assignments}
-                renderItem={renderListItem}
-            />
-            break;
-        default:
-            renderComponent =
-            <ActivityIndicator/>
+		case status.ACCEPTED:
+      renderComponent = 
+      <FlatList
+          keyExtractor={(item, index) => item.id}
+          data={assignments}
+          ListEmptyComponent={
+            <View>
+              <Text>No Assignments yet!</Text>
+            </View>
+          }
+          renderItem={renderListItem}
+      />
+      break;
+    default:
+      renderComponent =
+      <ActivityIndicator/>
 	};
 
   return (
