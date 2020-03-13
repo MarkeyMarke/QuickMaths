@@ -26,6 +26,10 @@ const StudentHomeScreen = props => {
       setCurrentStatus(status.PENDING);
     };
 
+    const setAccepted = () => {
+      setCurrentStatus(status.ACCEPTED);
+    };
+
     // Will set the active component here depending on what is returned from fetch
     const fetchData = async () => {
       if(fetch.status === status.NONE){
@@ -70,7 +74,7 @@ const StudentHomeScreen = props => {
 			break;
 		case status.PENDING:
 			renderComponent = 
-			<PendingClass/>
+			<PendingClass setStatus={setAccepted}/>
 			break;
 		case status.ACCEPTED:
       renderComponent = 

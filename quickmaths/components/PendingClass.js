@@ -1,32 +1,62 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, { useState, useCallback } from 'react';
+import {View, Text, StyleSheet, SafeAreaView, RefreshControl, ScrollView} from 'react-native';
 
 import Background from './Background';
 import StandardButton from './StandardButton';
 
 const PendingClass = props => {
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+
+        wait(2000).then(() => {
+            setRefreshing(false);
+            props.setStatus();
+        });
+
+    },[refreshing]);
+
     return (
         <Background>
-            <View style={styles.screen}>
-                <View style={styles.textContainer}>
-                    <Text style={styles.text}>You're trying to join _.</Text>
-                    <Text style={styles.text}>Please ask your teacher to let you in!</Text>
-                </View>
-                <StandardButton
-                    text="Cancel"
-                    onTap={()=> {
-                        console.log('Cancel');
-                        props.navigation.replace('StudentHomeScreen');
-                    }}
-                />
-            </View>
+            <SafeAreaView style={styles.screen}>
+                <ScrollView 
+                    contentContainerStyle={styles.container} 
+                    refreshControl={
+                        <RefreshControl 
+                            refreshing={refreshing} 
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                    <View style={styles.textContainer}>
+                        <Text style={styles.text}>You're trying to join _.</Text>
+                        <Text style={styles.text}>Please ask your teacher to let you in!</Text>
+                    </View>
+                    <StandardButton
+                        text="Cancel"
+                        onTap={()=> {
+                            console.log('Cancel');
+                        }}
+                    />
+                    </ScrollView>
+            </SafeAreaView>
         </Background>
     );
 };
 
+function wait(timeout) {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+};
+
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
+        flex: 1
+    },
+    container:{
+        flexGrow:1,
         justifyContent: 'center',
         alignItems: 'center'
     },
