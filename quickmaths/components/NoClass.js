@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableWithoutFeedback, Alert, Keyboard} from 'react-native';
 
 import Background from './Background';
 import StandardButton from './StandardButton';
 
 const NoClass = props => {
     const [courseCode, setCourseCode] = useState('');
+    const psuedoCourseCode = '123456';
 
     return (
         <Background>
@@ -26,8 +27,13 @@ const NoClass = props => {
                 <StandardButton
                     text="Join"
                     onTap={()=> {
-                        console.log('Join');
-                        props.navigation.replace('Pending');
+                        if(psuedoCourseCode === courseCode){
+                            props.setStatus();
+                        }
+                        else{
+                            Alert.alert("Sorry", "That class code does not exist.", [{ text: "OK", onPress: () => {} }]);
+                            setCourseCode('');
+                        }
                     }}
                 />
             </View>

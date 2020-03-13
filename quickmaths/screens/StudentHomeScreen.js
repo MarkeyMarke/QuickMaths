@@ -5,7 +5,7 @@ import Colors from "../constants/Colors";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
 import Background from "../components/Background";
-import { STUDENT_ASSIGNMENTS, STUDENT_FETCH } from "../data/dummy-data";
+import { STUDENT_FETCH_ASSIGNMENTS } from "../data/dummy-data";
 import ListItem from "../components/ListItem";
 import { Ionicons } from "@expo/vector-icons";
 import NoClass from "../components/NoClass";
@@ -18,10 +18,14 @@ const StudentHomeScreen = props => {
         ACCEPTED: 'accepted'
     };
     
-    const [fetch, setFetch] = useState(STUDENT_FETCH);
+    const [fetch, setFetch] = useState(STUDENT_FETCH_ASSIGNMENTS);
     const [currentStatus, setCurrentStatus] = useState(null);
     const [assignments, setAssignments] = useState(null);
     
+    const setPending = () => {
+      setCurrentStatus(status.PENDING);
+    };
+
     // Will set the active component here depending on what is returned from fetch
     const fetchData = async () => {
       if(fetch.status === status.NONE){
@@ -62,7 +66,7 @@ const StudentHomeScreen = props => {
 	switch (currentStatus){
 		case status.NONE:
 			renderComponent = 
-			<NoClass/>
+			<NoClass setStatus={setPending}/>
 			break;
 		case status.PENDING:
 			renderComponent = 

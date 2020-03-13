@@ -62,7 +62,7 @@ export const STUDENT_ASSIGNMENTS = [
   )
 ];
 
-export const STUDENT_FETCH = {
+export const STUDENT_FETCH_ASSIGNMENTS = {
   status: "none",
   assignments: STUDENT_ASSIGNMENTS
 };
