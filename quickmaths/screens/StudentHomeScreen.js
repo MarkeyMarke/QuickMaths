@@ -81,9 +81,10 @@ const StudentHomeScreen = props => {
       <FlatList
           keyExtractor={(item, index) => item.id}
           data={assignments}
+          contentContainerStyle={{ flexGrow: 1 }}
           ListEmptyComponent={
-            <View>
-              <Text>No Assignments yet!</Text>
+            <View style={styles.screen}>
+              <Text style={styles.emptyText}>No Assignments yet!</Text>
             </View>
           }
           renderItem={renderListItem}
@@ -106,6 +107,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  emptyText: {
+    color: "black",
+    fontSize: 25
   }
 });
 
