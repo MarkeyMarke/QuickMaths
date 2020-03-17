@@ -12,69 +12,61 @@ import NoClass from "../components/NoClass";
 import PendingClass from "../components/PendingClass";
 
 const StudentHomeScreen = props => {
-    const status = {
-        NONE: 'none',
-        PENDING: 'pending',
-        ACCEPTED: 'accepted'
-    };
-    
-    const [fetch, setFetch] = useState(STUDENT_FETCH_ASSIGNMENTS);
-    const [currentStatus, setCurrentStatus] = useState(null);
-    const [assignments, setAssignments] = useState(null);
-    
-    const setPending = () => {
+  const status = {
+      NONE: 'none',
+      PENDING: 'pending',
+      ACCEPTED: 'accepted'
+  };
+  
+  const [fetch, setFetch] = useState(STUDENT_FETCH_ASSIGNMENTS);
+  const [currentStatus, setCurrentStatus] = useState(null);
+  const [assignments, setAssignments] = useState(null);
+
+  // Will set the active component here depending on what is returned from fetch
+  const fetchData = async () => {
+    if(fetch.status === status.NONE){
+      setCurrentStatus(status.NONE);
+    }
+    else if(fetch.status === status.PENDING){
       setCurrentStatus(status.PENDING);
-    };
-
-    const setAccepted = () => {
+    }
+    else{
+      setAssignments(fetch.assignments);
       setCurrentStatus(status.ACCEPTED);
-    };
+    }
+  };
+    
+  useEffect(() => {
+      fetchData();
+  }, []);
 
-    // Will set the active component here depending on what is returned from fetch
-    const fetchData = async () => {
-      if(fetch.status === status.NONE){
-        setCurrentStatus(status.NONE);
-      }
-      else if(fetch.status === status.PENDING){
-        setCurrentStatus(status.PENDING);
-      }
-      else{
-        setAssignments(fetch.assignments);
-        setCurrentStatus(status.ACCEPTED);
-      }
-    };
-      
-    useEffect(() => {
-        fetchData();
-    }, []);
+  const renderListItem = itemData => {
+      return (
+        <ListItem
+          topText={itemData.item.title}
+          middleText={itemData.item.getDueDateText()}
+          bottomText={itemData.item.getProgressText()}
+          onSelect={() => {
+            props.navigation.navigate("Assignment", {
+              progress: itemData.item.progress,
+              title: itemData.item.title
+            });
+          }}
+          icon={<Ionicons name="ios-play" size={75} color="white" />}
+        />
+      );
+  };
 
-    const renderListItem = itemData => {
-        return (
-          <ListItem
-            topText={itemData.item.title}
-            middleText={itemData.item.getDueDateText()}
-            bottomText={itemData.item.getProgressText()}
-            onSelect={() => {
-              props.navigation.navigate("Assignment", {
-                progress: itemData.item.progress,
-                title: itemData.item.title
-              });
-            }}
-            icon={<Ionicons name="ios-play" size={75} color="white" />}
-          />
-        );
-    };
-
-    let renderComponent;
+  let renderComponent;
 
 	switch (currentStatus){
 		case status.NONE:
 			renderComponent = 
-			<NoClass setStatus={setPending}/>
+			<NoClass setStatus={() => setCurrentStatus(status.PENDING)}/>
 			break;
 		case status.PENDING:
 			renderComponent = 
-			<PendingClass setStatus={setAccepted}/>
+			<PendingClass setStatus={() => setCurrentStatus(status.ACCEPTED)}/>
 			break;
 		case status.ACCEPTED:
       renderComponent = 
