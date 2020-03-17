@@ -66,7 +66,10 @@ const StudentHomeScreen = props => {
 			break;
 		case status.PENDING:
 			renderComponent = 
-			<PendingClass setStatus={() => setCurrentStatus(status.ACCEPTED)}/>
+      <PendingClass 
+        setStatus={() => setCurrentStatus(status.ACCEPTED)}
+        onCancel={() => setCurrentStatus(status.NONE)} 
+      />
 			break;
 		case status.ACCEPTED:
       renderComponent = 

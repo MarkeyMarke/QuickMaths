@@ -36,7 +36,7 @@ const PendingClass = props => {
                     <StandardButton
                         text="Cancel"
                         onTap={()=> {
-                            console.log('Cancel');
+                            props.onCancel();
                         }}
                     />
                     </ScrollView>
