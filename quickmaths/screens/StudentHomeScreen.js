@@ -1,75 +1,94 @@
 import React, { useState, useEffect } from "react";
-import {StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import {View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
 import Colors from "../constants/Colors";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
 import Background from "../components/Background";
-import { STUDENT_ASSIGNMENTS } from "../data/dummy-data";
+import { STUDENT_FETCH_ASSIGNMENTS } from "../data/dummy-data";
 import ListItem from "../components/ListItem";
 import { Ionicons } from "@expo/vector-icons";
 import NoClass from "../components/NoClass";
 import PendingClass from "../components/PendingClass";
 
 const StudentHomeScreen = props => {
-    const components = {
-        NONE: 'none',
-        PENDING: 'pending',
-        ACCEPTED: 'accepted'
-    };
+  const status = {
+      NONE: 'none',
+      PENDING: 'pending',
+      ACCEPTED: 'accepted'
+  };
+  
+  const [fetch, setFetch] = useState(STUDENT_FETCH_ASSIGNMENTS); // will remove once fetch request is set up
+  const [currentStatus, setCurrentStatus] = useState(null);
+  const [assignments, setAssignments] = useState(null);
+
+  // Will set the active component here depending on what is returned from fetch
+  //TODO: Set up the fetch request
+  const fetchData = async () => {
+    if(fetch.status === status.NONE){
+      setCurrentStatus(status.NONE);
+    }
+    else if(fetch.status === status.PENDING){
+      setCurrentStatus(status.PENDING);
+    }
+    else{
+      setAssignments(fetch.assignments);
+      setCurrentStatus(status.ACCEPTED);
+    }
+  };
     
-    const [activeComponent, setActiveComponent] = useState(null);
-    const [assignments, setAssignments] = useState(null);
-    
-    // Will set the active component here depending on what is returned from fetch
-    const fetchData = async () => {
-        setAssignments(STUDENT_ASSIGNMENTS);
-        setActiveComponent(components.ACCEPTED);
-    };
-      
-    useEffect(() => {
-        fetchData();
-    }, []);
+  useEffect(() => {
+      fetchData();
+  }, []);
 
-    const renderListItem = itemData => {
-        return (
-          <ListItem
-            topText={itemData.item.title}
-            middleText={itemData.item.getDueDateText()}
-            bottomText={itemData.item.getProgressText()}
-            onSelect={() => {
-              props.navigation.navigate("Assignment", {
-                progress: itemData.item.progress,
-                title: itemData.item.title
-              });
-            }}
-            icon={<Ionicons name="ios-play" size={75} color="white" />}
-          />
-        );
-    };
+  const renderListItem = itemData => {
+      return (
+        <ListItem
+          topText={itemData.item.title}
+          middleText={itemData.item.getDueDateText()}
+          bottomText={itemData.item.getProgressText()}
+          onSelect={() => {
+            props.navigation.navigate("Assignment", {
+              progress: itemData.item.progress,
+              title: itemData.item.title
+            });
+          }}
+          icon={<Ionicons name="ios-play" size={75} color="white" />}
+        />
+      );
+  };
 
-    let renderComponent;
+  let renderComponent;
 
-	switch (activeComponent){
-		case components.NONE:
+	switch (currentStatus){
+		case status.NONE:
 			renderComponent = 
-			<NoClass/>
+			<NoClass setStatus={() => setCurrentStatus(status.PENDING)}/>
 			break;
-		case components.PENDING:
+		case status.PENDING:
 			renderComponent = 
-			<PendingClass/>
+      <PendingClass 
+        setStatus={() => setCurrentStatus(status.ACCEPTED)}
+        onCancel={() => setCurrentStatus(status.NONE)} 
+      />
 			break;
-		case components.ACCEPTED:
-            renderComponent = 
-            <FlatList
-                keyExtractor={(item, index) => item.id}
-                data={assignments}
-                renderItem={renderListItem}
-            />
-            break;
-        default:
-            renderComponent =
-            <ActivityIndicator/>
+		case status.ACCEPTED:
+      renderComponent = 
+      <FlatList
+          keyExtractor={(item, index) => item.id}
+          data={assignments}
+          contentContainerStyle={{ flexGrow: 1 }}
+          ListEmptyComponent={
+            <View style={styles.screen}>
+              <Text style={styles.emptyText}>No Assignments yet!</Text>
+            </View>
+          }
+          renderItem={renderListItem}
+      />
+      break;
+    default:
+      renderComponent =
+      <ActivityIndicator/>
 	};
 
   return (
@@ -84,6 +103,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  emptyText: {
+    color: "black",
+    fontSize: 25
   }
 });
 

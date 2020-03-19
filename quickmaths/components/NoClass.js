@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableWithoutFeedback, Alert, Keyboard} from 'react-native';
 
 import Background from './Background';
 import StandardButton from './StandardButton';
 
 const NoClass = props => {
     const [courseCode, setCourseCode] = useState('');
-
+    const psuedoCourseCode = '123456'; // will delete this, as check will be done on server
+    //ToDo: Create a function that sends a fetch request to server and returns
+    //      a response to check if the entered course code was correct.
     return (
         <Background>
             <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
@@ -26,8 +28,14 @@ const NoClass = props => {
                 <StandardButton
                     text="Join"
                     onTap={()=> {
-                        console.log('Join');
-                        props.navigation.replace('Pending');
+                        // This if else block will be moved to a function that does a fetch request
+                        if(psuedoCourseCode === courseCode){
+                            props.setStatus();
+                        }
+                        else{
+                            Alert.alert("Sorry", "That class code does not exist.", [{ text: "OK", onPress: () => {} }]);
+                            setCourseCode('');
+                        }
                     }}
                 />
             </View>
