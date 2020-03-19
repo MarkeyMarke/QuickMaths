@@ -7,6 +7,9 @@ import StandardButton from './StandardButton';
 const PendingClass = props => {
     const [refreshing, setRefreshing] = useState(false);
 
+    //Will call this function when user pulls down the screen to refresh 
+    //TODO: set up fetch request in the function, and add a conditional check to determine
+    //      if the component should change if the student has been accepted or not.
     const onRefresh = useCallback(() => {
         setRefreshing(true);
 
@@ -36,6 +39,7 @@ const PendingClass = props => {
                     <StandardButton
                         text="Cancel"
                         onTap={()=> {
+                            //TODO: Set up fetch request to cancel joining of class
                             props.onCancel();
                         }}
                     />
@@ -45,6 +49,7 @@ const PendingClass = props => {
     );
 };
 
+//will remove once fetch request is set up
 function wait(timeout) {
     return new Promise(resolve => {
       setTimeout(resolve, timeout);

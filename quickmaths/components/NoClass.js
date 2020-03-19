@@ -6,8 +6,9 @@ import StandardButton from './StandardButton';
 
 const NoClass = props => {
     const [courseCode, setCourseCode] = useState('');
-    const psuedoCourseCode = '123456';
-
+    const psuedoCourseCode = '123456'; // will delete this, as check will be done on server
+    //ToDo: Create a function that sends a fetch request to server and returns
+    //      a response to check if the entered course code was correct.
     return (
         <Background>
             <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
@@ -27,6 +28,7 @@ const NoClass = props => {
                 <StandardButton
                     text="Join"
                     onTap={()=> {
+                        // This if else block will be moved to a function that does a fetch request
                         if(psuedoCourseCode === courseCode){
                             props.setStatus();
                         }

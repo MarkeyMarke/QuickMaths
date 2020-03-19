@@ -18,11 +18,12 @@ const StudentHomeScreen = props => {
       ACCEPTED: 'accepted'
   };
   
-  const [fetch, setFetch] = useState(STUDENT_FETCH_ASSIGNMENTS);
+  const [fetch, setFetch] = useState(STUDENT_FETCH_ASSIGNMENTS); // will remove once fetch request is set up
   const [currentStatus, setCurrentStatus] = useState(null);
   const [assignments, setAssignments] = useState(null);
 
   // Will set the active component here depending on what is returned from fetch
+  //TODO: Set up the fetch request
   const fetchData = async () => {
     if(fetch.status === status.NONE){
       setCurrentStatus(status.NONE);
