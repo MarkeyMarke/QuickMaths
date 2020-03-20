@@ -37,7 +37,7 @@ const TeacherHomeScreen = props => {
         return (
             <ListItem 
                 topText={itemData.item.title} 
-                middleText={itemData.item.classYear}
+                middleText={"Class of " + itemData.item.classYear}
                 bottomText={itemData.item.courseCode}
                 onSelect={() => {
                     props.navigation.navigate({

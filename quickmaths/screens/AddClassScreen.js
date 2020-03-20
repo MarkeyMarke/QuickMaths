@@ -19,7 +19,7 @@ const AddClassScreen = props => {
     const dispatch = useDispatch();
     
     const addCourseHandler = (courseName, classYear) => {
-        dispatch(addCourse(courseName, "Class of " + classYear));
+        dispatch(addCourse(courseName, classYear));
     };
 
     return(
