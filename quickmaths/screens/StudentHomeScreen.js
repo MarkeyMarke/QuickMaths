@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import {View, Text, StyleSheet, FlatList, ActivityIndicator, Platform } from "react-native";
 
 import Colors from "../constants/Colors";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
@@ -114,7 +114,7 @@ StudentHomeScreen.navigationOptions = navData => {
   return {
     headerTitle: "Assignments",
     headerLeftContainerStyle: {
-      backgroundColor: Colors.accentColor
+      backgroundColor: Platform.OS == "android" ? Colors.accentColor : ""
     },
     gestureEnabled: false,
     headerLeft: () => (

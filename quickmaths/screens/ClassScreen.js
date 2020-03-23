@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, StyleSheet, Platform} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons} from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -96,7 +96,7 @@ ClassScreen.navigationOptions = navigationData => {
 	return {
 		headerTitle: selectedClassTitle,
 		headerLeftContainerStyle: {
-			backgroundColor: Colors.accentColor
+			backgroundColor: Platform.OS == "android" ? Colors.accentColor : ""
 		},
 		headerRight: () => (
 			<HeaderButtons HeaderButtonComponent={EvilIconsHeaderButton}>

@@ -5,7 +5,8 @@ import {
   Button,
   Alert,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from "react-native";
 import Signature from "react-native-signature-canvas";
 import { QUESTIONS } from "../data/dummy-data";
@@ -262,7 +263,7 @@ AssignmentScreen.navigationOptions = navData => {
   return {
     headerTitle: navData.navigation.state.params.title,
     headerLeftContainerStyle: {
-      backgroundColor: Colors.accentColor
+      backgroundColor: Platform.OS == "android" ? Colors.accentColor : ""
     },
     gestureEnabled: false,
     headerLeft: () => (
