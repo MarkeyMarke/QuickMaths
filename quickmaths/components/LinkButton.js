@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     button:{
         alignItems: 'center',
         justifyContent: 'center',
-        height: 30,
+        height: 20,
         marginTop: 18
     }
 });

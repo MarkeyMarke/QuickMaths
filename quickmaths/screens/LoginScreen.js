@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
-  Button,
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
@@ -12,6 +11,7 @@ import {
 import Background from "../components/Background";
 import AppTitle from "../constants/AppTitle";
 import StandardButton from "../components/StandardButton";
+import LinkButton from '../components/LinkButton';
 
 import { useSelector, useDispatch } from "react-redux";
 import * as usersAuthActions from "../store/actions/users";
@@ -97,15 +97,15 @@ const LoginScreen = props => {
           </View>
 
           <StandardButton text="Login" onTap={onLogin} />
-          <Button
-            title="Forgot Password?"
-            onPress={() => {
+          <LinkButton
+            text="Forgot Password?"
+            onTap={() => {
               props.navigation.navigate("EmailRecovery");
             }}
           />
-          <Button
-            title="Not Registered?"
-            onPress={() => {
+          <LinkButton
+            text="Not Registered?"
+            onTap={() => {
               props.navigation.navigate("Register");
             }}
           />

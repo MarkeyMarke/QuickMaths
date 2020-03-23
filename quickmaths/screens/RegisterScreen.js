@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
+import { View, TextInput, StyleSheet, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import Background from '../components/Background';
 import AppTitle from '../constants/AppTitle';
 import StandardButton from '../components/StandardButton';
 import Checkbox from '../components/Checkbox';
+import LinkButton from '../components/LinkButton';
 import { signInAsStudent, signInAsTeacher } from '../store/actions/users';
 import * as usersAuthActions from '../store/actions/users';
 
@@ -98,9 +99,9 @@ const RegisterScreen = props => {
 						/>
 					</View>
 					<StandardButton text='Register' onTap={signUpHandler} />
-					<Button
-						title='Already registered?'
-						onPress={() => {
+					<LinkButton
+						text='Already registered?'
+						onTap={() => {
 							props.navigation.navigate('Login');
 						}}
 					/>
