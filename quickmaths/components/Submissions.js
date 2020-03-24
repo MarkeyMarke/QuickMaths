@@ -103,9 +103,7 @@ const styles = StyleSheet.create({
     icon: {
 		transform: [ { rotateY: '180deg' } ],
 		color: 'white',
-		marginLeft: 3,
-		marginTop: 3,
-		marginBottom: 3
+		marginLeft: -30,
 	},
 	simpleBackLabel: {
 		width: '95%',

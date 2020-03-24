@@ -56,7 +56,6 @@ const ClassScreen = props => {
 		case components.SUBMISSIONS:
 			renderComponent = 
 			<Submissions
-				onSelectSubmissionsTab={onSelectSubmissionsTab}
 				courseAssignments={courseAssignments}
 			/>
 			break;
