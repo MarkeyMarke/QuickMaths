@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {StyleSheet, View, TextInput, TouchableWithoutFeedback,Picker, Text, Platform, Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {Item, HeaderButtons} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -12,8 +12,10 @@ import EditIcon from '../constants/EditIcon';
 
 const AddClassScreen = props => {
     const [courseName, setCourseName] = useState('');
-    const [classYear, setClassYear] = useState('');
+    const [classYear, setClassYear] = useState(null);
+    const [show, setShow] = useState(false);
 
+    const year = new Date().getFullYear();
     const dispatch = useDispatch();
     
     const addCourseHandler = (courseName, classYear) => {
@@ -34,16 +36,59 @@ const AddClassScreen = props => {
                         />
                         <EditIcon/>
                     </View>
-                    <View style={styles.inputFieldContainer}>
-                        <TextInput
-                            style={styles.inputField}
-                            placeholder="Class of xxxx"
-                            placeholderTextColor='white'
-                            onChangeText={(text) => setClassYear(text)}
-                            value={classYear}
-                        />
-                        <EditIcon/>
-                    </View>
+                    {classYear ? 
+                        <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
+                            <View style={styles.inputFieldContainer}>
+                                <Text style={styles.inputField}>Class of {classYear}</Text>
+                                <EditIcon/>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    : 
+                        <TouchableWithoutFeedback onPress={() => {setShow(true);}}>
+                            <View style={styles.inputFieldContainer}>
+                                <Text style={styles.inputField}>Class of xxxx</Text>
+                                <EditIcon/>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    }
+                    {show &&
+                        <View style={styles.pickerContainer}>
+                            <Picker
+                                selectedValue={classYear}
+                                onValueChange={(itemValue, itemPosition) => {
+                                    setClassYear(itemValue);
+                                    if(Platform.OS == "android"){
+                                        setShow(false);
+                                    }
+                                }}
+                                mode="dropdown"
+                                itemStyle={{color:Colors.primaryColor}}
+                            >
+                                <Picker.Item 
+                                    label={(year-1).toString()} 
+                                    value={(year-1).toString()}
+                                />
+                                <Picker.Item 
+                                    label={year.toString()} 
+                                    value={year.toString()}
+                                />
+                                <Picker.Item 
+                                    label={(year+1).toString()} 
+                                    value={(year+1).toString()}
+                                />
+                            </Picker>
+                            {Platform.OS == "ios" &&
+                                <StandardButton
+                                    text="Set Class Year"
+                                    onTap={() => {
+                                        setShow(false);
+                                    }}
+                                    containerStyle={{alignSelf:'center'}}
+                                />
+                            }
+                        </View>
+                    }
+                    {!show &&
                     <StandardButton
                         text="Save"
                         onTap={()=> {
@@ -52,6 +97,7 @@ const AddClassScreen = props => {
                         }}
                         containerStyle={{width:'85%'}}
                     />
+                    }
                 </View>
             </TouchableWithoutFeedback>
         </Background>
@@ -96,6 +142,12 @@ const styles = StyleSheet.create({
     inputField: {
         color: 'white',
         fontSize: 20
+    },
+    pickerContainer: {
+        backgroundColor:"white", 
+        width:"85%",
+        color: Colors.primaryColor,
+        marginTop: 10
     }
 });
 

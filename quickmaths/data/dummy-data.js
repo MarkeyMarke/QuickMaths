@@ -33,9 +33,9 @@ export const COURSE_ASSIGNMENTS = [
 ];
 
 export const COURSES = [
-  new Course("c1", "Ms. Honda's Class", "Class of 2017", "123456789"),
-  new Course("c2", "Ms. Honda's Class", "Class of 2018", "123456789"),
-  new Course("c3", "Ms. Honda's Class", "Class of 2019", "123456789")
+  new Course("c1", "Ms. Honda's Class", "2017", "123456789"),
+  new Course("c2", "Ms. Honda's Class", "2018", "123456789"),
+  new Course("c3", "Ms. Honda's Class", "2019", "123456789")
 ];
 
 export const STUDENT_ASSIGNMENTS = [
