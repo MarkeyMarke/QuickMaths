@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, ImageBackground, StyleSheet} from 'react-native';
+import {View, ImageBackground, StyleSheet, Platform} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -105,7 +105,7 @@ TeacherHomeScreen.navigationOptions = (navData) => {
     return{
         headerTitle: 'Courses',
         headerLeftContainerStyle: {
-            backgroundColor: Colors.accentColor,
+            backgroundColor: Platform.OS == "android" ? Colors.accentColor : "",
         },
         headerLeft: () => (
                <HeaderButtons HeaderButtonComponent={HeaderButton}>

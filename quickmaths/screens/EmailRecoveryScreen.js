@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Keyboard, Button, StyleSheet, TouchableWithoutFeedback, Alert } from 'react-native';
+import { View, Text, TextInput, Keyboard, StyleSheet, TouchableWithoutFeedback, Alert } from 'react-native';
 
 import Background from '../components/Background';
 import StandardButton from '../components/StandardButton';
 import Colors from '../constants/Colors';
+import LinkButton from '../components/LinkButton';
 
 import { useDispatch } from 'react-redux';
 import * as usersAuthActions from '../store/actions/users';
@@ -55,9 +56,9 @@ const EmailRecoveryScreen = props => {
 						/>
 					</View>
 					<StandardButton text='Send' onTap={onSend} />
-					<Button
-						title='Remember password?'
-						onPress={() => {
+					<LinkButton
+						text='Remember password?'
+						onTap={() => {
 							props.navigation.navigate('Login');
 						}}
 					/>

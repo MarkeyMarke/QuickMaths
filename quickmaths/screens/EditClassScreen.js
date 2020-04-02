@@ -67,7 +67,7 @@ EditClassScreen.navigationOptions = (navData) => {
     return{
         headerTitle: 'Courses',
         headerLeftContainerStyle: {
-            backgroundColor: Colors.accentColor,
+            backgroundColor: Platform.OS == "android" ? Colors.accentColor : ""
         },
         headerLeft: () => (
                <HeaderButtons HeaderButtonComponent={HeaderButton}>
