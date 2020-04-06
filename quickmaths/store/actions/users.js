@@ -9,7 +9,7 @@ export const GETDATA_URL = `https://identitytoolkit.googleapis.com/v1/accounts:l
 export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
 export const EMAILVERIFICATION_URL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`;
 export const FORGETPASSWORD_URL = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`;
-export const CHECKUSER_URL = `https://${PROJECT_ID}.firebaseio.com/users.json`;
+// = `https://${PROJECT_ID}.firebaseio.com/users.json`;
 export const CHANGEPASSWORD_URL = `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`;
 export const CHANGEEMAIL_URL = `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`;
 
@@ -76,6 +76,7 @@ export const signIn = (email, password) => {
 			let message = 'Verify Your Email!';
 			throw new Error(message);
 		}
+		//TODO: to be replaced with mysql
 		//Check User
 		var localId = resData.localId;
 		const getUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`);
@@ -174,6 +175,7 @@ export const signUp = (email, fullName, userID, password, selected) => {
 			}
 			throw new Error(message);
 		}
+		//TODO: to be replaced with mysql, also store the email
 		//Post New User to Firebase
 		var localId = resData.localId;
 		const createTeacherUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
@@ -319,8 +321,10 @@ export const updatePassword = (password, idToken) => {
 	};
 };
 //Function For Update Name And/Or UserID Profile
+//TODO: to be replaced with mysql, also update the email
 export const updateProfile = (name, nameProfile, id, idProfile, token) => {
 	return async dispatch => {
+		//This is how you get the userID as 'localid' for the update fetch later
 		const response = await fetch(
 			`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}
 		`,
@@ -341,6 +345,7 @@ export const updateProfile = (name, nameProfile, id, idProfile, token) => {
 		if (id == '') id = idProfile;
 		const resData = await response.json();
 		var localId = resData.users[0].localId;
+		//TODO: this is the one you need to replace.
 		const updateProfileFetch = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
 			method: 'PATCH',
 			headers: {
