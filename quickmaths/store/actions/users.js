@@ -78,7 +78,6 @@ export const signIn = (email, password) => {
 			let message = 'Verify Your Email!';
 			throw new Error(message);
 		}
-		//TODO: to be replaced with mysql
 		//Check User
 		var localId = resData.localId;
 		try {
@@ -92,14 +91,14 @@ export const signIn = (email, password) => {
 			);
 			const responseJSON = await response.json();
 			if (responseJSON.failed) {
-				console.log("fetch failed - sign in");
 				let message = 'Something Went Wrong!';
 	 			throw new Error(message);
 			} else {
-				var isTeacher = responseJSON.is_teacher;
-				var nameProf = responseJSON.name;
-				var idProf = responseJSON.school_id;
-				var emailProf = responseJSON.email;
+				console.log(responseJSON);
+				var isTeacher = responseJSON[0].is_teacher;
+				var nameProf = responseJSON[0].name;
+				var idProf = responseJSON[0].school_id;
+				var emailProf = responseJSON[0].email;
 				if (isTeacher)
 					dispatch({
 						type: SIGN_IN_AS_TEACHER,
