@@ -81,28 +81,48 @@ export const signIn = (email, password) => {
 		//TODO: to be replaced with mysql
 		//Check User
 		var localId = resData.localId;
-		const getUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`);
-		const resUserData = await getUser.json();
-		var isTeacher = resUserData.teacher;
-		var nameProf = resUserData.fullName;
-		var idProf = resUserData.userID;
-		var emailProf = resData.email;
-		if (isTeacher)
-			dispatch({
-				type: SIGN_IN_AS_TEACHER,
-				name: nameProf,
-				email: emailProf,
-				id: idProf,
-				token: resData.idToken
-			});
-		else
-			dispatch({
-				type: SIGN_IN_AS_STUDENT,
-				name: nameProf,
-				email: emailProf,
-				id: idProf,
-				token: resData.idToken
-			});
+		try {
+			const response = await fetch(
+				`https://quickmaths-9472.nodechef.com/signin`, {
+					body: JSON.stringify({
+						firebase_id: localId
+					}),
+					...httpTemplate
+				}
+			);
+			const responseJSON = await response.json();
+			if (responseJSON.failed) {
+				console.log("fetch failed - sign in");
+				let message = 'Something Went Wrong!';
+	 			throw new Error(message);
+			} else {
+				var isTeacher = responseJSON.is_teacher;
+				var nameProf = responseJSON.name;
+				var idProf = responseJSON.school_id;
+				var emailProf = responseJSON.email;
+				if (isTeacher)
+					dispatch({
+						type: SIGN_IN_AS_TEACHER,
+						name: nameProf,
+						email: emailProf,
+						id: idProf,
+						token: resData.idToken
+					});
+				else
+					dispatch({
+						type: SIGN_IN_AS_STUDENT,
+						name: nameProf,
+						email: emailProf,
+						id: idProf,
+						token: resData.idToken
+					});
+			}
+		}
+		catch (err){
+			console.log(err);
+			let message = 'Something Went Wrong!';
+		 	throw new Error(message);
+		};
 		//dispatch({ type: SIGN_IN });
 	};
 };
