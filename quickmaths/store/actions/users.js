@@ -2,6 +2,7 @@ export const SIGN_UP = 'SIGN_UP';
 export const SIGN_OUT = 'SIGN_OUT';
 export const SIGN_IN_AS_TEACHER = 'SIGN_IN_AS_TEACHER';
 export const SIGN_IN_AS_STUDENT = 'SIGN_IN_AS_STUDENT';
+export const UPDATE_EMAIL = 'UPDATE_EMAIL';
 
 import { API_KEY, PROJECT_ID } from 'react-native-dotenv';
 import { httpTemplate } from '../../constants/HttpTemplate';
@@ -313,6 +314,10 @@ export const updateEmail = (email, idToken) => {
 			}
 			throw new Error(message);
 		}
+		dispatch({
+			type: UPDATE_EMAIL,
+			email: email
+		});
 	};
 };
 //Function For Update Password
@@ -349,7 +354,7 @@ export const updatePassword = (password, idToken) => {
 };
 //Function For Update Name And/Or UserID Profile
 //TODO: to be replaced with mysql, also update the email
-export const updateProfile = (name, nameProfile, id, idProfile, token) => {
+export const updateProfile = (name, nameProfile, id, idProfile, token, email, emailProfile) => {
 	return async dispatch => {
 		//This is how you get the userID as 'localid' for the update fetch later
 		const response = await fetch(
@@ -370,21 +375,46 @@ export const updateProfile = (name, nameProfile, id, idProfile, token) => {
 		}
 		if (name == '') name = nameProfile;
 		if (id == '') id = idProfile;
+		if (email == '') email = emailProfile;
 		const resData = await response.json();
 		var localId = resData.users[0].localId;
 		//TODO: this is the one you need to replace.
-		const updateProfileFetch = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
-			method: 'PATCH',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				fullName: name,
-				userID: id
-			})
-		});
-		if (!updateProfileFetch.ok) {
-			throw new Error('Something went wrong!');
+		// const updateProfileFetch = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
+		// 	method: 'PATCH',
+		// 	headers: {
+		// 		'Content-Type': 'application/json'
+		// 	},
+		// 	body: JSON.stringify({
+		// 		fullName: name,
+		// 		userID: id
+		// 	})
+		// });
+		// if (!updateProfileFetch.ok) {
+		// 	throw new Error('Something went wrong!');
+		// }
+		try {
+			const response = await fetch(
+				`https://quickmaths-9472.nodechef.com/updateprofile`, {
+					body: JSON.stringify({
+						firebase_id: localId,
+						name: name,
+						email: email,
+						school_id: id,
+					}),
+					...httpTemplate
+				}
+			);
+			const responseJSON = await response.json();
+			if (responseJSON.failed) {
+				console.log("update fetch failed!");
+				let message = 'Something Went Wrong!';
+	 			throw new Error(message);
+			};
+		}
+		catch (err){
+			console.log(err);
+			let message = 'Something Went Wrong!';
+		 	throw new Error(message);
 		}
 	};
 };
