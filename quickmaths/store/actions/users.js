@@ -4,6 +4,7 @@ export const SIGN_IN_AS_TEACHER = 'SIGN_IN_AS_TEACHER';
 export const SIGN_IN_AS_STUDENT = 'SIGN_IN_AS_STUDENT';
 
 import { API_KEY, PROJECT_ID } from 'react-native-dotenv';
+import { httpTemplate } from '../../constants/HttpTemplate';
 export const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
 export const GETDATA_URL = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`;
 export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
@@ -18,6 +19,7 @@ function validateEmail(email) {
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return !re.test(String(email).toLowerCase());
 }
+
 //Function For Sign In
 export const signIn = (email, password) => {
 	return async dispatch => {
@@ -175,25 +177,31 @@ export const signUp = (email, fullName, userID, password, selected) => {
 			}
 			throw new Error(message);
 		}
-		//TODO: to be replaced with mysql, also store the email
-		//Post New User to Firebase
+		//Post New User to MySQL
 		var localId = resData.localId;
-		const createTeacherUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				fullName: fullName,
-				userID: userID,
-				teacher: selected
-			})
-		});
-		if (!createTeacherUser.ok) {
-			let message = 'Something Went Wrong!';
-			throw new Error(message);
+		try {
+			const response = await fetch(
+				`https://quickmaths-9472.nodechef.com/signup`, {
+					body: JSON.stringify({
+						firebase_id: localId,
+						school_id: userID,
+						name: fullName,
+						is_teacher: selected,
+						email: email
+					}),
+					...httpTemplate
+				}
+			);
+			const responseJSON = await response.json();
+			if (responseJSON.failed) {
+				let message = 'Something Went Wrong!';
+	 			throw new Error(message);
+			};
 		}
-		dispatch({ type: SIGN_UP });
+		catch (err){
+			let message = 'Something Went Wrong!';
+		 	throw new Error(message);
+		}
 	};
 };
 //Function For Forget Password
