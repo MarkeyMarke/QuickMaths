@@ -378,20 +378,6 @@ export const updateProfile = (name, nameProfile, id, idProfile, token, email, em
 		if (email == '') email = emailProfile;
 		const resData = await response.json();
 		var localId = resData.users[0].localId;
-		//TODO: this is the one you need to replace.
-		// const updateProfileFetch = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
-		// 	method: 'PATCH',
-		// 	headers: {
-		// 		'Content-Type': 'application/json'
-		// 	},
-		// 	body: JSON.stringify({
-		// 		fullName: name,
-		// 		userID: id
-		// 	})
-		// });
-		// if (!updateProfileFetch.ok) {
-		// 	throw new Error('Something went wrong!');
-		// }
 		try {
 			const response = await fetch(
 				`https://quickmaths-9472.nodechef.com/updateprofile`, {
