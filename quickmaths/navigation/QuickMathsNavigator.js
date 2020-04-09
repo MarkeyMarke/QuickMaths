@@ -17,6 +17,7 @@ import EditClassScreen from "../screens/EditClassScreen";
 import AddAssignmentScreen from "../screens/AddAssignmentScreen";
 import QuestionScreen from "../screens/QuestionScreen";
 import AssignmentScreen from "../screens/AssignmentScreen";
+import ChangeEmailScreen from "../screens/ChangeEmailScreen";
 
 const StudentNavigator = createStackNavigator(
   {
@@ -54,7 +55,8 @@ const TeacherNavigator = createStackNavigator(
 
 const ProfileNavigator = createStackNavigator(
   {
-    Profile: ProfileScreen
+    Profile: ProfileScreen,
+    ChangeEmail: ChangeEmailScreen
   },
   {
     defaultNavigationOptions: {
