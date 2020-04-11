@@ -2,8 +2,10 @@ export const SIGN_UP = 'SIGN_UP';
 export const SIGN_OUT = 'SIGN_OUT';
 export const SIGN_IN_AS_TEACHER = 'SIGN_IN_AS_TEACHER';
 export const SIGN_IN_AS_STUDENT = 'SIGN_IN_AS_STUDENT';
+export const UPDATE_EMAIL = 'UPDATE_EMAIL';
 
 import { API_KEY, PROJECT_ID } from 'react-native-dotenv';
+import { httpTemplate } from '../../constants/HttpTemplate';
 export const SIGNIN_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
 export const GETDATA_URL = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`;
 export const SIGNUP_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
@@ -18,6 +20,7 @@ function validateEmail(email) {
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return !re.test(String(email).toLowerCase());
 }
+
 //Function For Sign In
 export const signIn = (email, password) => {
 	return async dispatch => {
@@ -76,31 +79,50 @@ export const signIn = (email, password) => {
 			let message = 'Verify Your Email!';
 			throw new Error(message);
 		}
-		//TODO: to be replaced with mysql
 		//Check User
 		var localId = resData.localId;
-		const getUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`);
-		const resUserData = await getUser.json();
-		var isTeacher = resUserData.teacher;
-		var nameProf = resUserData.fullName;
-		var idProf = resUserData.userID;
-		var emailProf = resData.email;
-		if (isTeacher)
-			dispatch({
-				type: SIGN_IN_AS_TEACHER,
-				name: nameProf,
-				email: emailProf,
-				id: idProf,
-				token: resData.idToken
-			});
-		else
-			dispatch({
-				type: SIGN_IN_AS_STUDENT,
-				name: nameProf,
-				email: emailProf,
-				id: idProf,
-				token: resData.idToken
-			});
+		try {
+			const response = await fetch(
+				`https://quickmaths-9472.nodechef.com/signin`, {
+					body: JSON.stringify({
+						firebase_id: localId
+					}),
+					...httpTemplate
+				}
+			);
+			const responseJSON = await response.json();
+			if (responseJSON.failed) {
+				let message = 'Something Went Wrong!';
+	 			throw new Error(message);
+			} else {
+				console.log(responseJSON);
+				var isTeacher = responseJSON[0].is_teacher;
+				var nameProf = responseJSON[0].name;
+				var idProf = responseJSON[0].school_id;
+				var emailProf = responseJSON[0].email;
+				if (isTeacher)
+					dispatch({
+						type: SIGN_IN_AS_TEACHER,
+						name: nameProf,
+						email: emailProf,
+						id: idProf,
+						token: resData.idToken
+					});
+				else
+					dispatch({
+						type: SIGN_IN_AS_STUDENT,
+						name: nameProf,
+						email: emailProf,
+						id: idProf,
+						token: resData.idToken
+					});
+			}
+		}
+		catch (err){
+			console.log(err);
+			let message = 'Something Went Wrong!';
+		 	throw new Error(message);
+		};
 		//dispatch({ type: SIGN_IN });
 	};
 };
@@ -175,25 +197,31 @@ export const signUp = (email, fullName, userID, password, selected) => {
 			}
 			throw new Error(message);
 		}
-		//TODO: to be replaced with mysql, also store the email
-		//Post New User to Firebase
+		//Post New User to MySQL
 		var localId = resData.localId;
-		const createTeacherUser = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				fullName: fullName,
-				userID: userID,
-				teacher: selected
-			})
-		});
-		if (!createTeacherUser.ok) {
-			let message = 'Something Went Wrong!';
-			throw new Error(message);
+		try {
+			const response = await fetch(
+				`https://quickmaths-9472.nodechef.com/signup`, {
+					body: JSON.stringify({
+						firebase_id: localId,
+						school_id: userID,
+						name: fullName,
+						is_teacher: selected,
+						email: email
+					}),
+					...httpTemplate
+				}
+			);
+			const responseJSON = await response.json();
+			if (responseJSON.failed) {
+				let message = 'Something Went Wrong!';
+	 			throw new Error(message);
+			};
 		}
-		dispatch({ type: SIGN_UP });
+		catch (err){
+			let message = 'Something Went Wrong!';
+		 	throw new Error(message);
+		}
 	};
 };
 //Function For Forget Password
@@ -286,6 +314,10 @@ export const updateEmail = (email, idToken) => {
 			}
 			throw new Error(message);
 		}
+		dispatch({
+			type: UPDATE_EMAIL,
+			email: email
+		});
 	};
 };
 //Function For Update Password
@@ -322,7 +354,7 @@ export const updatePassword = (password, idToken) => {
 };
 //Function For Update Name And/Or UserID Profile
 //TODO: to be replaced with mysql, also update the email
-export const updateProfile = (name, nameProfile, id, idProfile, token) => {
+export const updateProfile = (name, nameProfile, id, idProfile, token, email, emailProfile) => {
 	return async dispatch => {
 		//This is how you get the userID as 'localid' for the update fetch later
 		const response = await fetch(
@@ -343,21 +375,32 @@ export const updateProfile = (name, nameProfile, id, idProfile, token) => {
 		}
 		if (name == '') name = nameProfile;
 		if (id == '') id = idProfile;
+		if (email == '') email = emailProfile;
 		const resData = await response.json();
 		var localId = resData.users[0].localId;
-		//TODO: this is the one you need to replace.
-		const updateProfileFetch = await fetch(`https://${PROJECT_ID}.firebaseio.com/users/${localId}.json`, {
-			method: 'PATCH',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				fullName: name,
-				userID: id
-			})
-		});
-		if (!updateProfileFetch.ok) {
-			throw new Error('Something went wrong!');
+		try {
+			const response = await fetch(
+				`https://quickmaths-9472.nodechef.com/updateprofile`, {
+					body: JSON.stringify({
+						firebase_id: localId,
+						name: name,
+						email: email,
+						school_id: id,
+					}),
+					...httpTemplate
+				}
+			);
+			const responseJSON = await response.json();
+			if (responseJSON.failed) {
+				console.log("update fetch failed!");
+				let message = 'Something Went Wrong!';
+	 			throw new Error(message);
+			};
+		}
+		catch (err){
+			console.log(err);
+			let message = 'Something Went Wrong!';
+		 	throw new Error(message);
 		}
 	};
 };

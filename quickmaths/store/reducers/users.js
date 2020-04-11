@@ -1,4 +1,4 @@
-import { SIGN_OUT, SIGN_IN, SIGN_IN_AS_STUDENT, SIGN_IN_AS_TEACHER } from '../actions/users';
+import { SIGN_OUT, SIGN_IN, SIGN_IN_AS_STUDENT, SIGN_IN_AS_TEACHER, UPDATE_EMAIL } from '../actions/users';
 
 const initialState = {
 	isTeacher: false,
@@ -28,6 +28,11 @@ const usersReducer = (state = initialState, action) => {
 				email: action.email,
 				id: action.id,
 				token: action.token
+			};
+		case UPDATE_EMAIL:
+			return {
+				...state,
+				email: action.email
 			};
 		case SIGN_OUT:
 			return {
