@@ -109,7 +109,7 @@ const ClassScreen = (props) => {
 
 ClassScreen.navigationOptions = (navigationData) => {
   const course = navigationData.navigation.getParam("class");
-  const selectedClassTitle = course.title;
+  const selectedClassTitle = course.class_title;
   return {
     headerTitle: selectedClassTitle,
     headerLeftContainerStyle: {

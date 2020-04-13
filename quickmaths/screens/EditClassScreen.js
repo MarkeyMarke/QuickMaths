@@ -17,22 +17,43 @@ import Background from "../components/Background";
 import StandardButton from "../components/StandardButton";
 import Colors from "../constants/Colors";
 import EditIcon from "../constants/EditIcon";
-import { editCourse } from "../store/actions/courses";
+import { httpTemplate } from "../constants/HttpTemplate";
 
 const EditClassScreen = (props) => {
   const course = props.navigation.getParam("class");
 
-  const [courseName, setCourseName] = useState(course.title);
-  const [classYear, setClassYear] = useState(course.classYear);
+  const [courseName, setCourseName] = useState(course.class_title);
+  const [classYear, setClassYear] = useState(course.class_year);
   const [show, setShow] = useState(false);
 
-  const year = Number(course.classYear);
+  const year = course.class_year;
 
   const dispatch = useDispatch();
 
-  const editCourseHandler = (id, courseName, classYear) => {
+  const editCourseHandler = async (courseName, classYear) => {
     //TODO: https://quickmaths-9472.nodechef.com/updateclass NOTE: Year is a float!
-    dispatch(editCourse(id, courseName, classYear));
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/updateclass`,
+        {
+          body: JSON.stringify({
+            id: course.id,
+            firebase_id: course.firebase_id,
+            class_title: courseName,
+            class_year: classYear
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't edit class.");
+      else {
+        console.log("Edited class!");
+        console.log(responseJSON);
+      }
+    } catch (err) {
+      console.log("Edit class fetch has failed.");
+    }
   };
 
   return (
@@ -44,7 +65,7 @@ const EditClassScreen = (props) => {
       >
         <View style={styles.screen}>
           <View style={styles.inputFieldContainer}>
-            <Text style={styles.inputField}>{course.courseCode}</Text>
+            <Text style={styles.inputField}>{course.id}</Text>
           </View>
           <View style={styles.inputFieldContainer}>
             <TextInput
@@ -117,7 +138,7 @@ const EditClassScreen = (props) => {
             <StandardButton
               text="Save"
               onTap={() => {
-                editCourseHandler(course.id, courseName, classYear);
+                editCourseHandler(courseName, classYear);
                 props.navigation.pop();
               }}
               containerStyle={{ width: "85%" }}
