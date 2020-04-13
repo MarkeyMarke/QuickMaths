@@ -15,6 +15,7 @@ import AddListItemButton from "../components/AddListItemButton";
 import { deleteCourse, setCourse } from "../store/actions/courses";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
+import { getFirebaseID } from "../constants/FirebaseID";
 
 const TeacherHomeScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
@@ -52,23 +53,7 @@ const TeacherHomeScreen = (props) => {
 
   const fetchData = async () => {
     //TODO: https://quickmaths-9472.nodechef.com/getclasses
-    const response = await fetch(
-			`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
-			{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					idToken: firebaseToken
-				})
-			}
-		);
-		if (!response.ok) {
-			throw new Error('Something went wrong!');
-    }
-    const resData = await response.json();
-		var firebaseId = resData.users[0].localId;
+		var firebaseId = await getFirebaseID(firebaseToken);
     try {
       const response = await fetch(
         `https://quickmaths-9472.nodechef.com/getclasses`,

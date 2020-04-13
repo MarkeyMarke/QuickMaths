@@ -13,13 +13,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
 
-import { API_KEY, PROJECT_ID } from 'react-native-dotenv';
 import Background from "../components/Background";
 import StandardButton from "../components/StandardButton";
 import { addCourse } from "../store/actions/courses";
 import Colors from "../constants/Colors";
 import EditIcon from "../constants/EditIcon";
 import { httpTemplate } from "../constants/HttpTemplate";
+import { getFirebaseID } from "../constants/FirebaseID";
 
 const AddClassScreen = (props) => {
   const [courseName, setCourseName] = useState("");
@@ -33,23 +33,7 @@ const AddClassScreen = (props) => {
 
   const addCourseHandler = async (courseName, classYear) => {
     //TODO: https://quickmaths-9472.nodechef.com/createclass NOTE: Year is a float!
-    const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                idToken: firebaseToken
-            })
-        }
-    );
-    if (!response.ok) {
-        throw new Error('Something went wrong!');
-    }   
-    const resData = await response.json();
-    var firebaseId = resData.users[0].localId;
+    var firebaseId = await getFirebaseID(firebaseToken);
     try {
         const response = await fetch(
           `https://quickmaths-9472.nodechef.com/createclass`,
