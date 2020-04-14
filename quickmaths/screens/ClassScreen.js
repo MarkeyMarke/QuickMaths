@@ -17,6 +17,7 @@ import Roster from "../components/Roster";
 import Submissions from "../components/Submissions";
 import { COURSE_ASSIGNMENTS } from "../data/dummy-data";
 import Loading from "../constants/Loading";
+import { httpTemplate } from "../constants/HttpTemplate";
 
 const ClassScreen = (props) => {
   const components = {
@@ -29,9 +30,9 @@ const ClassScreen = (props) => {
     components.ASSIGNMENTS
   );
 
-  const courseAssignments = useSelector(
-    (state) => state.assignments.assignments
-  );
+  const course = props.navigation.getParam("class");
+
+  const [courseAssignments, setCourseAssignments] = useState(null); 
   const dispatch = useDispatch();
 
   const deleteAssignmentHandler = (item) => {
@@ -41,7 +42,26 @@ const ClassScreen = (props) => {
 
   const fetchData = async () => {
     //TODO: https://quickmaths-9472.nodechef.com/viewclass NOTE: Make a new model for this specific assignment format
-    dispatch(setAssignment(COURSE_ASSIGNMENTS));
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/viewclass`,
+        {
+          body: JSON.stringify({
+            class_id: course.id
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't find Assignments.");
+      else {
+        console.log("Retrieved Assignments!");
+        console.log(responseJSON);
+        setCourseAssignments(responseJSON);
+      }
+    } catch (err) {
+      console.log("Assignment info fetch has failed.");
+    }
   };
 
   useEffect(() => {
