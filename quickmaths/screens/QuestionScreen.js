@@ -12,7 +12,7 @@ const QuestionScreen = props => {
     const item = props.navigation.getParam('question');
 
     const [question, setQuestion] =  item ? useState(item.question) : useState('');
-    const [answer, setAnswer] = item ? useState(item.answer) : useState('');
+    const [answer, setAnswer] = item ? useState(item.answer.toString()) : useState('');
 
     return(
         <Background>
