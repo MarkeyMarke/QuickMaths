@@ -36,9 +36,28 @@ const ClassScreen = (props) => {
   const [courseAssignments, setCourseAssignments] = useState(null); 
   const dispatch = useDispatch();
 
-  const deleteAssignmentHandler = (item) => {
+  const deleteAssignmentHandler = async(item) => {
     //TODO: https:///quickmaths-9472.nodechef.com/deleteassignment
-    dispatch(deleteAssignment(item.id));
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/deleteassignment`,
+        {
+          body: JSON.stringify({
+            id: item.id
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't delete Assignment.");
+      else {
+        console.log("Deleted Assignment!");
+        console.log(responseJSON);
+      }
+    } catch (err) {
+      console.log("Delete Assignment fetch has failed.");
+    }
+    //dispatch(deleteAssignment(item.id));
   };
 
   const fetchData = async () => {
