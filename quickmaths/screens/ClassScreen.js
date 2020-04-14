@@ -18,6 +18,7 @@ import Submissions from "../components/Submissions";
 import { COURSE_ASSIGNMENTS } from "../data/dummy-data";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
+import Assignment from "../models/Assignment";
 
 const ClassScreen = (props) => {
   const components = {
@@ -57,7 +58,11 @@ const ClassScreen = (props) => {
       else {
         console.log("Retrieved Assignments!");
         console.log(responseJSON);
-        setCourseAssignments(responseJSON);
+        var convertedAssignments = [];
+        responseJSON.forEach(item => {
+          convertedAssignments.push(new Assignment(item.id.toString(), item.name, item.due_date, item.pub_date, 0));
+        });
+        setCourseAssignments(convertedAssignments);
       }
     } catch (err) {
       console.log("Assignment info fetch has failed.");

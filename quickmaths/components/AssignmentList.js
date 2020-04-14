@@ -19,8 +19,8 @@ const AssignmentList = props => {
         return (
             <ListItem 
                 topText={itemData.item.title} 
-                middleText={"Due " + itemData.item.getDueDateText()}
-                bottomText={itemData.item.status + " " + itemData.item.publishDate}
+                middleText={"Due " + itemData.item.getDateText(itemData.item.dueDate)}
+                bottomText={"Published " + itemData.item.getDateText(itemData.item.publishDate)}
                 bottomTextStyle={{fontStyle:"italic"}}
                 containerStyle={styles.listItemContainerStyle}
                 onSelect={() => {
