@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -31,8 +31,10 @@ const ClassScreen = (props) => {
     components.ASSIGNMENTS
   );
 
-  const course = props.navigation.getParam("class");
-
+  const [course, updateCourse] = useState(props.navigation.getParam("class"));
+  const updateCourseHandler = useCallback((updatedCourse) => {
+    updateCourse(updatedCourse);
+  }, [updateCourse]);
   const [courseAssignments, setCourseAssignments] = useState(null); 
   const dispatch = useDispatch();
 
@@ -91,6 +93,14 @@ const ClassScreen = (props) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    props.navigation.setParams({courseInfo: course});
+  }, [course]);
+
+  useEffect(() => {
+    props.navigation.setParams({updateCourse: updateCourseHandler});
+  }, [updateCourseHandler]);
 
   let renderComponent;
 
@@ -152,8 +162,16 @@ const ClassScreen = (props) => {
 };
 
 ClassScreen.navigationOptions = (navigationData) => {
-  const course = navigationData.navigation.getParam("class");
-  const selectedClassTitle = course.class_title;
+  const course = navigationData.navigation.getParam("courseInfo");
+  var selectedClassTitle;
+  if(course){
+    selectedClassTitle = course.class_title;
+  } else {
+    selectedClassTitle = navigationData.navigation.getParam("class").class_title;
+  }
+  console.log(course);
+  const updateCourse = navigationData.navigation.getParam("updateCourse");
+
   return {
     headerTitle: selectedClassTitle,
     headerLeftContainerStyle: {
@@ -169,6 +187,7 @@ ClassScreen.navigationOptions = (navigationData) => {
               routeName: "EditClass",
               params: {
                 class: course,
+                updateCourse: updateCourse
               },
             });
           }}

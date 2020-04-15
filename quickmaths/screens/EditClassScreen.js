@@ -139,6 +139,12 @@ const EditClassScreen = (props) => {
               text="Save"
               onTap={() => {
                 editCourseHandler(courseName, classYear);
+                props.navigation.state.params.updateCourse({
+                  class_title: courseName,
+                  class_year: classYear,
+                  firebase_id: course.firebase_id,
+                  id: course.id
+                });
                 props.navigation.pop();
               }}
               containerStyle={{ width: "85%" }}

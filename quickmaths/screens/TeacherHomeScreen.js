@@ -79,7 +79,7 @@ const TeacherHomeScreen = (props) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [refresh]);
 
   const renderListItem = (itemData) => {
     return (
