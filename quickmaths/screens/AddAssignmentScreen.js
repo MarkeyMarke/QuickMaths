@@ -8,7 +8,6 @@ import {
   Platform,
   TouchableWithoutFeedback,
 } from "react-native";
-import { useDispatch } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import Background from "../components/Background";
@@ -18,8 +17,6 @@ import Question from "../models/Question";
 import ListItem from "../components/ListItem";
 import { EvilIcons } from "@expo/vector-icons";
 import StandardButton from "../components/StandardButton";
-import { addAssignment, editAssignment } from "../store/actions/assignments";
-import { QUESTIONS } from "../data/dummy-data";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
 
@@ -39,13 +36,19 @@ const AddAssignmentScreen = (props) => {
     ? useState(item.getDateText(item.dueDate))
     : useState(null);
 
-  const dispatch = useDispatch();
-
   const course = props.navigation.getParam("class");
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  /**
+   * Gets the assignment info and questions if editing from a post request
+   * to the app server if the user is editing the assignment. Otherwise it sets
+   * the questions state to an empty array.
+   */
   const fetchData = async () => {
     if (item) {
-      //Get the assignment info and questions if editing
       try {
         const response = await fetch(
           `https://quickmaths-9472.nodechef.com/getassignment`,
@@ -57,16 +60,14 @@ const AddAssignmentScreen = (props) => {
           }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't get assignment info.");
+        if (responseJSON.failed) console.log("Couldn't get assignment info.");//TODO: replace or remove once all testing is done
         else {
-          console.log("Got assignment info!");
-          console.log(responseJSON);
           setQuestions(responseJSON.questions);
-          setQuestionID(responseJSON.questions[responseJSON.questions.length-1].id+1);
+          setQuestionID(responseJSON.questions[responseJSON.questions.length-1].id+1); //This is for the virtualized list
           setAssignmentID(responseJSON.assignment_id);
         }
       } catch (err) {
-        console.log("Got assignment info fetch has failed.");
+        console.log("Got assignment info fetch has failed.");//TODO: replace or remove once all testing is done
         console.log(err);
       }
     } else {
@@ -75,12 +76,11 @@ const AddAssignmentScreen = (props) => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  /**
+   * Sends a post request to the app server adding an assignment to the
+   * selected class
+   */
   const addAssignmentHandler = async() => {
-    //TODO: https:///quickmaths-9472.nodechef.com/createassignment NOTE: This query takes assignment data AND array of questions
     try {
       const convertedDate = date.getFullYear().toString() + "-" 
         + (date.getMonth() + 1).toString() + "-" 
@@ -103,20 +103,21 @@ const AddAssignmentScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't create assignment.");
+      if (responseJSON.failed) console.log("Couldn't create assignment."); //TODO: replace or remove once all testing is done
       else {
-        console.log("Created assignment!");
-        console.log(responseJSON);
+        console.log("Created assignment!"); //TODO: replace or remove once all testing is done
       }
     } catch (err) {
-      console.log("create assignment fetch has failed.");
-      console.log(err);
+      console.log("create assignment fetch has failed."); //TODO: replace or remove once all testing is done
+      console.log(err); //TODO: replace or remove once all testing is done
     }
-    //dispatch(addAssignment(assignmentName, date));
   };
 
+  /**
+   * Sends a post request to the app server with the updated assignment info
+   * to update the assignment in the db.
+   */
   const editAssignmentHandler = async() => {
-    //TODO: https:///quickmaths-9472.nodechef.com/replaceassignment NOTE: Look into Moment.JS for formatting Dates for JS -> MySQL
     try {
       const convertedDate = date.getFullYear().toString() + "-" 
         + (date.getMonth() + 1).toString() + "-" 
@@ -140,16 +141,14 @@ const AddAssignmentScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't replace assignment.");
+      if (responseJSON.failed) console.log("Couldn't replace assignment."); //TODO: replace or remove once all testing is done
       else {
-        console.log("replaced assignment!");
-        console.log(responseJSON);
+        console.log("replaced assignment!"); //TODO: replace or remove once all testing is done
       }
     } catch (err) {
-      console.log("replace assignment fetch has failed.");
-      console.log(err);
+      console.log("replace assignment fetch has failed."); //TODO: replace or remove once all testing is done
+      console.log(err); //TODO: replace or remove once all testing is done
     }
-    //dispatch(editAssignment(item.id, assignmentName, date));
   };
 
   const renderQuestionListItem = (itemData) => {

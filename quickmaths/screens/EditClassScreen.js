@@ -10,7 +10,6 @@ import {
   Keyboard,
 } from "react-native";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
-import { useDispatch } from "react-redux";
 
 import HeaderButton from "../components/HeaderButton";
 import Background from "../components/Background";
@@ -28,10 +27,13 @@ const EditClassScreen = (props) => {
 
   const year = course.class_year;
 
-  const dispatch = useDispatch();
-
+  /**
+   * Sends a post request to the app server in order to update a class
+   * with a new title and class year
+   * @param {String} courseName the new title for the class
+   * @param {Number} classYear the new year for the class
+   */
   const editCourseHandler = async (courseName, classYear) => {
-    //TODO: https://quickmaths-9472.nodechef.com/updateclass NOTE: Year is a float!
     try {
       const response = await fetch(
         `https://quickmaths-9472.nodechef.com/updateclass`,
@@ -46,13 +48,18 @@ const EditClassScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't edit class.");
+      if (responseJSON.failed) console.log("Couldn't edit class.");//TODO: replace or remove once all testing is done
       else {
-        console.log("Edited class!");
-        console.log(responseJSON);
+        //calls the updateCourse function from the Class Screen in order to update the previous screen with the new info
+        props.navigation.state.params.updateCourse({
+          class_title: courseName,
+          class_year: classYear,
+          firebase_id: course.firebase_id,
+          id: course.id
+        });
       }
     } catch (err) {
-      console.log("Edit class fetch has failed.");
+      console.log("Edit class fetch has failed."); //TODO: replace or remove once all testing is done
     }
   };
 
@@ -139,12 +146,6 @@ const EditClassScreen = (props) => {
               text="Save"
               onTap={() => {
                 editCourseHandler(courseName, classYear);
-                props.navigation.state.params.updateCourse({
-                  class_title: courseName,
-                  class_year: classYear,
-                  firebase_id: course.firebase_id,
-                  id: course.id
-                });
                 props.navigation.pop();
               }}
               containerStyle={{ width: "85%" }}

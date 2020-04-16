@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, ImageBackground, StyleSheet, Platform } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 
-import { API_KEY, PROJECT_ID } from 'react-native-dotenv';
-import { COURSES } from "../data/dummy-data";
 import ListItem from "../components/ListItem";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
@@ -16,18 +14,24 @@ import { deleteCourse, setCourse } from "../store/actions/courses";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
 import { getFirebaseID } from "../constants/FirebaseID";
+import Background from "../components/Background";
 
 const TeacherHomeScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
   const [classes, setClasses] = useState(null); 
-  const courses = useSelector((state) => state.courses.courses);
   const firebaseToken = useSelector(state => state.users.token);
-  
 
-  const dispatch = useDispatch();
+  //calls the fetchData function whenever the refresh state is updated
+  useEffect(() => {
+    fetchData();
+  }, [refresh]);
 
+  /**
+   * Sends a post request to the server containing the id of the class that will
+   * be deleted in the database. 
+   * @param {number} id the class id of the class that will be deleted
+   */
   const deleteCourseHandler = async (id) => {
-    //TODO: https://quickmaths-9472.nodechef.com/deleteclass
     try {
       const response = await fetch(
         `https://quickmaths-9472.nodechef.com/deleteclass`,
@@ -39,20 +43,22 @@ const TeacherHomeScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't delete class.");
+      if (responseJSON.failed) console.log("Couldn't delete class."); //TODO: replace or remove once all testing is done
       else {
-        console.log("Deleted class!");
-        console.log(responseJSON);
+        // reflects the deletion in the UI if the request is successful
+        setClasses(classes.filter((o) => {return o.id != id;}));
       }
     } catch (err) {
-      console.log("Delete class fetch has failed.");
+      console.log("Delete class fetch has failed."); //TODO: replace or remove once all testing is done
     }
-    setClasses(classes.filter((o) => {return o.id != id;}));
-    dispatch(deleteCourse(id));
   };
 
+  /**
+   * Grabs the user's firebaseId from Firebase to confirm user's current session
+   * is active and uses this id in a post request to the app server to grab 
+   * all the classes belonging to the user from the database.
+   */
   const fetchData = async () => {
-    //TODO: https://quickmaths-9472.nodechef.com/getclasses
 		var firebaseId = await getFirebaseID(firebaseToken);
     try {
       const response = await fetch(
@@ -65,21 +71,14 @@ const TeacherHomeScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't find classes.");
+      if (responseJSON.failed) console.log("Couldn't find classes."); //TODO: replace or remove once all testing is done
       else {
-        console.log("Retrieved classes!");
-        console.log(responseJSON);
         setClasses(responseJSON);
       }
     } catch (err) {
-      console.log("Class info fetch has failed.");
+      console.log("Class info fetch has failed."); //TODO: replace or remove once all testing is done
     }
-    dispatch(setCourse(COURSES));
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [refresh]);
 
   const renderListItem = (itemData) => {
     return (
@@ -106,15 +105,7 @@ const TeacherHomeScreen = (props) => {
   };
 
   return (
-    <ImageBackground
-      source={{
-        uri:
-          "https://www.trainingzone.co.uk/sites/default/files/styles/inline_banner/public/elenaleonova-books.jpg?itok=IKaBmw_i",
-      }}
-      style={styles.backgroundImage}
-      blurRadius={3}
-      resizeMode="cover"
-    >
+    <Background>
       {!classes ? (
         <Loading />
       ) : (
@@ -145,7 +136,7 @@ const TeacherHomeScreen = (props) => {
           }
         />
       )}
-    </ImageBackground>
+    </Background>
   );
 };
 

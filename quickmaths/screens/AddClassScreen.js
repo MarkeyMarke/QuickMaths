@@ -9,13 +9,12 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
 
 import Background from "../components/Background";
 import StandardButton from "../components/StandardButton";
-import { addCourse } from "../store/actions/courses";
 import Colors from "../constants/Colors";
 import EditIcon from "../constants/EditIcon";
 import { httpTemplate } from "../constants/HttpTemplate";
@@ -29,10 +28,14 @@ const AddClassScreen = (props) => {
   const firebaseToken = useSelector(state => state.users.token);
 
   const year = new Date().getFullYear();
-  const dispatch = useDispatch();
 
+  /**
+   * Grabs the user's firebaseId and uses that in a post request to the app server
+   * that updates the database with a new class for the user.
+   * @param {String} courseName the title of the new class 
+   * @param {Number} classYear the class year for the new class
+   */
   const addCourseHandler = async (courseName, classYear) => {
-    //TODO: https://quickmaths-9472.nodechef.com/createclass NOTE: Year is a float!
     var firebaseId = await getFirebaseID(firebaseToken);
     try {
         const response = await fetch(
@@ -48,18 +51,15 @@ const AddClassScreen = (props) => {
         );
         const responseJSON = await response.json();
         if (responseJSON.failed) {
-            console.log("Couldn't add class.");
-            console.log(convertedYear);
+            console.log("Couldn't add class."); //TODO: replace or remove once all testing is done
         }
         else {
-          console.log("Added class!");
-          console.log(responseJSON);
+          console.log("Added class!"); //TODO: replace or remove once all testing is done
         }
       } catch (err) {
-        console.log("Add class fetch has failed.");
-        console.log(err);
+        console.log("Add class fetch has failed."); //TODO: replace or remove once all testing is done
+        console.log(err); //TODO: replace or remove once all testing is done
       }
-    dispatch(addCourse(courseName, classYear));
   };
 
   return (
