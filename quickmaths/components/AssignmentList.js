@@ -18,8 +18,12 @@ const AssignmentList = props => {
         fetchData();
     }, [refresh]);
 
+    /**
+     * Sends a post request to the app server that will delete the assignment 
+     * and all its questions from the db.
+     * @param {Object} item the assignment object that will be deleted
+     */
     const deleteAssignmentHandler = async(item) => {
-        //TODO: https:///quickmaths-9472.nodechef.com/deleteassignment
         try {
         const response = await fetch(
             `https://quickmaths-9472.nodechef.com/deleteassignment`,
@@ -31,19 +35,22 @@ const AssignmentList = props => {
             }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't delete Assignment.");
+        if (responseJSON.failed) console.log("Couldn't delete Assignment."); //TODO: replace or remove once all testing is done
         else {
-            console.log("Deleted Assignment!");
-            console.log(responseJSON);
+            // reflects the deletion in the UI if the request is successful
+            setCourseAssignments(courseAssignments.filter((o) => {return o.id != item.id;}));
         }
         } catch (err) {
-        console.log("Delete Assignment fetch has failed.");
+        console.log("Delete Assignment fetch has failed."); //TODO: replace or remove once all testing is done
+        console.log(err); //TODO: replace or remove once all testing is done
         }
-        //dispatch(deleteAssignment(item.id));
     };
 
+    /**
+     * Sends a post request to the app server with the class id and
+     * recevies an array of assignment objects as the response.
+     */
     const fetchData = async () => {
-        //TODO: https://quickmaths-9472.nodechef.com/viewclass NOTE: Make a new model for this specific assignment format
         try {
         const response = await fetch(
             `https://quickmaths-9472.nodechef.com/viewclass`,
@@ -55,10 +62,8 @@ const AssignmentList = props => {
             }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't find Assignments.");
+        if (responseJSON.failed) console.log("Couldn't find Assignments."); //TODO: replace or remove once all testing is done
         else {
-            console.log("Retrieved Assignments!");
-            console.log(responseJSON);
             var convertedAssignments = [];
             responseJSON.forEach(item => {
             convertedAssignments.push(new Assignment(item.id.toString(), item.name, item.due_date, item.pub_date, 0));
@@ -66,7 +71,7 @@ const AssignmentList = props => {
             setCourseAssignments(convertedAssignments);
         }
         } catch (err) {
-        console.log("Assignment info fetch has failed.");
+            console.log("Assignment info fetch has failed."); //TODO: replace or remove once all testing is done
         }
     };
 
