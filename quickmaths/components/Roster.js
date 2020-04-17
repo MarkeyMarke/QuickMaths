@@ -1,124 +1,136 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import SegmentedControlTab from 'react-native-segmented-control-tab';
-import {AntDesign} from '@expo/vector-icons';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import SegmentedControlTab from "react-native-segmented-control-tab";
+import { AntDesign } from "@expo/vector-icons";
 
-import SwipeableList from '../components/SwipeableList';
-import ListItem from '../components/ListItem';
-import Colors from '../constants/Colors';
-import { setStudents } from '../store/actions/students';
-import { STUDENTS } from '../data/dummy-data';
-import Loading from '../constants/Loading';
+import SwipeableList from "../components/SwipeableList";
+import ListItem from "../components/ListItem";
+import Colors from "../constants/Colors";
+import { setStudents } from "../store/actions/students";
+import { STUDENTS } from "../data/dummy-data";
+import Loading from "../constants/Loading";
 
-const Roster = props => {
-    const [ selectedIndex, setSelectedIndex ] = useState(0);
-    const students = useSelector(state => state.students.students);
+const Roster = (props) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const students = useSelector((state) => state.students.students);
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const fetchData = async () => {
-        dispatch(setStudents(STUDENTS));
-    };
+  const fetchData = async () => {
+    dispatch(setStudents(STUDENTS));
+    //TODO: https://quickmaths-9472.nodechef.com/viewroster Input: { id: (classid) } Output: [{...},...]
+    //TODO: https://quickmaths-9472.nodechef.com/viewrosterrequests Input: { id: (classid) } Output: [{...},...]
+  };
 
-    useEffect(() => {
-        fetchData();
-      }, []
-    );      
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    const renderStudentListItem = itemData => {
-		return (
-			<ListItem
-				topText={itemData.item.name}
-				middleText={itemData.item.id}
-				bottomText={itemData.item.email}
-				bottomTextStyle={{ fontStyle: 'italic' }}
-				containerStyle={styles.listItemContainerStyle}
-				onSelect={() => {
-					console.log('pressed!');
-				}}
-				buttonContainerStyle={{ marginTop: 15, marginLeft: 15 }}
-			/>
-		);
-	};
+  //TODO: https:///quickmaths-9472.nodechef.com/leaveclass Input: { firebase_id: (studentid) } Output: Failed yes/no
 
-    const renderStudentRequestListItem = itemData => {
-            return (
-                <ListItem
-                    topText={itemData.item.name}
-                    middleText={itemData.item.id}
-                    bottomText={itemData.item.email}
-                    bottomTextStyle={{ fontStyle: 'italic' }}
-                    containerStyle={styles.listItemContainerStyle}
-                    onSelect={() => {
-                        console.log('pressed!');
-                    }}
-                    icon={<AntDesign name='plus' size={50} color='white' />}
-                    buttonContainerStyle={{ marginTop: 15, marginLeft: 15 }}
-                />
-            );
-        };
-
-    if(!students){
-        return <Loading/>
-    }
-
-    return(
-        <View>
-            <SegmentedControlTab 
-                values={["Roster", "Requests"]}
-                selectedIndex={selectedIndex}
-                onTabPress={(index) => {setSelectedIndex(index)}}
-                tabsContainerStyle={styles.segmentedTabsContainerStyle}
-                tabStyle={styles.segmentedTabStyle}
-                tabTextStyle={styles.segmentedTabTextStyle}
-                borderRadius={0}
-                activeTabStyle={styles.segmentedActiveTabStyle}
-            />
-            {selectedIndex === 0  ? ( 
-                <SwipeableList
-                    data={students} 
-                    renderItem={renderStudentListItem} 
-                    onAdd={() => {console.log("Added")}}
-                    onDelete={() => {console.log("Deleted")}}
-                    buttonContainerStyle={styles.deleteButtonContainer}
-                />
-            ) : (
-                <SwipeableList
-                    data={students} 
-                    renderItem={renderStudentRequestListItem} 
-                    onAdd={() => {console.log("Added")}}
-                    onDelete={() => {console.log("Deleted")}}
-                    buttonContainerStyle={styles.deleteButtonContainer}
-                />
-            )}
-        </View>
+  const renderStudentListItem = (itemData) => {
+    return (
+      <ListItem
+        topText={itemData.item.name}
+        middleText={itemData.item.id}
+        bottomText={itemData.item.email}
+        bottomTextStyle={{ fontStyle: "italic" }}
+        containerStyle={styles.listItemContainerStyle}
+        onSelect={() => {
+          console.log("pressed!");
+        }}
+        buttonContainerStyle={{ marginTop: 15, marginLeft: 15 }}
+      />
     );
+  };
 
-}
+  const renderStudentRequestListItem = (itemData) => {
+    return (
+      <ListItem
+        topText={itemData.item.name}
+        middleText={itemData.item.id}
+        bottomText={itemData.item.email}
+        bottomTextStyle={{ fontStyle: "italic" }}
+        containerStyle={styles.listItemContainerStyle}
+        onSelect={() => {
+          console.log("pressed!");
+        }}
+        icon={<AntDesign name="plus" size={50} color="white" />}
+        buttonContainerStyle={{ marginTop: 15, marginLeft: 15 }}
+      />
+    );
+  };
+
+  if (!students) {
+    return <Loading />;
+  }
+
+  return (
+    <View>
+      <SegmentedControlTab
+        values={["Roster", "Requests"]}
+        selectedIndex={selectedIndex}
+        onTabPress={(index) => {
+          setSelectedIndex(index);
+        }}
+        tabsContainerStyle={styles.segmentedTabsContainerStyle}
+        tabStyle={styles.segmentedTabStyle}
+        tabTextStyle={styles.segmentedTabTextStyle}
+        borderRadius={0}
+        activeTabStyle={styles.segmentedActiveTabStyle}
+      />
+      {selectedIndex === 0 ? (
+        <SwipeableList
+          data={students}
+          renderItem={renderStudentListItem}
+          onAdd={() => {
+            console.log("Added");
+          }}
+          onDelete={() => {
+            console.log("Deleted");
+          }}
+          buttonContainerStyle={styles.deleteButtonContainer}
+        />
+      ) : (
+        <SwipeableList
+          data={students}
+          renderItem={renderStudentRequestListItem}
+          onAdd={() => {
+            console.log("Added");
+          }}
+          onDelete={() => {
+            console.log("Deleted");
+          }}
+          buttonContainerStyle={styles.deleteButtonContainer}
+        />
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    deleteButtonContainer: {
-		marginTop: 10
-    },
-    listItemContainerStyle: {
-		width: '95%',
-		marginTop: 10
-    },
-    segmentedTabsContainerStyle: {
-		width: '95%',
-		marginTop: 10
-	},
-	segmentedTabStyle: {
-		backgroundColor: Colors.accentColor,
-		borderColor: 'transparent'
-	},
-	segmentedTabTextStyle: {
-		color: 'white'
-	},
-	segmentedActiveTabStyle: {
-		backgroundColor: Colors.primaryColor
-	}
+  deleteButtonContainer: {
+    marginTop: 10,
+  },
+  listItemContainerStyle: {
+    width: "95%",
+    marginTop: 10,
+  },
+  segmentedTabsContainerStyle: {
+    width: "95%",
+    marginTop: 10,
+  },
+  segmentedTabStyle: {
+    backgroundColor: Colors.accentColor,
+    borderColor: "transparent",
+  },
+  segmentedTabTextStyle: {
+    color: "white",
+  },
+  segmentedActiveTabStyle: {
+    backgroundColor: Colors.primaryColor,
+  },
 });
 
 export default Roster;
