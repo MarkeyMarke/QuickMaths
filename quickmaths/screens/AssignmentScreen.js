@@ -6,7 +6,7 @@ import {
   Alert,
   Text,
   ActivityIndicator,
-  Platform
+  Platform,
 } from "react-native";
 import Signature from "react-native-signature-canvas";
 import { QUESTIONS } from "../data/dummy-data";
@@ -19,7 +19,7 @@ import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
 
 //TODO: Set the title of the screen to have the assignment name
-const AssignmentScreen = props => {
+const AssignmentScreen = (props) => {
   const [currentQuestions, setQuestions] = useState(null);
   const [index, setIndex] = useState(null);
   const [alreadyComplete, setAlreadyComplete] = useState(false);
@@ -60,17 +60,17 @@ const AssignmentScreen = props => {
     Alert.alert(title, message, [{ text: "OK", onPress: () => {} }]);
   };
 
-  const readImageHandler = async base64string => {
+  const readImageHandler = async (base64string) => {
     const fetchUrl = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLECLOUD_API_KEY}`;
     const body = {
       requests: [
         {
           image: {
-            content: base64string
+            content: base64string,
           },
-          features: [{ type: "TEXT_DETECTION" }]
-        }
-      ]
+          features: [{ type: "TEXT_DETECTION" }],
+        },
+      ],
     };
 
     try {
@@ -78,9 +78,9 @@ const AssignmentScreen = props => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
       const responseJSON = await googleCloudeResponse.json();
       //Checks if Google found any texts
@@ -115,7 +115,7 @@ const AssignmentScreen = props => {
     </View>
   );
 
-  const progressText = text => {
+  const progressText = (text) => {
     return (
       <View style={styles.progressTextContainer}>
         <Text style={styles.whiteText}>{text}</Text>
@@ -123,7 +123,7 @@ const AssignmentScreen = props => {
     );
   };
 
-  const questionText = text => {
+  const questionText = (text) => {
     return (
       <View style={styles.questionTextContainer}>
         <Text style={styles.whiteText}>{text}</Text>
@@ -190,7 +190,7 @@ const AssignmentScreen = props => {
         {questionText(`${currentQuestions[index].question}?`)}
         <View style={styles.canvasContainer}>
           <Signature
-            onOK={img => readImageHandler(img.substr(22))}
+            onOK={(img) => readImageHandler(img.substr(22))}
             descriptionText="Your answer"
             clearText="Clear"
             confirmText="Send"
@@ -207,24 +207,24 @@ const styles = StyleSheet.create({
   assignmentContainer: {
     flex: 90,
     justifyContent: "flex-start",
-    alignItems: "center"
+    alignItems: "center",
   },
   backButtonContainer: {
     flex: 10,
     justifyContent: "center",
     alignItems: "flex-start",
-    marginLeft: "5%"
+    marginLeft: "5%",
   },
   whiteText: {
     fontSize: 25,
-    color: "white"
+    color: "white",
   },
   progressTextContainer: {
     alignItems: "center",
     justifyContent: "center",
     width: "90%",
     height: "10%",
-    backgroundColor: Colors.primaryColor
+    backgroundColor: Colors.primaryColor,
   },
   questionTextContainer: {
     alignItems: "center",
@@ -235,35 +235,35 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0,0,0,0.6)",
     borderRadius: 20,
     borderWidth: 1,
-    marginVertical: 10
+    marginVertical: 10,
   },
   answerText: {
-    fontSize: 100
+    fontSize: 100,
   },
   answerTextContainer: {
     alignItems: "center",
     justifyContent: "center",
     width: "90%",
     height: "50%",
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   canvasContainer: {
     width: "90%",
     height: "70%",
-    marginBottom: "5%"
+    marginBottom: "5%",
   },
   loadingContainer: {
     flex: 90,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
 
-AssignmentScreen.navigationOptions = navData => {
+AssignmentScreen.navigationOptions = (navData) => {
   return {
     headerTitle: navData.navigation.state.params.title,
     headerLeftContainerStyle: {
-      backgroundColor: Platform.OS == "android" ? Colors.accentColor : ""
+      backgroundColor: Platform.OS == "android" ? Colors.accentColor : "",
     },
     gestureEnabled: false,
     headerLeft: () => (
@@ -276,7 +276,7 @@ AssignmentScreen.navigationOptions = navData => {
           }}
         />
       </HeaderButtons>
-    )
+    ),
   };
 };
 

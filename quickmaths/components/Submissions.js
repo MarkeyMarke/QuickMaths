@@ -3,6 +3,7 @@ import {View, FlatList, StyleSheet, Text} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 
 import { STUDENT_REMAINING } from '../data/dummy-data';
+import { COURSE_ASSIGNMENTS } from "../data/dummy-data";
 import TabButton from './TabButton';
 import ListItem from './ListItem';
 import Colors from '../constants/Colors';
@@ -11,9 +12,11 @@ import Loading from '../constants/Loading';
 const Submissions = props => {
     const [ isStudentRemainingActive, setIsStudentRemainingActive ] = useState(false);
 	const [ studentsRemaining, setStudentsRemaining ] = useState(null);
+	const [courseAssignments, setCourseAssignments] = useState(null); 
 	
 	const fetchData = async () => {
 		setStudentsRemaining(STUDENT_REMAINING);
+		setCourseAssignments(COURSE_ASSIGNMENTS);
 	};
 
 	useEffect(() => {
@@ -26,7 +29,7 @@ const Submissions = props => {
 			<View>
 				<ListItem
 					topText={itemData.item.title}
-					middleText={'Due ' + itemData.item.getDueDateText()}
+					middleText={'Due ' + itemData.item.dueDate}
 					bottomText={itemData.item.submissions + ' submissions missing'}
 					bottomTextStyle={{ fontStyle: 'italic' }}
 					containerStyle={{ width: '97.5%', marginTop: 10 }}
@@ -91,7 +94,7 @@ const Submissions = props => {
         ) : (
         <FlatList
             keyExtractor={(item, index) => item.id}
-            data={props.courseAssignments}
+            data={courseAssignments}
             renderItem={renderSubmissionListItem}
         />
         )}

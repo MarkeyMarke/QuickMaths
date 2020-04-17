@@ -1,15 +1,79 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import { EvilIcons} from '@expo/vector-icons';
 
 import SwipeableList from './SwipeableList';
 import AddListItemButton from './AddListItemButton';
 import ListItem from './ListItem';
-
-
+import { httpTemplate } from "../constants/HttpTemplate";
+import Assignment from "../models/Assignment";
+import Loading from '../constants/Loading';
 
 const AssignmentList = props => {
+    const [courseAssignments, setCourseAssignments] = useState(null); 
     const [refresh, setRefresh] = useState(false);
+    const course = props.navigation.getParam("class");
+
+    useEffect(() => {
+        fetchData();
+    }, [refresh]);
+
+    /**
+     * Sends a post request to the app server that will delete the assignment 
+     * and all its questions from the db.
+     * @param {Object} item the assignment object that will be deleted
+     */
+    const deleteAssignmentHandler = async(item) => {
+        try {
+        const response = await fetch(
+            `https://quickmaths-9472.nodechef.com/deleteassignment`,
+            {
+            body: JSON.stringify({
+                id: item.id
+            }), 
+            ...httpTemplate
+            }
+        );
+        const responseJSON = await response.json();
+        if (responseJSON.failed) console.log("Couldn't delete Assignment."); //TODO: replace or remove once all testing is done
+        else {
+            // reflects the deletion in the UI if the request is successful
+            setCourseAssignments(courseAssignments.filter((o) => {return o.id != item.id;}));
+        }
+        } catch (err) {
+        console.log("Delete Assignment fetch has failed."); //TODO: replace or remove once all testing is done
+        console.log(err); //TODO: replace or remove once all testing is done
+        }
+    };
+
+    /**
+     * Sends a post request to the app server with the class id and
+     * recevies an array of assignment objects as the response.
+     */
+    const fetchData = async () => {
+        try {
+        const response = await fetch(
+            `https://quickmaths-9472.nodechef.com/viewclass`,
+            {
+            body: JSON.stringify({
+                class_id: course.id
+            }), 
+            ...httpTemplate
+            }
+        );
+        const responseJSON = await response.json();
+        if (responseJSON.failed) console.log("Couldn't find Assignments."); //TODO: replace or remove once all testing is done
+        else {
+            var convertedAssignments = [];
+            responseJSON.forEach(item => {
+            convertedAssignments.push(new Assignment(item.id.toString(), item.name, item.due_date, item.pub_date, 0));
+            });
+            setCourseAssignments(convertedAssignments);
+        }
+        } catch (err) {
+            console.log("Assignment info fetch has failed."); //TODO: replace or remove once all testing is done
+        }
+    };
 
     const doRefresh = () => {
         setRefresh(!refresh);
@@ -19,8 +83,8 @@ const AssignmentList = props => {
         return (
             <ListItem 
                 topText={itemData.item.title} 
-                middleText={"Due " + itemData.item.getDueDateText()}
-                bottomText={itemData.item.status + " " + itemData.item.publishDate}
+                middleText={"Due " + itemData.item.getDateText(itemData.item.dueDate)}
+                bottomText={"Published " + itemData.item.getDateText(itemData.item.publishDate)}
                 bottomTextStyle={{fontStyle:"italic"}}
                 containerStyle={styles.listItemContainerStyle}
                 onSelect={() => {
@@ -39,11 +103,15 @@ const AssignmentList = props => {
         );
     };
 
+    if(!courseAssignments){
+        return <Loading/>
+    }
+
     return(
         <SwipeableList 
-            data={props.courseAssignments} 
+            data={courseAssignments} 
             renderItem={renderAssignmentListItem} 
-            onDelete={props.deleteAssignmentHandler}
+            onDelete={deleteAssignmentHandler}
             buttonContainerStyle={styles.deleteButtonContainer}
             listFooterComponent= {
                 <AddListItemButton

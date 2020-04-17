@@ -1,15 +1,18 @@
 class Assignment {
-    constructor(id, title, dueDate, status, publishDate, submissions){
+    constructor(id, title, dueDate, publishDate, submissions){
         this.id = id;
         this.title = title;
         this.dueDate = dueDate;
-        this.status = status;
         this.publishDate = publishDate;
         this.submissions = submissions; //based on amount of students in class?
     }
 
-    getDueDateText(){
-        return ((this.dueDate.getMonth()+1).toString()+'/'+this.dueDate.getDate().toString()+'/'+this.dueDate.getFullYear().toString());
+    getDateText(date){
+        return ((date.substring(5,7)+'/'+date.substring(8,10)+'/'+date.substring(0,4)));
+    }
+
+    createDueDate(){
+        return new Date(this.dueDate.substring(0,4) + "-" + this.dueDate.substring(5,7) + "-" + this.dueDate.substring(8,10))
     }
 }
 
