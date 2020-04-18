@@ -9,13 +9,49 @@ import {
   Keyboard,
 } from "react-native";
 
+import { useSelector} from "react-redux";
+
 import Background from "./Background";
 import StandardButton from "./StandardButton";
+import { getFirebaseID } from "../constants/FirebaseID";
+import { httpTemplate } from "../constants/HttpTemplate";
 
 const NoClass = (props) => {
   const [courseCode, setCourseCode] = useState("");
-  const psuedoCourseCode = "123456"; // will delete this, as check will be done on server
-  //TODO: https:///quickmaths-9472.nodechef.com/adduser input: { id: (classid), firebase_id: (studentID) } Output: failed yes/no
+  const firebaseToken = useSelector(state => state.users.token);
+  
+  /**
+   * Sends a post request to the app server with the body containing 
+   * the user's firebaseid and the course code of the class they want
+   * to join.
+   */
+  const addUser = async() => {
+    var firebaseId = await getFirebaseID(firebaseToken);
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/adduser`,
+        {
+          body: JSON.stringify({
+            id: Number.parseInt(courseCode),
+            firebase_id: firebaseId
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed){
+        Alert.alert("Sorry", "That class code does not exist.", [
+          { text: "OK", onPress: () => {} },
+        ]);
+        setCourseCode("");
+      } 
+      else {
+        props.setStatus(); //switches to the next component
+      }
+    } catch (err) {
+      console.log("Add user fetch has failed."); //TODO: replace or remove once all testing is done
+    }
+  }
   return (
     <Background>
       <TouchableWithoutFeedback
@@ -40,17 +76,7 @@ const NoClass = (props) => {
           </View>
           <StandardButton
             text="Join"
-            onTap={() => {
-              // This if else block will be moved to a function that does a fetch request
-              if (psuedoCourseCode === courseCode) {
-                props.setStatus();
-              } else {
-                Alert.alert("Sorry", "That class code does not exist.", [
-                  { text: "OK", onPress: () => {} },
-                ]);
-                setCourseCode("");
-              }
-            }}
+            onTap={addUser}
           />
         </View>
       </TouchableWithoutFeedback>
