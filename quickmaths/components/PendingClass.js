@@ -8,14 +8,45 @@ import {
   ScrollView,
 } from "react-native";
 
+import { useSelector} from "react-redux";
+
 import Background from "./Background";
 import StandardButton from "./StandardButton";
+import { getFirebaseID } from "../constants/FirebaseID";
+import { httpTemplate } from "../constants/HttpTemplate";
 
 const PendingClass = (props) => {
   const [refreshing, setRefreshing] = useState(false);
 
-  //Will call this function when user pulls down the screen to refresh
-  //TODO: https:///quickmaths-9472.nodechef.com/leaveclass Input: { firebase_id: (studentid) } Output: Failed yes/no
+  const firebaseToken = useSelector(state => state.users.token);
+ 
+  /**
+   * Sends a post request to the app server that will remove the 
+   * user's request to join the class.
+   */
+  const leaveClass = async() => {
+    var firebaseId = await getFirebaseID(firebaseToken);
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/leaveclass`,
+        {
+          body: JSON.stringify({
+            firebase_id: firebaseId
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't leave the class."); //TODO: replace or remove once all testing is done
+      else {
+        props.onCancel();
+      }
+    } catch (err) {
+      console.log("Add user fetch has failed."); //TODO: replace or remove once all testing is done
+    }
+  }
+
+   //Will call this function when user pulls down the screen to refresh
   const onRefresh = useCallback(() => {
     setRefreshing(true);
 
@@ -42,10 +73,7 @@ const PendingClass = (props) => {
           </View>
           <StandardButton
             text="Cancel"
-            onTap={() => {
-              //TODO: Set up fetch request to cancel joining of class
-              props.onCancel();
-            }}
+            onTap={leaveClass}
           />
         </ScrollView>
       </SafeAreaView>
