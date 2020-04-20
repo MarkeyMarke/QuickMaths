@@ -7,9 +7,12 @@ import { useSelector, useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
 import StandardButton from "./StandardButton";
 import { signOut } from "../store/actions/users";
+import { getFirebaseID } from "../constants/FirebaseID";
+import { httpTemplate } from "../constants/HttpTemplate";
 
 const CustomDrawer = (props) => {
   const isTeacher = useSelector((state) => state.users.isTeacher);
+  const firebaseToken = useSelector(state => state.users.token);
   const dispatch = useDispatch();
 
   const signOutHandler = () => {
@@ -24,7 +27,35 @@ const CustomDrawer = (props) => {
     else props.navigation.navigate("StudentHomeScreen");
   };
 
-  //TODO: https:///quickmaths-9472.nodechef.com/leaveclass Input: { firebase_id: (studentid) } Output: Failed yes/no
+  /**
+   * Sends a post request to the app server that will remove the 
+   * user's request to join the class.
+   */
+  const leaveClass = async() => {
+    var firebaseId = await getFirebaseID(firebaseToken);
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/leaveclass`,
+        {
+          body: JSON.stringify({
+            firebase_id: firebaseId
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't leave the class."); //TODO: replace or remove once all testing is done
+      else {
+        props.navigation.navigate({
+          routeName: "StudentHomeScreen",
+          params: {refresh: true}
+        });
+      }
+    } catch (err) {
+      console.log("Add user fetch has failed."); //TODO: replace or remove once all testing is done
+      console.log(err);
+    }
+  }
 
   return (
     <ScrollView>
@@ -45,9 +76,7 @@ const CustomDrawer = (props) => {
         {isTeacher ? null : (
           <StandardButton
             text="Leave Class"
-            onTap={() => {
-              console.log("Left the class!");
-            }}
+            onTap={leaveClass}
             buttonStyle={styles.button}
             containerStyle={styles.container}
           />
