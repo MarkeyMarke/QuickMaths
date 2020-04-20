@@ -61,7 +61,7 @@ const ClassScreen = (props) => {
       renderComponent = <Submissions/>;
       break;
     case components.ROSTER:
-      renderComponent = <Roster />;
+      renderComponent = <Roster navigation={props.navigation}/>;
       break;
   }
 
