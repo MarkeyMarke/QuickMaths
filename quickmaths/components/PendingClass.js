@@ -1,77 +1,122 @@
-import React, { useState, useCallback } from 'react';
-import {View, Text, StyleSheet, SafeAreaView, RefreshControl, ScrollView} from 'react-native';
+import React, { useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  RefreshControl,
+  ScrollView,
+} from "react-native";
 
-import Background from './Background';
-import StandardButton from './StandardButton';
+import { useSelector} from "react-redux";
 
-const PendingClass = props => {
-    const [refreshing, setRefreshing] = useState(false);
+import Background from "./Background";
+import StandardButton from "./StandardButton";
+import { getFirebaseID } from "../constants/FirebaseID";
+import { httpTemplate } from "../constants/HttpTemplate";
 
-    //Will call this function when user pulls down the screen to refresh 
-    //TODO: set up fetch request in the function, and add a conditional check to determine
-    //      if the component should change if the student has been accepted or not.
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
+const PendingClass = (props) => {
+  const [refreshing, setRefreshing] = useState(false);
 
-        wait(2000).then(() => {
-            setRefreshing(false);
-            props.setStatus();
-        });
+  const firebaseToken = useSelector(state => state.users.token);
+ 
+  /**
+   * Sends a post request to the app server that will remove the 
+   * user's request to join the class.
+   */
+  const leaveClass = async() => {
+    var firebaseId = await getFirebaseID(firebaseToken);
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/leaveclass`,
+        {
+          body: JSON.stringify({
+            firebase_id: firebaseId
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't leave the class."); //TODO: replace or remove once all testing is done
+      else {
+        props.onCancel();
+      }
+    } catch (err) {
+      console.log("Add user fetch has failed."); //TODO: replace or remove once all testing is done
+    }
+  }
 
-    },[refreshing]);
+   //Will call this function when user pulls down the screen to refresh
+  const onRefresh = async() => {
+    setRefreshing(true);
+    var firebaseId = await getFirebaseID(firebaseToken);
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/getstudentassignments`,
+        {
+          body: JSON.stringify({
+            firebase_id: firebaseId
+          }), 
+          ...httpTemplate
+        }
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't find student assignments."); //TODO: replace or remove once all testing is done
+      else {
+        console.log(responseJSON);
+        if(responseJSON.status === "accepted"){
+          setRefreshing(false);
+          props.setStatus();
+        }
+      }
+    } catch (err) {
+      console.log("Class info fetch has failed."); //TODO: replace or remove once all testing is done
+      console.log(err);
+    }
+    setRefreshing(false);
+  };
 
-    return (
-        <Background>
-            <SafeAreaView style={styles.screen}>
-                <ScrollView 
-                    contentContainerStyle={styles.container} 
-                    refreshControl={
-                        <RefreshControl 
-                            refreshing={refreshing} 
-                            onRefresh={onRefresh}
-                        />
-                    }
-                >
-                    <View style={styles.textContainer}>
-                        <Text style={styles.text}>You're trying to join _.</Text>
-                        <Text style={styles.text}>Please ask your teacher to let you in!</Text>
-                    </View>
-                    <StandardButton
-                        text="Cancel"
-                        onTap={()=> {
-                            //TODO: Set up fetch request to cancel joining of class
-                            props.onCancel();
-                        }}
-                    />
-                    </ScrollView>
-            </SafeAreaView>
-        </Background>
-    );
-};
-
-//will remove once fetch request is set up
-function wait(timeout) {
-    return new Promise(resolve => {
-      setTimeout(resolve, timeout);
-    });
+  return (
+    <Background>
+      <SafeAreaView style={styles.screen}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>You're trying to join _.</Text>
+            <Text style={styles.text}>
+              Please ask your teacher to let you in!
+            </Text>
+          </View>
+          <StandardButton
+            text="Cancel"
+            onTap={leaveClass}
+          />
+        </ScrollView>
+      </SafeAreaView>
+    </Background>
+  );
 };
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1
-    },
-    container:{
-        flexGrow:1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    textContainer: {
-        alignItems: 'center'
-    },
-    text: {
-        fontSize: 20,
-        color: 'white'
-    },
+  screen: {
+    flex: 1,
+  },
+  container: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textContainer: {
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 20,
+    color: "white",
+  },
 });
 
 export default PendingClass;

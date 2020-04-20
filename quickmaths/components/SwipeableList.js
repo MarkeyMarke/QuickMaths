@@ -7,8 +7,9 @@ import {Ionicons} from '@expo/vector-icons';
 const SwipeableList = props => {
     return (
         <SwipeListView 
-            keyExtractor={(item, index) => item.id}
-            data={props.data} 
+            keyExtractor={props.keyExtractor}
+            data={props.data}
+            ListEmptyComponent={props.listEmptyComponent} 
             renderItem={props.renderItem}
             renderHiddenItem={(data, rowMap) => (
             <View style={[styles.backRow, props.backRowStyle]}>

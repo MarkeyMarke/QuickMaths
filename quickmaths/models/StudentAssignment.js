@@ -8,7 +8,7 @@ class StudentAssignment {
     }
 
     getDueDateText(){
-        return ((this.dueDate.getMonth()+1).toString()+'/'+this.dueDate.getDate().toString()+'/'+this.dueDate.getFullYear().toString());
+        return ((this.dueDate.substring(5,7)+'/'+this.dueDate.substring(8,10)+'/'+this.dueDate.substring(0,4)));
     }
 
     getProgressText(){
