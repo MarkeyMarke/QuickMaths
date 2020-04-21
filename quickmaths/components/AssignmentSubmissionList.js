@@ -33,7 +33,7 @@ const AssignmentSubmissionList = (props) => {
           } catch (err) {
             console.log("Teacher student progress fetch has failed."); //TODO: replace or remove once all testing is done
             console.log(err);
-          }
+        }
     };
     
     useEffect(() => {
@@ -49,7 +49,7 @@ const AssignmentSubmissionList = (props) => {
               middleTextStyle={{ fontStyle: "italic" }}
               containerStyle={{ width: "97.5%", marginTop: 10 }}
               onSelect={() => {
-                props.saveAssignmentId(itemData.item.assignment_id);
+                props.saveAssignment(itemData.item);
                 props.goToStudentAssignmentProgress();
               }}
               icon={<Ionicons name="ios-play" size={75} color="white" />}
