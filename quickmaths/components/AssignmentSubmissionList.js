@@ -12,8 +12,11 @@ const AssignmentSubmissionList = (props) => {
 
     const course = props.navigation.getParam("class");
     
+    /**
+     * Sends a post request to the app server, containing a class id, that receives
+     * an array of assignment objects from the pertaining class. 
+     */
     const fetchData = async () => {
-        //TODO: https://quickmaths-9472.nodechef.com/getteacherstudentprogress, Input: classID, Output: [{ assignment_id*,(assignment)name*,due_date,count* }], NOTE: If Mark isn't done with query yet, make dummy data
         try {
             const response = await fetch(
               `https://quickmaths-9472.nodechef.com/getteacherstudentprogress`,

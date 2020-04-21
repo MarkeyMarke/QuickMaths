@@ -11,8 +11,11 @@ import { httpTemplate } from "../constants/HttpTemplate";
 const StudentProgressList = (props) => {
     const [students, setStudents] = useState(null);
     
+    /**
+     * Sends a post request, containing an assignment id, and receives an array
+     * of student objects.
+     */
     const fetchData = async () => {
-    //TODO: https://quickmaths-9472.nodechef.com/getincompleteassgn, Input: assignmentID, Output: [{ firebase_id*, (student)name*, school_id*, email, isComplete* }]
         try {
             const response = await fetch(
             `https://quickmaths-9472.nodechef.com/getincompleteassgn`,
