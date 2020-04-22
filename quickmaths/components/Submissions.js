@@ -1,131 +1,41 @@
-import React, {useState, useEffect} from 'react';
-import {View, FlatList, StyleSheet, Text} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
+import React, { useState} from "react";
+import { View} from "react-native";
 
-import { STUDENT_REMAINING } from '../data/dummy-data';
-import { COURSE_ASSIGNMENTS } from "../data/dummy-data";
-import TabButton from './TabButton';
-import ListItem from './ListItem';
-import Colors from '../constants/Colors';
-import Loading from '../constants/Loading';
+import AssignmentSubmissionList from "./AssignmentSubmissionList";
+import StudentProgressList from "./StudentProgressList";
 
-const Submissions = props => {
-    const [ isStudentRemainingActive, setIsStudentRemainingActive ] = useState(false);
-	const [ studentsRemaining, setStudentsRemaining ] = useState(null);
-	const [courseAssignments, setCourseAssignments] = useState(null); 
-	
-	const fetchData = async () => {
-		setStudentsRemaining(STUDENT_REMAINING);
-		setCourseAssignments(COURSE_ASSIGNMENTS);
-	};
+const Submissions = (props) => {
+  //Used for conditional rendering between two sub-screens
+  const [isStudentRemainingActive, setIsStudentRemainingActive] = useState(
+    false
+  );
+ 
+  const [assignment, setAssignment] = useState(null);
 
-	useEffect(() => {
-		fetchData();
-	  }, []
-	);	  
+  const saveAssignment= (assignment) => {
+    setAssignment(assignment);
+  } 
 
-    const renderSubmissionListItem = itemData => {
-		return (
-			<View>
-				<ListItem
-					topText={itemData.item.title}
-					middleText={'Due ' + itemData.item.dueDate}
-					bottomText={itemData.item.submissions + ' submissions missing'}
-					bottomTextStyle={{ fontStyle: 'italic' }}
-					containerStyle={{ width: '97.5%', marginTop: 10 }}
-					onSelect={() => {
-						setIsStudentRemainingActive(true);
-					}}
-					icon={<Ionicons name='ios-play' size={75} color='white' />}
-				/>
-			</View>
-		);
-	};
+  const switchSubComponent = () => {
+    setIsStudentRemainingActive(!isStudentRemainingActive);
+  };
 
-	const renderStudentRemainingList = itemData => {
-		var str2 = 'Incompleted';
-		if (itemData.item.assignment === str2) {
-			return (
-				<ListItem
-					topText={itemData.item.name}
-					middleText={itemData.item.studentid}
-					bottomText={itemData.item.assignment}
-					bottomTextStyle={{ fontStyle: 'italic' }}
-					containerStyle={{ width: '95.5%', marginTop: 10 }}
-					icon={<Ionicons name='md-close-circle' size={70} color='white' />}
-				/>
-			);
-		} else {
-			return (
-				<ListItem
-					topText={itemData.item.name}
-					middleText={itemData.item.studentid}
-					bottomText={itemData.item.assignment}
-					bottomTextStyle={{ fontStyle: 'italic' }}
-					containerStyle={{ width: '95.5%', marginTop: 10 }}
-					icon={<Ionicons name='md-checkmark-circle' size={70} color='white' />}
-				/>
-			);
-		}
-	};
-
-	if(!studentsRemaining){
-		return <Loading/>
-	}
-	
-    return (
-        <View>
-        {isStudentRemainingActive ? (
-        <View>
-            <View style={styles.simpleBackLabel}>
-                <TabButton active={isStudentRemainingActive} onTap={() => {
-                    setIsStudentRemainingActive(false);
-                }}>
-                <Ionicons name='ios-play' size={35} style={styles.icon} />
-                </TabButton>
-                <Text style={styles.simpleAdditionText}>Simple Addition HW</Text>
-            </View>
-            <FlatList
-                keyExtractor={(item, index) => item.id}
-                data={studentsRemaining}
-                renderItem={renderStudentRemainingList}
-            />
-        </View>
-        ) : (
-        <FlatList
-            keyExtractor={(item, index) => item.id}
-            data={courseAssignments}
-            renderItem={renderSubmissionListItem}
+  return (
+    <View>
+      {isStudentRemainingActive ? (
+        <StudentProgressList
+          assignment={assignment}
+          goToAssignmentSubmission={switchSubComponent}
         />
-        )}
-        </View>
-    );
-}
-
-const styles = StyleSheet.create({
-    icon: {
-		transform: [ { rotateY: '180deg' } ],
-		color: 'white',
-		marginLeft: -30,
-	},
-	simpleBackLabel: {
-		width: '95%',
-		height: '5%',
-		marginLeft: 10,
-		marginTop: 10,
-		borderColor: 'transparent',
-		backgroundColor: Colors.primaryColor,
-		flexDirection: 'row'
-	},
-	simpleAdditionText: {
-		color: 'white',
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginLeft: 45,
-		marginTop: 10,
-		fontSize: 15,
-		fontWeight: 'bold'
-	}
-});
+      ) : (
+        <AssignmentSubmissionList
+          navigation={props.navigation}
+          goToStudentAssignmentProgress={switchSubComponent}
+          saveAssignment={saveAssignment}
+        />
+      )}
+    </View>
+  );
+};
 
 export default Submissions;

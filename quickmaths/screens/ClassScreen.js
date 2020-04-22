@@ -58,7 +58,7 @@ const ClassScreen = (props) => {
       );
       break;
     case components.SUBMISSIONS:
-      renderComponent = <Submissions/>;
+      renderComponent = <Submissions navigation={props.navigation}/>;
       break;
     case components.ROSTER:
       renderComponent = <Roster navigation={props.navigation}/>;
