@@ -28,14 +28,18 @@ const StudentHomeScreen = (props) => {
     PENDING: "pending",
     ACCEPTED: "accepted",
   };
-
+  const [refresh, setRefresh] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(null);
   const [assignments, setAssignments] = useState(null);
   const firebaseToken = useSelector((state) => state.users.token);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [refresh]);
+
+  const doRefresh = () => {
+    setRefresh(!refresh);
+  };
 
   /**
    * Sends a post request, containing the student's firebase id, and receives
@@ -97,6 +101,7 @@ const StudentHomeScreen = (props) => {
             progress: itemData.item.progress,
             title: itemData.item.title,
             assignment_id: itemData.item.id,
+            refresh: doRefresh,
           });
         }}
         icon={<Ionicons name="ios-play" size={75} color="white" />}

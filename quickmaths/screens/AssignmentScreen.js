@@ -170,6 +170,7 @@ const AssignmentScreen = (props) => {
     <View style={styles.backButtonContainer}>
       <BackButton
         onTap={() => {
+          props.navigation.state.params.refresh();
           props.navigation.pop();
         }}
       />
@@ -241,7 +242,13 @@ const AssignmentScreen = (props) => {
             `Question ${currentQuestions.length}/${currentQuestions.length}`
           )}
           {questionText(`You're finished!`)}
-          <StandardButton text="Finish" onTap={() => props.navigation.pop()} />
+          <StandardButton
+            text="Finish"
+            onTap={() => {
+              props.navigation.state.params.refresh();
+              props.navigation.pop();
+            }}
+          />
         </View>
       </Background>
     );
