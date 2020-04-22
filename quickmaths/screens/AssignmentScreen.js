@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  Button,
   Alert,
   Text,
   ActivityIndicator,
   Platform,
+  Button,
 } from "react-native";
 import Signature from "react-native-signature-canvas";
-import { QUESTIONS } from "../data/dummy-data";
 import { GOOGLECLOUD_API_KEY } from "react-native-dotenv";
 import Background from "../components/Background";
 import BackButton from "../constants/BackButton";
@@ -17,41 +16,102 @@ import StandardButton from "../components/StandardButton";
 import Colors from "../constants/Colors";
 import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
+import { httpTemplate } from "../constants/HttpTemplate";
+import { useSelector } from "react-redux";
+import { getFirebaseID } from "../constants/FirebaseID";
+import Question from "../models/Question";
 
-//TODO: Set the title of the screen to have the assignment name
 const AssignmentScreen = (props) => {
   const [currentQuestions, setQuestions] = useState(null);
   const [index, setIndex] = useState(null);
   const [alreadyComplete, setAlreadyComplete] = useState(false);
-
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
+  const firebaseToken = useSelector((state) => state.users.token);
 
   const fetchQuestions = async () => {
-    //TODO: Eventually turns into MySQL fetch
-    const numberOfQuestions = QUESTIONS.length;
-    const questionsAlreadyDone = props.navigation.state.params.progress;
-    setQuestions(QUESTIONS);
+    //Get the assignment id from previous screen
+    const assignment_id = props.navigation.state.params.assignment_id;
 
-    //Index is NOT progress, it is used to traverse through the questions
-    if (questionsAlreadyDone < numberOfQuestions) {
-      setIndex(questionsAlreadyDone);
-    } else {
-      setIndex(0);
-      setAlreadyComplete(true);
+    //Fetch assignment info from database using assignment_id as input
+    console.log("Attempted to read assignment info.");
+    const body = JSON.stringify({
+      assignment_id,
+    });
+    const httpBody = {
+      body: body,
+      ...httpTemplate,
+    };
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/getstudentquestions`,
+        httpBody
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) console.log("Couldn't find assignment info.");
+      else {
+        //Set the state
+        console.log("Retrieved assignment info!");
+        console.log(responseJSON);
+
+        //Convert from a promise
+        var questions = [];
+        responseJSON.forEach((item) => {
+          questions.push(new Question(item.id, item.question, item.answer));
+        });
+        setQuestions(questions);
+        const numberOfQuestions = questions.length;
+        const questionsAlreadyDone = props.navigation.state.params.progress;
+
+        //Index is NOT progress, it is used to traverse through the questions
+        if (questionsAlreadyDone < numberOfQuestions) {
+          console.log("Set index to: ", questionsAlreadyDone);
+          setIndex(questionsAlreadyDone);
+        } else {
+          console.log("Set index to: ", 0);
+          setIndex(0);
+          setAlreadyComplete(true);
+        }
+      }
+    } catch (err) {
+      console.log("Assignment info fetch has failed.");
+      console.log(err);
     }
   };
 
   const updateProgress = async () => {
-    //TODO: Eventually turns into MySQL fetch
-    const mySQLResult = { error: false };
-    if (mySQLResult.error) {
+    //Get the assignment id from previous screen
+    const assignment_id = props.navigation.state.params.assignment_id;
+    //Get the id from the imported function
+    var firebaseId = await getFirebaseID(firebaseToken);
+
+    //Fetch update progress on MySQL
+    console.log("Attempted to read student assignment questions.");
+    const body = JSON.stringify({
+      assignment_id,
+      firebase_id: firebaseId,
+    });
+    const httpBody = {
+      body: body,
+      ...httpTemplate,
+    };
+
+    try {
+      const response = await fetch(
+        `https://quickmaths-9472.nodechef.com/updatestudentprogress`,
+        httpBody
+      );
+      const responseJSON = await response.json();
+      if (responseJSON.failed) {
+        console.log("Couldn't update student progress.");
+        makeAlert("Sorry", "An error has occured!");
+      } else {
+        console.log("Updated student progress!");
+        setIndex(index + 1);
+        makeAlert("Good job!", "That was correct!");
+      }
+    } catch (err) {
+      console.log("Student progress fetch has failed.");
       makeAlert("Sorry", "An error has occured!");
       console.log(error);
-    } else {
-      setIndex(index + 1);
-      makeAlert("Good job!", "That was correct!");
     }
   };
 
@@ -83,6 +143,7 @@ const AssignmentScreen = (props) => {
         body: JSON.stringify(body),
       });
       const responseJSON = await googleCloudeResponse.json();
+
       //Checks if Google found any texts
       if (Object.keys(responseJSON.responses[0]).length > 0) {
         const answer = responseJSON.responses[0].fullTextAnnotation.text.replace(
@@ -109,6 +170,7 @@ const AssignmentScreen = (props) => {
     <View style={styles.backButtonContainer}>
       <BackButton
         onTap={() => {
+          props.navigation.state.params.refresh();
           props.navigation.pop();
         }}
       />
@@ -136,9 +198,12 @@ const AssignmentScreen = (props) => {
     background-color: #B76767;
   }`;
 
-  //TODO: Make a separate component for all of these rendered elements
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
   //Check if all questions have been loaded first
-  if (!currentQuestions) {
+  if (currentQuestions === null || index === null) {
     return (
       <Background>
         {backButton}
@@ -148,6 +213,7 @@ const AssignmentScreen = (props) => {
       </Background>
     );
   }
+
   //Then check if the assignment is already completed (also don't go out of index)
   if (alreadyComplete && index < currentQuestions.length) {
     return (
@@ -176,7 +242,13 @@ const AssignmentScreen = (props) => {
             `Question ${currentQuestions.length}/${currentQuestions.length}`
           )}
           {questionText(`You're finished!`)}
-          <StandardButton text="Finish" onTap={() => props.navigation.pop()} />
+          <StandardButton
+            text="Finish"
+            onTap={() => {
+              props.navigation.state.params.refresh();
+              props.navigation.pop();
+            }}
+          />
         </View>
       </Background>
     );
