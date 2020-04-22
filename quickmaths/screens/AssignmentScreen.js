@@ -6,9 +6,9 @@ import {
   Text,
   ActivityIndicator,
   Platform,
+  Button,
 } from "react-native";
 import Signature from "react-native-signature-canvas";
-import { QUESTIONS } from "../data/dummy-data";
 import { GOOGLECLOUD_API_KEY } from "react-native-dotenv";
 import Background from "../components/Background";
 import BackButton from "../constants/BackButton";
@@ -18,16 +18,14 @@ import { Item, HeaderButtons } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
 import { httpTemplate } from "../constants/HttpTemplate";
 import { useSelector } from "react-redux";
+import { getFirebaseID } from "../constants/FirebaseID";
+import Question from "../models/Question";
 
 const AssignmentScreen = (props) => {
   const [currentQuestions, setQuestions] = useState(null);
   const [index, setIndex] = useState(null);
   const [alreadyComplete, setAlreadyComplete] = useState(false);
   const firebaseToken = useSelector((state) => state.users.token);
-
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
 
   const fetchQuestions = async () => {
     //Get the assignment id from previous screen
@@ -36,7 +34,7 @@ const AssignmentScreen = (props) => {
     //Fetch assignment info from database using assignment_id as input
     console.log("Attempted to read assignment info.");
     const body = JSON.stringify({
-      id: assignment_id,
+      assignment_id,
     });
     const httpBody = {
       body: body,
@@ -53,20 +51,29 @@ const AssignmentScreen = (props) => {
         //Set the state
         console.log("Retrieved assignment info!");
         console.log(responseJSON);
-        const numberOfQuestions = responseJSON.length;
+
+        //Convert from a promise
+        var questions = [];
+        responseJSON.forEach((item) => {
+          questions.push(new Question(item.id, item.question, item.answer));
+        });
+        setQuestions(questions);
+        const numberOfQuestions = questions.length;
         const questionsAlreadyDone = props.navigation.state.params.progress;
-        setQuestions(responseJSON);
 
         //Index is NOT progress, it is used to traverse through the questions
         if (questionsAlreadyDone < numberOfQuestions) {
+          console.log("Set index to: ", questionsAlreadyDone);
           setIndex(questionsAlreadyDone);
         } else {
+          console.log("Set index to: ", 0);
           setIndex(0);
           setAlreadyComplete(true);
         }
       }
     } catch (err) {
       console.log("Assignment info fetch has failed.");
+      console.log(err);
     }
   };
 
@@ -79,7 +86,7 @@ const AssignmentScreen = (props) => {
     //Fetch update progress on MySQL
     console.log("Attempted to read student assignment questions.");
     const body = JSON.stringify({
-      assignment_id: assignment_id,
+      assignment_id,
       firebase_id: firebaseId,
     });
     const httpBody = {
@@ -190,8 +197,12 @@ const AssignmentScreen = (props) => {
     background-color: #B76767;
   }`;
 
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
   //Check if all questions have been loaded first
-  if (!currentQuestions) {
+  if (currentQuestions === null || index === null) {
     return (
       <Background>
         {backButton}
@@ -201,6 +212,7 @@ const AssignmentScreen = (props) => {
       </Background>
     );
   }
+
   //Then check if the assignment is already completed (also don't go out of index)
   if (alreadyComplete && index < currentQuestions.length) {
     return (
