@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     listItem: {
         height: 110,
         marginTop: 20,
-        backgroundColor: 'rgba(0,0,0, 0.8)',
+        backgroundColor: 'rgba(0,0,0, 1)',
         width: '85%',
         flex: 1,
     },
