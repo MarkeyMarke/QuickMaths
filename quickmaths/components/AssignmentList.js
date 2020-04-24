@@ -8,6 +8,7 @@ import ListItem from './ListItem';
 import { httpTemplate } from "../constants/HttpTemplate";
 import Assignment from "../models/Assignment";
 import Loading from '../constants/Loading';
+import CustomAlert from '../constants/CustomAlert';
 
 const AssignmentList = props => {
     const [courseAssignments, setCourseAssignments] = useState(null); 
@@ -35,14 +36,13 @@ const AssignmentList = props => {
             }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't delete Assignment."); //TODO: replace or remove once all testing is done
+        if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
         else {
             // reflects the deletion in the UI if the request is successful
             setCourseAssignments(courseAssignments.filter((o) => {return o.id != item.id;}));
         }
         } catch (err) {
-        console.log("Delete Assignment fetch has failed."); //TODO: replace or remove once all testing is done
-        console.log(err); //TODO: replace or remove once all testing is done
+            CustomAlert("Connection Error", "Please Try Again Later", "Okay");
         }
     };
 
@@ -62,7 +62,7 @@ const AssignmentList = props => {
             }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't find Assignments."); //TODO: replace or remove once all testing is done
+        if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
         else {
             var convertedAssignments = [];
             responseJSON.forEach(item => {
@@ -71,7 +71,7 @@ const AssignmentList = props => {
             setCourseAssignments(convertedAssignments);
         }
         } catch (err) {
-            console.log("Assignment info fetch has failed."); //TODO: replace or remove once all testing is done
+            CustomAlert("Connection Error", "Please Try Again Later", "Okay");
         }
     };
 

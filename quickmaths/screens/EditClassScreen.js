@@ -17,6 +17,7 @@ import StandardButton from "../components/StandardButton";
 import Colors from "../constants/Colors";
 import EditIcon from "../constants/EditIcon";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const EditClassScreen = (props) => {
   const course = props.navigation.getParam("class");
@@ -48,7 +49,7 @@ const EditClassScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't edit class.");//TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
       else {
         //calls the updateCourse function from the Class Screen in order to update the previous screen with the new info
         props.navigation.state.params.updateCourse({
@@ -59,7 +60,7 @@ const EditClassScreen = (props) => {
         });
       }
     } catch (err) {
-      console.log("Edit class fetch has failed."); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   };
 

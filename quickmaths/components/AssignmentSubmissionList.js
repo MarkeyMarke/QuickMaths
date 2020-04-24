@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ListItem from "./ListItem";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const AssignmentSubmissionList = (props) => {
     const [assignments, setAssignments] = useState(null);
@@ -28,14 +29,12 @@ const AssignmentSubmissionList = (props) => {
               }
             );
             const responseJSON = await response.json();
-            if (responseJSON.failed) console.log("Couldn't get teacher student progress."); //TODO: replace or remove once all testing is done
+            if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
             else {
-                console.log(responseJSON);
                 setAssignments(responseJSON);
             }
           } catch (err) {
-            console.log("Teacher student progress fetch has failed."); //TODO: replace or remove once all testing is done
-            console.log(err);
+            CustomAlert("Connection Error", "Please Try Again Later", "Okay");
         }
     };
     

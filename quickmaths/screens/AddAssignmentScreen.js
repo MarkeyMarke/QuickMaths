@@ -19,6 +19,7 @@ import { EvilIcons } from "@expo/vector-icons";
 import StandardButton from "../components/StandardButton";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const AddAssignmentScreen = (props) => {
   const item = props.navigation.getParam("assignment");
@@ -60,15 +61,14 @@ const AddAssignmentScreen = (props) => {
           }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't get assignment info.");//TODO: replace or remove once all testing is done
+        if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
         else {
           setQuestions(responseJSON.questions);
           setQuestionID(responseJSON.questions[responseJSON.questions.length-1].id+1); //This is for the virtualized list
           setAssignmentID(responseJSON.assignment_id);
         }
       } catch (err) {
-        console.log("Got assignment info fetch has failed.");//TODO: replace or remove once all testing is done
-        console.log(err);
+        CustomAlert("Connection Error", "Please Try Again Later", "Okay");
       }
     } else {
       setQuestions([]);
@@ -103,13 +103,9 @@ const AddAssignmentScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't create assignment."); //TODO: replace or remove once all testing is done
-      else {
-        console.log("Created assignment!"); //TODO: replace or remove once all testing is done
-      }
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
     } catch (err) {
-      console.log("create assignment fetch has failed."); //TODO: replace or remove once all testing is done
-      console.log(err); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   };
 
@@ -141,13 +137,9 @@ const AddAssignmentScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't replace assignment."); //TODO: replace or remove once all testing is done
-      else {
-        console.log("replaced assignment!"); //TODO: replace or remove once all testing is done
-      }
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
     } catch (err) {
-      console.log("replace assignment fetch has failed."); //TODO: replace or remove once all testing is done
-      console.log(err); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   };
 

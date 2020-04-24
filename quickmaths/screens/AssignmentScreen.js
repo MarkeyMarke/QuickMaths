@@ -32,7 +32,6 @@ const AssignmentScreen = (props) => {
     const assignment_id = props.navigation.state.params.assignment_id;
 
     //Fetch assignment info from database using assignment_id as input
-    console.log("Attempted to read assignment info.");
     const body = JSON.stringify({
       assignment_id,
     });
@@ -46,12 +45,8 @@ const AssignmentScreen = (props) => {
         httpBody
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't find assignment info.");
+      if (responseJSON.failed) makeAlert("Something Unexpected Happened!", "Please Try Again Later");
       else {
-        //Set the state
-        console.log("Retrieved assignment info!");
-        console.log(responseJSON);
-
         //Convert from a promise
         var questions = [];
         responseJSON.forEach((item) => {
@@ -63,17 +58,14 @@ const AssignmentScreen = (props) => {
 
         //Index is NOT progress, it is used to traverse through the questions
         if (questionsAlreadyDone < numberOfQuestions) {
-          console.log("Set index to: ", questionsAlreadyDone);
           setIndex(questionsAlreadyDone);
         } else {
-          console.log("Set index to: ", 0);
           setIndex(0);
           setAlreadyComplete(true);
         }
       }
     } catch (err) {
-      console.log("Assignment info fetch has failed.");
-      console.log(err);
+      makeAlert("Connection Error", "Please Try Again Later");
     }
   };
 
@@ -84,7 +76,6 @@ const AssignmentScreen = (props) => {
     var firebaseId = await getFirebaseID(firebaseToken);
 
     //Fetch update progress on MySQL
-    console.log("Attempted to read student assignment questions.");
     const body = JSON.stringify({
       assignment_id,
       firebase_id: firebaseId,
@@ -101,17 +92,13 @@ const AssignmentScreen = (props) => {
       );
       const responseJSON = await response.json();
       if (responseJSON.failed) {
-        console.log("Couldn't update student progress.");
         makeAlert("Sorry", "An error has occured!");
       } else {
-        console.log("Updated student progress!");
         setIndex(index + 1);
         makeAlert("Good job!", "That was correct!");
       }
     } catch (err) {
-      console.log("Student progress fetch has failed.");
       makeAlert("Sorry", "An error has occured!");
-      console.log(error);
     }
   };
 
@@ -162,7 +149,6 @@ const AssignmentScreen = (props) => {
     } catch (error) {
       //If there was something wrong with the internet connection or the technical stack
       makeAlert("Sorry", "An error has occured!");
-      console.log(error);
     }
   };
 

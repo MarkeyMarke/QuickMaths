@@ -7,6 +7,7 @@ import ListItem from "./ListItem";
 import Colors from "../constants/Colors";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const StudentProgressList = (props) => {
     const [students, setStudents] = useState(null);
@@ -27,14 +28,12 @@ const StudentProgressList = (props) => {
             }
             );
             const responseJSON = await response.json();
-            if (responseJSON.failed) console.log("Couldn't get the incomplete assignment info"); //TODO: replace or remove once all testing is done
+            if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
             else {
-                console.log(responseJSON);
                 setStudents(responseJSON);
             }
         } catch (err) {
-            console.log("The incomplete assignment fetch has failed."); //TODO: replace or remove once all testing is done
-            console.log(err);
+          CustomAlert("Connection Error", "Please Try Again Later", "Okay");
         }
     };
 

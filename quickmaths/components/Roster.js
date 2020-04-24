@@ -9,6 +9,7 @@ import ListItem from "../components/ListItem";
 import Colors from "../constants/Colors";
 import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const Roster = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -39,12 +40,12 @@ const Roster = (props) => {
           }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't find roster info."); //TODO: replace or remove once all testing is done
+        if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
         else {
           setRoster(responseJSON);
         }
       } catch (err) {
-        console.log("Roster info fetch has failed."); //TODO: replace or remove once all testing is done
+        CustomAlert("Connection Error", "Please Try Again Later", "Okay");
       }
     } else {
       try {
@@ -58,12 +59,12 @@ const Roster = (props) => {
           }
         );
         const responseJSON = await response.json();
-        if (responseJSON.failed) console.log("Couldn't find roster requests."); //TODO: replace or remove once all testing is done
+        if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
         else {
           setRequests(responseJSON);
         }
       } catch (err) {
-        console.log("Roster request info fetch has failed."); //TODO: replace or remove once all testing is done
+        CustomAlert("Connection Error", "Please Try Again Later", "Okay");
       }
     }
   };
@@ -86,9 +87,9 @@ const Roster = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't remove the user."); //TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
     } catch (err) {
-      console.log("Remove user fetch has failed."); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   }; 
 
@@ -110,12 +111,12 @@ const Roster = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't accept the request."); //TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
       else {
         setRequests(requests.filter((o) => {return o.firebase_id != item.firebase_id;}));
       }
     } catch (err) {
-      console.log("The accept request fetch has failed."); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   }
 

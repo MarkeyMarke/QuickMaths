@@ -20,6 +20,7 @@ import PendingClass from "../components/PendingClass";
 import { httpTemplate } from "../constants/HttpTemplate";
 import { getFirebaseID } from "../constants/FirebaseID";
 import StudentAssignment from "../models/StudentAssignment";
+import CustomAlert from "../constants/CustomAlert";
 
 const StudentHomeScreen = (props) => {
   const refreshFromDrawer = props.navigation.getParam("refresh");
@@ -60,7 +61,7 @@ const StudentHomeScreen = (props) => {
       );
       const responseJSON = await response.json();
       if (responseJSON.failed)
-        console.log("Couldn't find student assignments.");
+      CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
       //TODO: replace or remove once all testing is done
       else {
         if (responseJSON.status === status.NONE) {
@@ -85,8 +86,7 @@ const StudentHomeScreen = (props) => {
         }
       }
     } catch (err) {
-      console.log("Class info fetch has failed."); //TODO: replace or remove once all testing is done
-      console.log(err);
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   };
 

@@ -19,6 +19,7 @@ import Colors from "../constants/Colors";
 import EditIcon from "../constants/EditIcon";
 import { httpTemplate } from "../constants/HttpTemplate";
 import { getFirebaseID } from "../constants/FirebaseID";
+import CustomAlert from "../constants/CustomAlert";
 
 const AddClassScreen = (props) => {
   const [courseName, setCourseName] = useState("");
@@ -51,14 +52,10 @@ const AddClassScreen = (props) => {
         );
         const responseJSON = await response.json();
         if (responseJSON.failed) {
-            console.log("Couldn't add class."); //TODO: replace or remove once all testing is done
-        }
-        else {
-          console.log("Added class!"); //TODO: replace or remove once all testing is done
+          CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
         }
       } catch (err) {
-        console.log("Add class fetch has failed."); //TODO: replace or remove once all testing is done
-        console.log(err); //TODO: replace or remove once all testing is done
+        CustomAlert("Connection Error", "Please Try Again Later", "Okay");
       }
   };
 

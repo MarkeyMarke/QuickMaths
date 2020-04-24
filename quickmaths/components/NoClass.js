@@ -5,7 +5,6 @@ import {
   TextInput,
   StyleSheet,
   TouchableWithoutFeedback,
-  Alert,
   Keyboard,
 } from "react-native";
 
@@ -15,6 +14,7 @@ import Background from "./Background";
 import StandardButton from "./StandardButton";
 import { getFirebaseID } from "../constants/FirebaseID";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const NoClass = (props) => {
   const [courseCode, setCourseCode] = useState("");
@@ -40,16 +40,14 @@ const NoClass = (props) => {
       );
       const responseJSON = await response.json();
       if (responseJSON.failed){
-        Alert.alert("Sorry", "That class code does not exist.", [
-          { text: "OK", onPress: () => {} },
-        ]);
+        CustomAlert("Sorry", "That class code does not exist.", "OK");
         setCourseCode("");
       } 
       else {
         props.setStatus(); //switches to the next component
       }
     } catch (err) {
-      console.log("Add user fetch has failed."); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   }
   return (
