@@ -43,7 +43,7 @@ const StudentProgressList = (props) => {
   }, []);
 
   const renderStudentRemainingList = (itemData) => {
-    if (itemData.item.isComplete) {
+    if (!itemData.item.isComplete) {
       return (
         <ListItem
           topText={itemData.item.name}
