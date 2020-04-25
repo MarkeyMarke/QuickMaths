@@ -16,8 +16,8 @@ const ChangeAccountInfoScreen = props => {
 	const dispatch = useDispatch();
 	const idToken = useSelector(state => state.users.token);
 	const nameProfile = useSelector(state => state.users.name);
-    const idProfile = useSelector(state => state.users.id);
-    const emailProfile = useSelector(state => state.users.email);
+	const idProfile = useSelector(state => state.users.id);
+	const emailProfile = useSelector(state => state.users.email);
 	//Function For An Allert
 	useEffect(
 		() => {
@@ -26,27 +26,30 @@ const ChangeAccountInfoScreen = props => {
 			}
 		},
 		[ error ]
-    );
-    
+	);
+
 	//Function For Update Profile
 	const onUpdateProfile = async () => {
 		setError(null);
 		try {
-            if((name != '' || userID != '') && password != ''){
-                await dispatch(usersAuthActions.updateProfile(name, nameProfile, userID, idProfile, idToken, '', emailProfile));
-                await dispatch(usersAuthActions.updatePassword(password, idToken));
-                Alert.alert('Success', 'Profile and Password Changed. \n Please Sign In Again', [ { text: 'Okay' } ]);
-                props.navigation.navigate("Login");
-            }
-            else if (password != '') {
-                await dispatch(usersAuthActions.updatePassword(password, idToken));
-                Alert.alert('Success', 'Password Changed. Please Sign In Again', [ { text: 'Okay' } ]);
-                props.navigation.navigate("Login");
-            } else {
-                await dispatch(usersAuthActions.updateProfile(name, nameProfile, userID, idProfile, idToken, '', emailProfile));
-                Alert.alert('Success', 'Profile Changed.', [ { text: 'Okay' } ]);
-                props.navigation.goBack();
-            }
+			if ((name != '' || userID != '') && password != '') {
+				await dispatch(
+					usersAuthActions.updateProfile(name, nameProfile, userID, idProfile, idToken, '', emailProfile)
+				);
+				await dispatch(usersAuthActions.updatePassword(password, idToken));
+				Alert.alert('Success', 'Profile and Password Changed. \n Please Sign In Again', [ { text: 'Okay' } ]);
+				props.navigation.navigate('Login');
+			} else if (password != '') {
+				await dispatch(usersAuthActions.updatePassword(password, idToken));
+				Alert.alert('Success', 'Password Changed. Please Sign In Again', [ { text: 'Okay' } ]);
+				props.navigation.navigate('Login');
+			} else {
+				await dispatch(
+					usersAuthActions.updateProfile(name, nameProfile, userID, idProfile, idToken, '', emailProfile)
+				);
+				Alert.alert('Success', 'Profile Changed.', [ { text: 'Okay' } ]);
+				props.navigation.navigate('Login');
+			}
 		} catch (err) {
 			setError(err.message);
 		}
