@@ -14,6 +14,7 @@ import Background from "./Background";
 import StandardButton from "./StandardButton";
 import { getFirebaseID } from "../constants/FirebaseID";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const PendingClass = (props) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -37,12 +38,12 @@ const PendingClass = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't leave the class."); //TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
       else {
         props.onCancel();
       }
     } catch (err) {
-      console.log("Add user fetch has failed."); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   }
 
@@ -61,7 +62,7 @@ const PendingClass = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't find student assignments."); //TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
       else {
         console.log(responseJSON);
         if(responseJSON.status === "accepted"){
@@ -70,8 +71,7 @@ const PendingClass = (props) => {
         }
       }
     } catch (err) {
-      console.log("Class info fetch has failed."); //TODO: replace or remove once all testing is done
-      console.log(err);
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
     setRefreshing(false);
   };

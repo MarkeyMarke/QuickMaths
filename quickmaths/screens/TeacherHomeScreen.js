@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform} from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSelector} from "react-redux";
 
@@ -15,6 +15,7 @@ import Loading from "../constants/Loading";
 import { httpTemplate } from "../constants/HttpTemplate";
 import { getFirebaseID } from "../constants/FirebaseID";
 import Background from "../components/Background";
+import CustomAlert from "../constants/CustomAlert";
 
 const TeacherHomeScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
@@ -43,13 +44,13 @@ const TeacherHomeScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't delete class."); //TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
       else {
         // reflects the deletion in the UI if the request is successful
         setClasses(classes.filter((o) => {return o.id != id;}));
       }
     } catch (err) {
-      console.log("Delete class fetch has failed."); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   };
 
@@ -71,12 +72,12 @@ const TeacherHomeScreen = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't find classes."); //TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay"); //TODO: replace or remove once all testing is done
       else {
         setClasses(responseJSON);
       }
     } catch (err) {
-      console.log("Class info fetch has failed."); //TODO: replace or remove once all testing is done
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   };
 

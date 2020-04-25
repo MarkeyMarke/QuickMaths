@@ -9,6 +9,7 @@ import StandardButton from "./StandardButton";
 import { signOut } from "../store/actions/users";
 import { getFirebaseID } from "../constants/FirebaseID";
 import { httpTemplate } from "../constants/HttpTemplate";
+import CustomAlert from "../constants/CustomAlert";
 
 const CustomDrawer = (props) => {
   const isTeacher = useSelector((state) => state.users.isTeacher);
@@ -44,7 +45,7 @@ const CustomDrawer = (props) => {
         }
       );
       const responseJSON = await response.json();
-      if (responseJSON.failed) console.log("Couldn't leave the class."); //TODO: replace or remove once all testing is done
+      if (responseJSON.failed) CustomAlert("Something Unexpected Happened", "Please Try Again Later", "Okay");
       else {
         props.navigation.navigate({
           routeName: "StudentHomeScreen",
@@ -52,8 +53,7 @@ const CustomDrawer = (props) => {
         });
       }
     } catch (err) {
-      console.log("Add user fetch has failed."); //TODO: replace or remove once all testing is done
-      console.log(err);
+      CustomAlert("Connection Error", "Please Try Again Later", "Okay");
     }
   }
 
