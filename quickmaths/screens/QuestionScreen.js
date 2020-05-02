@@ -35,6 +35,7 @@ const QuestionScreen = props => {
                             placeholderTextColor='white'
                             onChangeText={(text) => setAnswer(text)}
                             value={answer}
+                            keyboardType="number-pad"
                         />
                         <EditIcon/>
                     </View>
