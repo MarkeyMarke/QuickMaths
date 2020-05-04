@@ -86,7 +86,7 @@ const PendingClass = (props) => {
           }
         >
           <View style={styles.textContainer}>
-            <Text style={styles.text}>You're trying to join _.</Text>
+            <Text style={styles.text}>You're trying to join a class.</Text>
             <Text style={styles.text}>
               Please ask your teacher to let you in!
             </Text>
